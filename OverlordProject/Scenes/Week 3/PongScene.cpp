@@ -55,8 +55,9 @@ void PongScene::Update()
 		m_InvertZ = false;
 	}
 
+	PxVec3 velocity = PxVec3{ m_BallDirX * m_BallSpeed, 0.f, m_BallDirZ * m_BallSpeed };
 	auto ballPos = m_pBall->GetTransform()->GetPosition();
-	m_pBall->GetTransform()->Translate(ballPos.x + m_BallDirX, ballPos.y, ballPos.z + m_BallDirZ);
+	m_pBall->GetComponent<RigidBodyComponent>()->GetPxRigidActor()->is<PxRigidDynamic>()->setLinearVelocity(velocity);
 }
 
 void PongScene::Draw()
@@ -84,7 +85,7 @@ void PongScene::InitializeBall()
 
 	m_pBall->GetTransform()->Translate(0.f, 0.f, 0.f);
 
-	auto pRigidBody = m_pBall->AddComponent(new RigidBodyComponent(true));
+	auto pRigidBody = m_pBall->AddComponent(new RigidBodyComponent(false));
 	pRigidBody->AddCollider(PxSphereGeometry{ radius }, *pBouncyMaterial, true);
 	pRigidBody->SetConstraint(RigidBodyConstraint::TransY, false);
 	m_pBall->SetOnTriggerCallBack([=](GameObject*, GameObject* otherObjectPtr, PxTriggerAction triggerAction)

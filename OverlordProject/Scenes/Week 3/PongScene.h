@@ -35,7 +35,7 @@ private:
 	GameObject* m_pRightWall;
 	GameObject* m_pLeftWall;
 
-	float m_BallSpeed = 0.3f;
+	float m_BallSpeed = 5.f;
 	float m_PlayerSpeed = 0.5f;
 	float m_BallDirX = 0.f;
 	float m_BallDirZ = 0.f;
