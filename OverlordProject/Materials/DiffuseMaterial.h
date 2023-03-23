@@ -8,7 +8,7 @@ public:
 	DiffuseMaterial(const DiffuseMaterial& other) = delete;
 	DiffuseMaterial(DiffuseMaterial&& other) noexcept = delete;
 	DiffuseMaterial& operator=(const DiffuseMaterial& other) = delete;
-	DiffuseMaterial& operator=(const DiffuseMaterial& other) = delete;
+	DiffuseMaterial& operator=(DiffuseMaterial&& other) = delete;
 
 	void SetDiffuseTexture(const std::wstring& assetFile);
 

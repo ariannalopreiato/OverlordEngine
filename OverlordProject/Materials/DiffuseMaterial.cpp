@@ -7,8 +7,8 @@ DiffuseMaterial::DiffuseMaterial()
 
 void DiffuseMaterial::SetDiffuseTexture(const std::wstring& assetFile)
 {
-	const auto diffuse = GetVariable(assetFile);
-	ContentManager::Load<Material>(assetFile);
+	m_pDiffuseTexture = ContentManager::Load<TextureData>(assetFile);
+	SetVariable_Texture(L"gDiffuseMap", m_pDiffuseTexture);
 }
 
 void DiffuseMaterial::InitializeEffectVariables()
