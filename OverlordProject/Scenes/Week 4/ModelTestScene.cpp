@@ -7,7 +7,7 @@
 void ModelTestScene::Initialize()
 {
 	auto& physx = PxGetPhysics();
-	auto defaultMaterial = physx.createMaterial(0.5f, 0.5f, 0.5f);
+	auto defaultMaterial = physx.createMaterial(0.5f, 0.5f, 0.1f);
 	
 	//GORUNDPLANE
 	GameSceneExt::CreatePhysXGroundPlane(*this, defaultMaterial);
