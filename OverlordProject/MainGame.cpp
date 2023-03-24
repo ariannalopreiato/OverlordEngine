@@ -101,8 +101,8 @@ void MainGame::Initialize()
 
 #ifdef W4
 	//SceneManager::Get()->AddGameScene(new ModelTestScene());
-	SceneManager::Get()->AddGameScene(new UberMaterialScene());
-	//SceneManager::Get()->AddGameScene(new SpikyScene());
+	//SceneManager::Get()->AddGameScene(new UberMaterialScene());
+	SceneManager::Get()->AddGameScene(new SpikyScene());
 	//SceneManager::Get()->AddGameScene(new SpriteTestScene());
 #endif
 
