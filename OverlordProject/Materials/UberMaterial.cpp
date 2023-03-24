@@ -8,19 +8,25 @@ UberMaterial::UberMaterial()
 void UberMaterial::SetDiffuseTexture(const std::wstring& assetFile)
 {
 	m_pDiffuseTexture = ContentManager::Load<TextureData>(assetFile);
-	SetVariable_Texture(L"gDiffuseMap", m_pDiffuseTexture);
+	SetVariable_Texture(L"gDiffuseTexture", m_pDiffuseTexture);
 }
 
 void UberMaterial::SetNormalTexture(const std::wstring& assetFile)
 {
 	m_pNormalTexture = ContentManager::Load<TextureData>(assetFile);
-	SetVariable_Texture(L"gNormalMap", m_pNormalTexture);
+	SetVariable_Texture(L"gNormalTexture", m_pNormalTexture);
 }
 
 void UberMaterial::SetEnvironmentTexture(const std::wstring& assetFile)
 {
 	m_pEnvironmentTexture = ContentManager::Load<TextureData>(assetFile);
-	SetVariable_Texture(L"gEnvironmentMap", m_pEnvironmentTexture);
+	SetVariable_Texture(L"gTextureEnv", m_pEnvironmentTexture);
+}
+
+void UberMaterial::SetSpecularTexture(const std::wstring& assetFile)
+{
+	m_pSpecularTexture = ContentManager::Load<TextureData>(assetFile);
+	SetVariable_Texture(L"gSpecularTexture", m_pSpecularTexture);
 }
 
 void UberMaterial::InitializeEffectVariables()
@@ -31,7 +37,7 @@ void UberMaterial::InitializeEffectVariables()
 	SetVariable_Vector(L"gColorSpecular", XMFLOAT4{ 1.f, 1.f, 1.f, 1.f });
 	SetVariable_Vector(L"gColorFresnel", XMFLOAT4{ 1.f, 1.f, 1.f, 1.f });
 	SetVariable_Scalar(L"gUseTextureDiffuse", true);
-	SetVariable_Scalar(L"gUseTextureNormal", true);
+	SetVariable_Scalar(L"gUseNormalTexture", true);
 	SetVariable_Scalar(L"gUseTextureSpecular", true);
 	SetVariable_Scalar(L"gUseFresnelFalloff", true);
 	SetVariable_Scalar(L"gUseEnvironmentMapping", true);
