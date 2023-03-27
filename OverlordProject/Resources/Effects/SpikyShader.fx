@@ -41,17 +41,17 @@ struct GS_DATA
 //****************
 // VERTEX SHADER *
 //****************
-GS_DATA MainVS(VS_DATA vsData)
+VS_DATA MainVS(VS_DATA vsData)
 {
 	//Step 1.
 	//Delete this transformation code and just return the VS_DATA parameter (vsData)
 	//Don't forget to change the return type!
 
-    GS_DATA temp = (GS_DATA) 0;
-    temp.Position = mul(float4(vsData.Position, 1), m_MatrixWorldViewProj);
-    temp.Normal = mul(vsData.Normal, (float3x3) m_MatrixWorld);
+   // GS_DATA temp = (GS_DATA) 0;
+   // temp.Position = mul(float4(vsData.Position, 1), m_MatrixWorldViewProj);
+   // temp.Normal = mul(vsData.Normal, (float3x3) m_MatrixWorld);
 
-    return temp;
+    return vsData;
 }
 
 //******************
@@ -60,9 +60,16 @@ GS_DATA MainVS(VS_DATA vsData)
 void CreateVertex(inout TriangleStream<GS_DATA> triStream, float3 pos, float3 normal, float2 texCoord)
 {
 	//Step 1. Create a GS_DATA object
+    GS_DATA object;
+
 	//Step 2. Transform the position using the WVP Matrix and assign it to (GS_DATA object).Position (Keep in mind: float3 -> float4)
+    object.Position = mul(float4(pos, 1.0f), m_MatrixWorldViewProj);
+
 	//Step 3. Transform the normal using the World Matrix and assign it to (GS_DATA object).Normal (Only Rotation, No translation!)
+    object.Normal = normalize(mul(pos, (float3x3)m_MatrixWorldViewProj));
+
 	//Step 4. Append (GS_DATA object) to the TriangleStream parameter (TriangleStream::Append(...))
+
 }
 
 [maxvertexcount(6)]
@@ -72,8 +79,14 @@ void SpikeGenerator(triangle VS_DATA vertices[3], inout TriangleStream<GS_DATA> 
     float3 basePoint, top, left, right, spikeNormal;
 
 	//Step 1. Calculate CENTER_POINT
+    float3 centerPoint = (vertices[0].Position + vertices[1].Position + vertices[2].Position) / 3;
+
 	//Step 2. Calculate Face Normal (Original Triangle)
+    spikeNormal = (vertices[0].Normal + vertices[1].Normal + vertices[2].Normal) / 3;
+
 	//Step 3. Offset CENTER_POINT (use gSpikeLength)
+    centerPoint += gSpikeLength * spikeNormal;
+
 	//Step 4 + 5. Calculate Individual Face Normals (Cross Product of Face Edges) & Create Vertices for every face
 
         //FACE 1

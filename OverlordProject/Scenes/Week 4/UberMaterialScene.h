@@ -12,5 +12,6 @@ public:
 
 protected:
 	void Initialize() override;
+	void OnGUI() override;
 };
 
