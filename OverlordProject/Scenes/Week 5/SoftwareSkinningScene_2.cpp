@@ -103,7 +103,6 @@ void SoftwareSkinningScene_2::Initialize()
 
 	AddChild(pRoot);
 
-	//todo ??
 	m_pBone0->CalculateBindPose();
 	GameObject* pBoxDrawer = new GameObject();
 	AddChild(pBoxDrawer);
@@ -125,8 +124,7 @@ void SoftwareSkinningScene_2::Update()
 
 	for (int i = 0; i < m_SkinnedVertices.size(); ++i)
 	{
-		auto v = XMFLOAT3(m_SkinnedVertices[i].originalVertex.Position.x, m_SkinnedVertices[i].originalVertex.Position.y, m_SkinnedVertices[i].originalVertex.Position.z);
-		XMVECTOR vertex = XMLoadFloat3(&v);
+		XMVECTOR vertex = XMLoadFloat3(&m_SkinnedVertices[i].originalVertex.Position);
 		XMFLOAT3 out;
 	
 		

@@ -29,12 +29,24 @@ private:
 
 	struct VertexSoftwareSkinned
 	{
-		VertexSoftwareSkinned(XMFLOAT3 position, XMFLOAT3 normal, XMFLOAT4 color)
+		//the sum of the weights always needs to be 1
+
+		VertexSoftwareSkinned(XMFLOAT3 position, XMFLOAT3 normal, XMFLOAT4 color, float weight0, float weight1)
 			: transformedVertex{ position, normal, color }
-			, originalVertex{ position, normal, color } {}
+			, originalVertex{ position, normal, color }
+			, blendWeight0{ weight0 }
+			, blendWeight1{ weight1 } {}
+
+		VertexSoftwareSkinned(XMFLOAT3 position, XMFLOAT3 normal, XMFLOAT4 color, float weight = 1.f)
+			: transformedVertex{ position, normal, color }
+			, originalVertex{ position, normal, color }
+			, blendWeight0{ weight }
+			, blendWeight1{ 1 - weight } {}
 
 		VertexPosNormCol transformedVertex{};
 		VertexPosNormCol originalVertex{};
+		float blendWeight0;
+		float blendWeight1;
 	};
 
 	void InitializeVertices(float length);

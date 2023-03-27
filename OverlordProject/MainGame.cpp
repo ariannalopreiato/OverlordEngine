@@ -108,8 +108,8 @@ void MainGame::Initialize()
 
 #ifdef W5
 	//SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_1());
-	SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_2());
-	//SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_3());
+	//SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_2());
+	SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_3());
 #endif
 
 #ifdef W6

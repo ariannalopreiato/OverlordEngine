@@ -32,9 +32,10 @@ void BoneObject::CalculateBindPose()
 	auto children = this->GetChildren<BoneObject>();
 
 	for (const auto child : children)
-	{		
-		auto matrixChild = XMLoadFloat4x4(&child->GetTransform()->GetWorld());
-		auto inverseChild = XMMatrixInverse(nullptr, matrixChild);
-		XMStoreFloat4x4(&child->m_BindPose, inverseChild);
+	{	
+		child->CalculateBindPose();
+		//auto matrixChild = XMLoadFloat4x4(&child->GetTransform()->GetWorld());
+		//auto inverseChild = XMMatrixInverse(nullptr, matrixChild);
+		//XMStoreFloat4x4(&child->m_BindPose, inverseChild);
 	}
 }
