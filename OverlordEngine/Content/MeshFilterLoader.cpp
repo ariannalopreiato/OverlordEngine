@@ -188,10 +188,8 @@ MeshFilter* MeshFilterLoader::ParseOVM11(BinaryReader* pReader)
 					{
 						animKey.boneTransforms.emplace_back(pReader->Read<XMFLOAT4X4>());
 					}
-
 					clip.keys.emplace_back(animKey);
-				}
-
+				}	
 				pMeshFilter->m_AnimationClips.emplace_back(clip);
 			}
 		}

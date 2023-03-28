@@ -176,6 +176,9 @@ private:
 	std::wstring m_MeshName{};
 	std::vector<SubMeshFilter> m_Meshes{};
 
+	std::vector<XMFLOAT4> m_BlendIndices{};
+	std::vector<XMFLOAT4> m_BlendWeights{};
+
 	std::vector<AnimationClip> m_AnimationClips{};
 	bool m_HasAnimations{};
 	USHORT m_BoneCount{};
