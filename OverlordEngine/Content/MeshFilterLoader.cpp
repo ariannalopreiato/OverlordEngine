@@ -152,7 +152,10 @@ MeshFilter* MeshFilterLoader::ParseOVM11(BinaryReader* pReader)
 			subMesh.blendIndices.reserve(subMesh.vertexCount);
 
 			for (UINT i = 0; i < subMesh.vertexCount; ++i)
+			{
 				subMesh.blendIndices.emplace_back(pReader->Read<XMFLOAT4>());
+				pMeshFilter->m_BlendIndices.emplace_back(subMesh.blendIndices[i]);
+			}
 		}
 		break;
 		case OVM_HEADER::BLENDWEIGHTS:
@@ -161,7 +164,10 @@ MeshFilter* MeshFilterLoader::ParseOVM11(BinaryReader* pReader)
 			subMesh.blendWeights.reserve(subMesh.vertexCount);
 
 			for (UINT i = 0; i < subMesh.vertexCount; ++i)
+			{
 				subMesh.blendWeights.emplace_back(pReader->Read<XMFLOAT4>());
+				pMeshFilter->m_BlendWeights.emplace_back(subMesh.blendWeights[i]);
+			}
 		}
 		break;
 		case OVM_HEADER::ANIMATIONCLIPS:
@@ -206,7 +212,7 @@ MeshFilter* MeshFilterLoader::ParseOVM11(BinaryReader* pReader)
 		}
 	}
 
-	pMeshFilter->m_Meshes.push_back(subMesh);
+	pMeshFilter->m_Meshes.emplace_back(subMesh);
 	return pMeshFilter;
 }
 #pragma endregion

@@ -93,6 +93,8 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Prefabs\Player.cpp" />
+    <ClCompile Include="Scenes\Exam\ExamScene.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial_Skinned.cpp" />
     <ClCompile Include="Prefabs\BoneObject.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial.cpp" />
@@ -135,6 +137,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Prefabs\Player.h" />
+    <ClInclude Include="Scenes\Exam\ExamScene.h" />
     <ClInclude Include="Materials\DiffuseMaterial_Skinned.h" />
     <ClInclude Include="Prefabs\BoneObject.h" />
     <ClInclude Include="Materials\DiffuseMaterial.h" />

@@ -4,6 +4,7 @@
 ModelAnimator::ModelAnimator(MeshFilter* pMeshFilter):
 	m_pMeshFilter{pMeshFilter}
 {
+	m_AnimationClips = m_pMeshFilter->GetAnimationClips();
 	SetAnimation(0);
 }
 
@@ -14,7 +15,7 @@ void ModelAnimator::Update(const SceneContext& sceneContext)
 	{
 		//1. 
 		auto passedTicks = m_AnimationSpeed * sceneContext.pGameTime->GetElapsed() * m_CurrentClip.ticksPerSecond;
-		passedTicks = std::max(passedTicks, m_CurrentClip.duration);
+		passedTicks = std::max(std::min(passedTicks, m_CurrentClip.duration), 0.f);
 
 		//2. 	
 		if (m_Reversed)
@@ -36,7 +37,7 @@ void ModelAnimator::Update(const SceneContext& sceneContext)
 
 		for (int i = 0; i < m_CurrentClip.keys.size(); ++i)
 		{
-			if (m_CurrentClip.keys[i].tick >= m_TickCount)
+			if (m_CurrentClip.keys[i].tick > m_TickCount)
 			{
 				keyA = m_CurrentClip.keys[i - 1];
 				keyB = m_CurrentClip.keys[i];
@@ -98,7 +99,7 @@ void ModelAnimator::SetAnimation(const std::wstring& clipName)
 void ModelAnimator::SetAnimation(UINT clipNumber)
 {
 	m_ClipSet = false;
-	if (clipNumber <= m_AnimationClips.size())
+	if (clipNumber < m_AnimationClips.size())
 	{
 		auto clip = m_AnimationClips[clipNumber];
 		SetAnimation(clip);
