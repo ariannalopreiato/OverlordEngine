@@ -22,20 +22,27 @@ void Player::Initialize()
 	//pObject->GetTransform()->Translate(0.f, 5.f, 0.f);
 
 
-	//pAnimator = pModel->GetAnimator();
+	pAnimator = pModel->GetAnimator();
 	//pAnimator->SetAnimation(m_AnimationClipId);
-	//pAnimator->SetAnimationSpeed(m_AnimationSpeed);
+	pAnimator->SetAnimation(1);
+	pAnimator->SetAnimationSpeed(m_AnimationSpeed);
 
-	////Gather Clip Names
-	//m_ClipCount = pAnimator->GetClipCount();
-	//m_ClipNames = new char* [m_ClipCount];
-	//for (UINT i{ 0 }; i < m_ClipCount; ++i)
-	//{
-	//	auto clipName = StringUtil::utf8_encode(pAnimator->GetClip(static_cast<int>(i)).name);
-	//	const auto clipSize = clipName.size();
-	//	m_ClipNames[i] = new char[clipSize + 1];
-	//	strncpy_s(m_ClipNames[i], clipSize + 1, clipName.c_str(), clipSize);
-	//}
+	//Gather Clip Names
+	m_ClipCount = pAnimator->GetClipCount();
+	m_ClipNames = new char* [m_ClipCount];
+	for (UINT i{ 0 }; i < m_ClipCount; ++i)
+	{
+		auto clipName = StringUtil::utf8_encode(pAnimator->GetClip(static_cast<int>(i)).name);
+		const auto clipSize = clipName.size();
+		m_ClipNames[i] = new char[clipSize + 1];
+		strncpy_s(m_ClipNames[i], clipSize + 1, clipName.c_str(), clipSize);
+	}
+
+	pAnimator->Play();
+}
+
+void Player::Update()
+{
 }
 
 Player::~Player()
