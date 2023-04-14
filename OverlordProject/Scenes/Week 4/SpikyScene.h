@@ -1,4 +1,6 @@
 #pragma once
+
+class SpikyMaterial;
 class SpikyScene : public GameScene
 {
 public:
@@ -13,7 +15,9 @@ public:
 protected:
 	void Initialize() override;
 	void Update() override;
+	void OnGUI() override;
 
 private:
 	GameObject* m_pSphere{ nullptr };
+	SpikyMaterial* m_pSpikyMaterial;
 };
