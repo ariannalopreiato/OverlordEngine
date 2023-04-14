@@ -91,10 +91,10 @@ void SpikeGenerator(triangle VS_DATA vertices[3], inout TriangleStream<GS_DATA> 
 
 	//Step 4 + 5. Calculate Individual Face Normals (Cross Product of Face Edges) & Create Vertices for every face
 
-		//FACE 1
+	//FACE 1
 	edge0 = centerPoint - top;
 	edge1 = top - left;
-	float3 faceNormalOne = normalize(cross(edge1, edge0));
+	float3 faceNormalOne = normalize(cross(edge0, edge1));
 
 	CreateVertex(triStream, top, faceNormalOne, (float2)0);
 	CreateVertex(triStream, centerPoint, faceNormalOne, (float2)0);
@@ -104,26 +104,30 @@ void SpikeGenerator(triangle VS_DATA vertices[3], inout TriangleStream<GS_DATA> 
 	triStream.RestartStrip();
 
 	//FACE 2
-	edge1 = top - right;
-	float3 faceNormalTwo = normalize(cross(edge1, edge0));
+	edge0 = centerPoint - right;
+	edge1 = right - top;
+	float3 faceNormalTwo = normalize(cross(edge0, edge1));
 
 	CreateVertex(triStream, top, faceNormalTwo, (float2)0);
 	CreateVertex(triStream, centerPoint, faceNormalTwo, (float2)0);
 	CreateVertex(triStream, left, faceNormalTwo, (float2)0);
 
+	triStream.RestartStrip();
+
 	//Face 3
-	edge0 = centerPoint - right;
-	edge1 = right - left;
-	float3 faceNormalThree = normalize(cross(edge1, edge0));
+	edge0 = centerPoint - left;
+	edge1 = left - right;
+	float3 faceNormalThree = normalize(cross(edge0, edge1));
 
 	CreateVertex(triStream, top, faceNormalThree, (float2)0);
 	CreateVertex(triStream, centerPoint, faceNormalThree, (float2)0);
 	CreateVertex(triStream, left, faceNormalThree, (float2)0);
 
+	triStream.RestartStrip();
+
 	//Step 6. Complete code in CreateVertex(...)
 
 	//Step 7. Bind this Geometry Shader function to the effect pass (See Technique Struct)
-	SetGeometryShader(CompileShader(gs_4_0, SpikeGenerator()));
 }
 
 //***************
@@ -145,7 +149,7 @@ technique11 Default //FXComposer >> Rename to "technique10 Default"
 	{
 		SetRasterizerState(FrontCulling);
 		SetVertexShader(CompileShader(vs_4_0, MainVS()));
-		//SetGeometryShader(NULL);
+		SetGeometryShader(CompileShader(gs_4_0, SpikeGenerator()));
 		SetPixelShader(CompileShader(ps_4_0, MainPS()));
 	}
 }
