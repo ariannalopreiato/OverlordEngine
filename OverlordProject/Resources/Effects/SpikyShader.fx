@@ -62,13 +62,13 @@ void CreateVertex(inout TriangleStream<GS_DATA> triStream, float3 pos, float3 no
 	object.Position = mul(float4(pos, 1.0f), m_MatrixWorldViewProj);
 
 	//Step 3. Transform the normal using the World Matrix and assign it to (GS_DATA object).Normal (Only Rotation, No translation!)
-	object.Normal = normalize(mul(pos, ((float3x3)transpose(m_MatrixWorld))));
+	object.Normal = mul(normal, (float3x3)m_MatrixWorld);
 
 	//Step 4. Append (GS_DATA object) to the TriangleStream parameter (TriangleStream::Append(...))
 	triStream.Append(object);
 }
 
-[maxvertexcount(6)]
+[maxvertexcount(9)]
 void SpikeGenerator(triangle VS_DATA vertices[3], inout TriangleStream<GS_DATA> triStream)
 {
 	//Use these variable names
@@ -104,13 +104,13 @@ void SpikeGenerator(triangle VS_DATA vertices[3], inout TriangleStream<GS_DATA> 
 	triStream.RestartStrip();
 
 	//FACE 2
-	edge0 = centerPoint - right;
+	edge0 = centerPoint - right; 
 	edge1 = right - top;
 	float3 faceNormalTwo = normalize(cross(edge0, edge1));
 
-	CreateVertex(triStream, top, faceNormalTwo, (float2)0);
+	CreateVertex(triStream, right, faceNormalTwo, (float2)0);
 	CreateVertex(triStream, centerPoint, faceNormalTwo, (float2)0);
-	CreateVertex(triStream, left, faceNormalTwo, (float2)0);
+	CreateVertex(triStream, top, faceNormalTwo, (float2)0);
 
 	triStream.RestartStrip();
 
@@ -119,14 +119,11 @@ void SpikeGenerator(triangle VS_DATA vertices[3], inout TriangleStream<GS_DATA> 
 	edge1 = left - right;
 	float3 faceNormalThree = normalize(cross(edge0, edge1));
 
-	CreateVertex(triStream, top, faceNormalThree, (float2)0);
-	CreateVertex(triStream, centerPoint, faceNormalThree, (float2)0);
 	CreateVertex(triStream, left, faceNormalThree, (float2)0);
-
-	triStream.RestartStrip();
+	CreateVertex(triStream, centerPoint, faceNormalThree, (float2)0);
+	CreateVertex(triStream, right, faceNormalThree, (float2)0);
 
 	//Step 6. Complete code in CreateVertex(...)
-
 	//Step 7. Bind this Geometry Shader function to the effect pass (See Technique Struct)
 }
 
