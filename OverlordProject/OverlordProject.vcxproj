@@ -107,8 +107,8 @@
     <ClCompile Include="Materials\ColorMaterial.cpp" />
     <ClCompile Include="Scenes\Week 3\MinionScene.cpp" />
     <ClCompile Include="Scenes\Week 4\SpikyScene.cpp" />
-    <ClCompile Include="Scenes\Week 4\SpriteTestScene.cpp" />
     <ClCompile Include="Materials\SpikyMaterial.cpp" />
+    <ClCompile Include="Scenes\Week 4\SpriteTestScene.cpp" />
     <ClCompile Include="Scenes\Week 5\SoftwareSkinningScene_1.cpp" />
     <ClCompile Include="Scenes\Week 5\SoftwareSkinningScene_2.cpp" />
     <ClCompile Include="Scenes\Week 5\SoftwareSkinningScene_3.cpp" />
@@ -151,8 +151,8 @@
     <ClInclude Include="Materials\ColorMaterial.h" />
     <ClInclude Include="Scenes\Week 3\MinionScene.h" />
     <ClInclude Include="Scenes\Week 4\SpikyScene.h" />
-    <ClInclude Include="Scenes\Week 4\SpriteTestScene.h" />
     <ClInclude Include="Materials\SpikyMaterial.h" />
+    <ClInclude Include="Scenes\Week 4\SpriteTestScene.h" />
     <ClInclude Include="Scenes\Week 5\SoftwareSkinningScene_1.h" />
     <ClInclude Include="Scenes\Week 5\SoftwareSkinningScene_2.h" />
     <ClInclude Include="Scenes\Week 5\SoftwareSkinningScene_3.h" />

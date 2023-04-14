@@ -7,7 +7,7 @@
 void PongScene::Initialize()
 {
 	//m_SceneContext.settings.showInfoOverlay = true;
-	//m_SceneContext.settings.drawPhysXDebug = true;
+	m_SceneContext.settings.drawPhysXDebug = false;
 	m_SceneContext.settings.drawGrid = false;
 	m_SceneContext.settings.enableOnGUI = true;
 	m_SceneContext.settings.clearColor = XMFLOAT4{ Colors::Black };
@@ -123,7 +123,6 @@ void PongScene::InitializePlayer(float x, float y, float z, GameObject*& player)
 
 	auto pRigidBody = player->AddComponent(new RigidBodyComponent(true));
 	pRigidBody->AddCollider(PxBoxGeometry{ width / 2, width / 2, height / 2 }, *pBouncyMaterial);
-	pRigidBody->SetConstraint(RigidBodyConstraint::TransX | RigidBodyConstraint::TransZ, false);
 }
 
 void PongScene::InitializeTriggers()

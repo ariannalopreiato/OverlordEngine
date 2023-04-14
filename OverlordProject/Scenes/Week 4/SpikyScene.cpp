@@ -19,5 +19,5 @@ void SpikyScene::Initialize()
 void SpikyScene::Update()
 {
 	//todo rotate on its axis
-	m_pSphere->GetTransform()->Rotate(0.f, 20.f, 0.f);
+	//m_pSphere->GetTransform()->Rotate(0.f, 20.f, 0.f);
 }

@@ -14,6 +14,7 @@ public:
 	void SetNormalTexture(const std::wstring& assetFile);
 	void SetEnvironmentTexture(const std::wstring& assetFile);
 	void SetSpecularTexture(const std::wstring& assetFile);
+	void SetOpacityTexture(const std::wstring& assetFile);
 
 protected:
 	void InitializeEffectVariables() override;
@@ -23,4 +24,5 @@ private:
 	TextureData* m_pNormalTexture;
 	TextureData* m_pEnvironmentTexture;
 	TextureData* m_pSpecularTexture;
+	TextureData* m_pOpacityTexture;
 };

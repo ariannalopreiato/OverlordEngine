@@ -29,6 +29,12 @@ void UberMaterial::SetSpecularTexture(const std::wstring& assetFile)
 	SetVariable_Texture(L"gSpecularTexture", m_pSpecularTexture);
 }
 
+void UberMaterial::SetOpacityTexture(const std::wstring& assetFile)
+{
+	m_pOpacityTexture = ContentManager::Load<TextureData>(assetFile);
+	SetVariable_Texture(L"gOpacityTexture", m_pOpacityTexture);
+}
+
 void UberMaterial::InitializeEffectVariables()
 {
 	SetVariable_Vector(L"gLightDirection", XMFLOAT4{ -0.577f, -0.577f, 0.577f, 1.f });

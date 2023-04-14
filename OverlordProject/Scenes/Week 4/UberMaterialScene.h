@@ -1,4 +1,5 @@
 #pragma once
+class UberMaterial;
 class UberMaterialScene : public GameScene
 {
 public:
@@ -13,5 +14,8 @@ public:
 protected:
 	void Initialize() override;
 	void OnGUI() override;
+
+private:
+	UberMaterial* m_pUberMaterial;
 };
 

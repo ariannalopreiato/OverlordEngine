@@ -44,12 +44,33 @@ SpriteRenderer::~SpriteRenderer()
 	m_Textures.clear();
 }
 
-void SpriteRenderer::UpdateBuffer(const SceneContext& /*sceneContext*/)
+void SpriteRenderer::UpdateBuffer(const SceneContext& sceneContext)
 {
-	TODO_W4(L"Complete UpdateBuffer")
+	//TODO_W4(L"Complete UpdateBuffer")
 
 	if (!m_pVertexBuffer || m_Sprites.size() > m_BufferSize)
 	{
+		SafeRelease(m_pVertexBuffer);
+		if (m_Sprites.size() > m_BufferSize)
+			m_BufferSize = static_cast<UINT>(m_Sprites.size());
+
+		D3D11_BUFFER_DESC vertexBufferDesc{};
+		m_pVertexBuffer->GetDesc(&vertexBufferDesc);
+
+		ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
+		vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		vertexBufferDesc.ByteWidth = sizeof(VertexSprite) * m_BufferSize;
+		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+		D3D11_SUBRESOURCE_DATA vertexBufferData;
+		ZeroMemory(&vertexBufferData, sizeof(vertexBufferData));
+		vertexBufferData.pSysMem = m_Sprites.data();
+		
+		HRESULT hr = sceneContext.d3dContext.pDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_pVertexBuffer);
+		HANDLE_ERROR(hr, L"Failed to create vertex buffer.");
+	
+		
 		// if the vertex buffer does not exists, or the number of sprites is bigger then the buffer size
 		//		release the buffer
 		//		update the buffer size (if needed)
@@ -90,6 +111,14 @@ void SpriteRenderer::UpdateBuffer(const SceneContext& /*sceneContext*/)
 		// Next you will need to use the device context to map the vertex buffer to the mapped resource
 		// use memcpy to copy all our sprite vertices (m_Sprites) to the mapped resource (D3D11_MAPPED_SUBRESOURCE::pData)
 		// unmap the vertex buffer
+
+		//D3D11_MAPPED_SUBRESOURCE mappedResource;
+		
+		//HRESULT hr = m_GameContext.d3dContext.pDeviceContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		
+		//memcpy(mappedResource.pData, m_Sprites.data(), sizeof(VertexSprite) * m_Sprites.size());
+
+		//m_GameContext.d3dContext.pDeviceContext->Unmap(m_pVertexBuffer, 0);
 	}
 }
 

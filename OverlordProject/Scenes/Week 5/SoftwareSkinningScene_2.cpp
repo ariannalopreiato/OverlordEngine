@@ -91,6 +91,8 @@ void SoftwareSkinningScene_2::InitializeVertices(float length)
 
 void SoftwareSkinningScene_2::Initialize()
 {
+	m_SceneContext.settings.enableOnGUI = true;
+
 	auto pMaterial = MaterialManager::Get()->CreateMaterial<ColorMaterial>();
 	pMaterial->SetColor(XMFLOAT4{ Colors::Gray });
 
@@ -114,9 +116,27 @@ void SoftwareSkinningScene_2::Update()
 {
 	if (m_AutoRotate)
 	{
-		m_BoneRotation = 45.f;
+		m_BoneRotation += m_RotationSign * m_RotationAngle * m_SceneContext.pGameTime->GetElapsed();
+
+		//cheange rotation sign when it reaches the max or min point
+		if (m_RotationSign > 0 && m_BoneRotation >= m_RotationAngle)
+		{
+			m_BoneRotation -= m_BoneRotation - m_RotationAngle;
+			m_RotationSign = -1;
+		}
+		else if (m_RotationSign < 0 && m_BoneRotation <= -m_RotationAngle)
+		{
+			m_BoneRotation += m_BoneRotation + m_RotationAngle;
+			m_RotationSign = 1;
+		}
+
 		m_pBone0->GetTransform()->Rotate(0.f, 0.f, m_BoneRotation);
 		m_pBone1->GetTransform()->Rotate(0.f, 0.f, -m_BoneRotation * 2.f);
+	}
+	else
+	{
+		m_pBone0->GetTransform()->Rotate(0.f, 0.f, m_Bone0Rotation);
+		m_pBone1->GetTransform()->Rotate(0.f, 0.f, -m_Bone1Rotation * 2.f);
 	}
 
 	XMMATRIX bone0Transform = XMMatrixMultiply(XMLoadFloat4x4(&m_pBone0->GetBindPose()), XMLoadFloat4x4(&m_pBone0->GetTransform()->GetWorld()));
@@ -154,4 +174,8 @@ void SoftwareSkinningScene_2::Update()
 
 void SoftwareSkinningScene_2::OnGUI()
 {
+	ImGui::Checkbox("Auto Rotate", &m_AutoRotate);
+
+	ImGui::SliderFloat("Bone One Rotation", &m_Bone0Rotation, 0.f, 90.f);
+	ImGui::SliderFloat("Bone Two Rotation", &m_Bone1Rotation, -45.f, 45.f);
 }

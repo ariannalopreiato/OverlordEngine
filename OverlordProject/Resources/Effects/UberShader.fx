@@ -386,7 +386,7 @@ technique11 DefaultTechnique {
 
 technique11 LightTech
 {
-	pass P0
+	pass p0
 	{
 		SetVertexShader(CompileShader(vs_4_0, MainVS()));
 		SetPixelShader(CompileShader(ps_4_0, MainPS()));
