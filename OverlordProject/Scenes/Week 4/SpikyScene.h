@@ -20,4 +20,5 @@ protected:
 private:
 	GameObject* m_pSphere{ nullptr };
 	SpikyMaterial* m_pSpikyMaterial;
+	float m_Rotation{};
 };

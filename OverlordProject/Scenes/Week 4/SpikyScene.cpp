@@ -19,8 +19,10 @@ void SpikyScene::Initialize()
 
 void SpikyScene::Update()
 {
-	//todo rotate on its axis
-	//m_pSphere->GetTransform()->Rotate(0.f, 20.f, 0.f);
+	float rotationSpeed = 20.0f; // adjust this to change the speed of rotation
+	float deltaTime = m_SceneContext.pGameTime->GetElapsed();
+	m_Rotation += rotationSpeed * deltaTime;
+	m_pSphere->GetTransform()->Rotate(0.0f, m_Rotation, 0.0f);
 }
 
 void SpikyScene::OnGUI()

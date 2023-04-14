@@ -13,9 +13,12 @@ public:
 
 protected:
 	void Initialize() override;
+	void Update() override;
 	void OnGUI() override;
 
 private:
 	UberMaterial* m_pUberMaterial;
+	GameObject* m_pSphere{ nullptr };
+	float m_Rotation{};
 };
 
