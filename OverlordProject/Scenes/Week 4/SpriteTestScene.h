@@ -20,4 +20,3 @@ private:
 	float m_TotalRotation{};
 	bool m_AutoRotate{};
 };
-

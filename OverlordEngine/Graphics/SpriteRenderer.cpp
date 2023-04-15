@@ -112,13 +112,13 @@ void SpriteRenderer::UpdateBuffer(const SceneContext& sceneContext)
 		// use memcpy to copy all our sprite vertices (m_Sprites) to the mapped resource (D3D11_MAPPED_SUBRESOURCE::pData)
 		// unmap the vertex buffer
 
-		//D3D11_MAPPED_SUBRESOURCE mappedResource;
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		
-		//HRESULT hr = m_GameContext.d3dContext.pDeviceContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		m_GameContext.d3dContext.pDeviceContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 		
-		//memcpy(mappedResource.pData, m_Sprites.data(), sizeof(VertexSprite) * m_Sprites.size());
+		memcpy(mappedResource.pData, m_Sprites.data(), sizeof(VertexSprite) * m_Sprites.size());
 
-		//m_GameContext.d3dContext.pDeviceContext->Unmap(m_pVertexBuffer, 0);
+		m_GameContext.d3dContext.pDeviceContext->Unmap(m_pVertexBuffer, 0);
 	}
 }
 
