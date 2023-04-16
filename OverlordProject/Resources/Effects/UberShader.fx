@@ -195,7 +195,6 @@ struct VS_INPUT
 	float3 Normal : NORMAL;
 	float2 TexCoord : TEXCOORD;
 	float3 Tangent : TANGENT;
-	float2 Lighting : COLOR1;
 };	
 
 struct VS_OUTPUT
@@ -206,7 +205,6 @@ struct VS_OUTPUT
 	float3 Normal : NORMAL;
 	float2 TexCoord : TEXCOORD;
 	float3 Tangent : TANGENT;
-	//float2 Lighting : COLOR1;
 };	
 
 //MAIN VERTEX SHADER
@@ -288,7 +286,7 @@ float3 CalculatePhong(float3 viewDirection, float3 normal, float specularIntensi
 	specularStrength = saturate(specularStrength);
 	float phong = pow(specularStrength, gShininess);
 	
-	return gColorSpecular * phong * specularIntensity;	
+	return gColorSpecular.xyz * phong * specularIntensity;	
 }
 
 float3 CalculateBlinn(float3 viewDirection, float3 normal, float specularIntensity)
@@ -298,7 +296,7 @@ float3 CalculateBlinn(float3 viewDirection, float3 normal, float specularIntensi
  	specularStrength = saturate(specularStrength); 
  	specularStrength = pow(specularStrength, gShininess);
 	
-	return gColorSpecular * specularStrength * specularIntensity;
+	return gColorSpecular.xyz * specularStrength * specularIntensity;
 }
 
 float3 CalculateSpecular(float3 viewDirection, float3 normal, float2 texCoord)
@@ -310,10 +308,10 @@ float3 CalculateSpecular(float3 viewDirection, float3 normal, float2 texCoord)
 	float3 color = float3(0,0,0);
 	
 	if(gUseBlinn)
-		color += CalculateBlinn(-viewDirection, normal, specularIntensity);
+		color += CalculateBlinn(viewDirection, normal, specularIntensity);
 
 	if(gUsePhong)
-		color += CalculatePhong(-viewDirection, normal, specularIntensity);
+		color += CalculatePhong(viewDirection, normal, specularIntensity);
 	
 	return color;
 }

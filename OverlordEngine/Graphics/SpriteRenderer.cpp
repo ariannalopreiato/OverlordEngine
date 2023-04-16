@@ -48,14 +48,20 @@ void SpriteRenderer::UpdateBuffer(const SceneContext& sceneContext)
 {
 	//TODO_W4(L"Complete UpdateBuffer")
 
+	// if the vertex buffer does not exists, or the number of sprites is bigger then the buffer size
 	if (!m_pVertexBuffer || m_Sprites.size() > m_BufferSize)
 	{
+		//release the buffer
 		SafeRelease(m_pVertexBuffer);
+
+		//update the buffer size (if needed)
 		if (m_Sprites.size() > m_BufferSize)
 			m_BufferSize = static_cast<UINT>(m_Sprites.size());
 
+		//Create a new buffer. Make sure the Usage flag is set to Dynamic, bound as vertex buffer
+		//and set the cpu access flags to access_write
 		D3D11_BUFFER_DESC vertexBufferDesc{};
-		m_pVertexBuffer->GetDesc(&vertexBufferDesc);
+		//m_pVertexBuffer->GetDesc(&vertexBufferDesc);
 
 		ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
 		vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -67,18 +73,9 @@ void SpriteRenderer::UpdateBuffer(const SceneContext& sceneContext)
 		ZeroMemory(&vertexBufferData, sizeof(vertexBufferData));
 		vertexBufferData.pSysMem = m_Sprites.data();
 		
+		//Finally create the buffer (sceneContext.d3dContext.pDevice). Be sure to log the HResult! (HANDLE_ERROR)
 		HRESULT hr = sceneContext.d3dContext.pDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_pVertexBuffer);
 		HANDLE_ERROR(hr, L"Failed to create vertex buffer.");
-	
-		
-		// if the vertex buffer does not exists, or the number of sprites is bigger then the buffer size
-		//		release the buffer
-		//		update the buffer size (if needed)
-		//		Create a new buffer. Make sure the Usage flag is set to Dynamic, bound as vertex buffer
-		//		and set the cpu access flags to access_write
-		//
-		//		Finally create the buffer (sceneContext.d3dContext.pDevice). Be sure to log the HResult! (HANDLE_ERROR)
-
 
 		ASSERT_NULL_(m_pVertexBuffer);
 	}
