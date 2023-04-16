@@ -4,7 +4,7 @@ class BoneObject;
 class SoftwareSkinningScene_3 : public GameScene
 {
 public:
-	SoftwareSkinningScene_3() : GameScene(L"Software Skinning Scene 3") {}
+	SoftwareSkinningScene_3() : GameScene(L"Software Skinning Scene") {}
 	~SoftwareSkinningScene_3() override = default;
 
 	SoftwareSkinningScene_3(const SoftwareSkinningScene_3& other) = delete;

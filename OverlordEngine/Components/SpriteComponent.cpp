@@ -24,9 +24,6 @@ void SpriteComponent::Draw(const SceneContext& sceneContext)
 	if (!m_pTexture)
 		return;
 
-	//TODO_W4(L"Draw the sprite with SpriteRenderer::Draw")
-
-
 	//Here you need to draw the SpriteComponent using the Draw of the sprite renderer
 	// The sprite renderer is a singleton
 	auto spriteRenderer = SpriteRenderer::Get();

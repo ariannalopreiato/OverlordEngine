@@ -51,7 +51,7 @@ struct GameContext
 {
 	UINT windowWidth{1280};
 	UINT windowHeight{720};
-	std::wstring windowTitle{L"GP2 - Overlord Engine 2023 (x64)"};
+	std::wstring windowTitle{L"GP2_Milestone1_2DAE07_Lopreiato_Arianna"};
 	HWND windowHandle{};
 	std::wstring contentRoot{ L"./Resources/" };
 	float inputUpdateFrequency{ 0.016f };

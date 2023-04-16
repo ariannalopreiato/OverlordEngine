@@ -2,7 +2,7 @@
 class HardwareSkinningScene: public GameScene
 {
 public:
-	HardwareSkinningScene() : GameScene(L"HardwareSkinningScene") {}
+	HardwareSkinningScene() : GameScene(L"Hardware Skinning Scene") {}
 	~HardwareSkinningScene() override;
 	HardwareSkinningScene(const HardwareSkinningScene& other) = delete;
 	HardwareSkinningScene(HardwareSkinningScene&& other) noexcept = delete;

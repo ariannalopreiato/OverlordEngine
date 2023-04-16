@@ -2,7 +2,7 @@
 class SpriteTestScene : public GameScene
 {
 public:
-	SpriteTestScene() :GameScene(L"SpriteTestScene") {}
+	SpriteTestScene() :GameScene(L"Sprite Test Scene") {}
 	~SpriteTestScene() override = default;
 
 	SpriteTestScene(const SpriteTestScene& other) = delete;
