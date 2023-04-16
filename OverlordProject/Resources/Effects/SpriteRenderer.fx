@@ -76,8 +76,8 @@ void CreateVertex(inout TriangleStream<GS_DATA> triStream, float3 pos, float4 co
         pos.x -= offset.x;
         pos.y -= offset.y;
 
-        pos.x -= pivotOffset.x;
-        pos.y -= pivotOffset.y;
+        pos.x += pivotOffset.x;
+        pos.y += pivotOffset.y;
 
         //Rotate
         float3 startPos = pos;
@@ -85,9 +85,6 @@ void CreateVertex(inout TriangleStream<GS_DATA> triStream, float3 pos, float4 co
         pos.y = (startPos.y * rotCosSin.x) + (startPos.x * rotCosSin.y);
 
         //Retransform to initial position
-        pos.x += pivotOffset.x;
-        pos.y += pivotOffset.y;
-
         pos.x += offset.x;
         pos.y += offset.y;
     }

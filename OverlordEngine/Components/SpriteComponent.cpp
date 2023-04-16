@@ -27,13 +27,14 @@ void SpriteComponent::Draw(const SceneContext& sceneContext)
 	//Here you need to draw the SpriteComponent using the Draw of the sprite renderer
 	// The sprite renderer is a singleton
 	auto spriteRenderer = SpriteRenderer::Get();
-
+	
 	// you will need to position (X&Y should be in screenspace, Z contains the depth between [0,1]), the rotation and the scale from the owning GameObject
 	auto worldpos{ m_pGameObject->GetTransform()->GetWorldPosition() };	
 	auto pos{ m_pGameObject->GetTransform()->GetPosition() };
 
 	// You can use the MathHelper::QuaternionToEuler function to help you with the z rotation 
 	auto rot{ MathHelper::QuaternionToEuler(m_pGameObject->GetTransform()->GetRotation()) };
-	spriteRenderer->AppendSprite(m_pTexture, XMFLOAT2{ worldpos.x, worldpos.y }, GetColor(), GetPivot(), XMFLOAT2{ 1,1 }, rot.z, pos.z);
+	auto scale{ m_pGameObject->GetTransform()->GetScale() };
+	spriteRenderer->AppendSprite(m_pTexture, XMFLOAT2{ worldpos.x, worldpos.y }, GetColor(), GetPivot(), {scale.x, scale.y}, rot.z, pos.z);
 	spriteRenderer->Draw(sceneContext);
 }
