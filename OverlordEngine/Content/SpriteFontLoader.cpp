@@ -19,13 +19,27 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	//If Identification bytes doesn't match B|M|F,
 	//Log Error (SpriteFontLoader::LoadContent > Not a valid .fnt font) &
 	//return nullptr
-	//...
+	const auto id0 = pReader->Read<char>();
+	const auto id1 = pReader->Read<char>();
+	const auto id2 = pReader->Read<char>();
+	const auto version = pReader->Read<char>();
+
+	//		   B			M			 F
+	if (id0 != 66 && id1 != 77 && id2 != 70)
+	{
+		Logger::LogError(L"SpriteFontLoader::LoadContent > Not a valid.fnt font");
+		return nullptr;
+	}
 
 	//Parse the version (version 3 required)
 	//If version is < 3,
 	//Log Error (SpriteFontLoader::LoadContent > Only .fnt version 3 is supported)
 	//return nullptr
-	//...
+	if (version < 3)
+	{
+		Logger::LogError(L"SpriteFontLoader::LoadContent > Only .fnt version 3 is supported");
+		return nullptr;
+	}
 
 	//Valid .fnt file >> Start Parsing!
 	//use this SpriteFontDesc to store all relevant information (used to initialize a SpriteFont object)

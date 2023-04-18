@@ -66,5 +66,6 @@ void CameraComponent::SetActive(bool active)
 GameObject* CameraComponent::Pick(CollisionGroup /*ignoreGroups*/) const
 {
 	TODO_W7(L"Implement Picking Logic")
+		//m_pScene->GetPhysxProxy()->Raycast();
 	return nullptr;
 }

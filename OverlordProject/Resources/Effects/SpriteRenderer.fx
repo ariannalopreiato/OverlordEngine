@@ -1,5 +1,3 @@
-//INCOMPLETE!
-
 float4x4 gTransform : WorldViewProjection;
 Texture2D gSpriteTexture;
 float2 gTextureSize;

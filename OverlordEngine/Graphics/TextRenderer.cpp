@@ -32,8 +32,7 @@ void TextRenderer::Initialize()
 	};
 }
 
-void TextRenderer::DrawText(SpriteFont* pFont, const std::wstring& text, const XMFLOAT2& position,
-                            const XMFLOAT4& color)
+void TextRenderer::DrawText(SpriteFont* pFont, const std::wstring& text, const XMFLOAT2& position, const XMFLOAT4& color)
 {
 	//skip if alpha is near 0
 	if (color.w <= 0.0001f)

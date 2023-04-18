@@ -26,6 +26,10 @@
     <ClCompile Include="Scenes\Exam\ExamScene.cpp" />
     <ClCompile Include="Prefabs\Player.cpp" />
     <ClCompile Include="Scenes\Week 4\SpriteTestScene.cpp" />
+    <ClCompile Include="Scenes\Week 7\CharacterScene.cpp" />
+    <ClCompile Include="Scenes\Week 7\FontTestScene.cpp" />
+    <ClCompile Include="Scenes\Week 7\PickingScene.cpp" />
+    <ClCompile Include="Prefabs\Character.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -52,5 +56,9 @@
     <ClInclude Include="Scenes\Exam\ExamScene.h" />
     <ClInclude Include="Prefabs\Player.h" />
     <ClInclude Include="Scenes\Week 4\SpriteTestScene.h" />
+    <ClInclude Include="Scenes\Week 7\CharacterScene.h" />
+    <ClInclude Include="Scenes\Week 7\FontTestScene.h" />
+    <ClInclude Include="Scenes\Week 7\PickingScene.h" />
+    <ClInclude Include="Prefabs\Character.h" />
   </ItemGroup>
 </Project>
