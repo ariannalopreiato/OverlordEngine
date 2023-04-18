@@ -4,7 +4,7 @@ class Character;
 class CharacterScene : public GameScene
 {
 public:
-	CharacterScene() :GameScene(L"CharacterScene") {}
+	CharacterScene() :GameScene(L"Character Scene") {}
 	~CharacterScene() override = default;
 	CharacterScene(const CharacterScene& other) = delete;
 	CharacterScene(CharacterScene&& other) noexcept = delete;
