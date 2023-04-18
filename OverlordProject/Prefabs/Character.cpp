@@ -13,11 +13,11 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	m_pControllerComponent = AddComponent(new ControllerComponent(m_CharacterDesc.controller));
 
 	//Camera
+	float moveBack = -13.f;
 	const auto pCamera = AddChild(new FixedCamera());
 	m_pCameraComponent = pCamera->GetComponent<CameraComponent>();
 	m_pCameraComponent->SetActive(true); //Uncomment to make this camera the active camera
-
-	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * .5f, 0.f);
+	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * .5f, moveBack);
 }
 
 void Character::Update(const SceneContext& sceneContext)
@@ -72,13 +72,12 @@ void Character::Update(const SceneContext& sceneContext)
 		//CAMERA ROTATION
 
 		//Adjust the TotalYaw (m_TotalYaw) & TotalPitch (m_TotalPitch) based on the local 'look' variable
-		m_TotalYaw += look.x;
-		m_TotalPitch += look.y;
-
 		//Make sure this calculated on a framerate independent way and uses CharacterDesc::rotationSpeed.
-		
+		m_TotalYaw += look.x * m_CharacterDesc.rotationSpeed * sceneContext.pGameTime->GetElapsed();
+		m_TotalPitch += look.y * m_CharacterDesc.rotationSpeed * sceneContext.pGameTime->GetElapsed();
 
 		//Rotate this character based on the TotalPitch (X) and TotalYaw (Y)
+		GetTransform()->Rotate(m_TotalPitch, m_TotalYaw, 0.f);
 
 		//********
 		//MOVEMENT
@@ -145,8 +144,11 @@ void Character::Update(const SceneContext& sceneContext)
 
 		//The displacement required to move the Character Controller (ControllerComponent::Move) can be calculated using our TotalVelocity (m/s)
 		//Calculate the displacement (m) for the current frame and move the ControllerComponent
-		//auto displacement = m_TotalVelocity / sceneContext.pGameTime->GetElapsed();
-		m_pControllerComponent->Move(m_TotalVelocity);
+		XMFLOAT3 displacement;
+		displacement.x = m_TotalVelocity.x * sceneContext.pGameTime->GetElapsed();
+		displacement.y = m_TotalVelocity.y * sceneContext.pGameTime->GetElapsed();
+		displacement.z = m_TotalVelocity.z * sceneContext.pGameTime->GetElapsed();
+		m_pControllerComponent->Move(displacement);
 		//The above is a simple implementation of Movement Dynamics, adjust the code to further improve the movement logic and behaviour.
 		//Also, it can be usefull to use a seperate RayCast to check if the character is grounded (more responsive)
 	}
