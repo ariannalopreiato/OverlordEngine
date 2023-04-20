@@ -123,7 +123,7 @@ void MainGame::Initialize()
 #endif
 
 #ifdef W7
-	//SceneManager::Get()->AddGameScene(new FontTestScene());
+	SceneManager::Get()->AddGameScene(new FontTestScene());
 	SceneManager::Get()->AddGameScene(new PickingScene());
 	SceneManager::Get()->AddGameScene(new CharacterScene());
 #endif

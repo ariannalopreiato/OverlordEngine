@@ -1,5 +1,3 @@
-//INCOMPLETE!
-
 float4x4 gTransform : WORLDVIEWPROJECTION;
 Texture2D gSpriteTexture;
 float2 gTextureSize;
@@ -54,32 +52,47 @@ VS_DATA MainVS(VS_DATA input)
 void CreateVertex(inout TriangleStream<GS_DATA> triStream, float3 pos, float4 col, float2 texCoord, int channel)
 {
 	//Create a new GS_DATA object
+	GS_DATA vertex;
+
 	//Fill in all the fields
+	vertex.Position = mul(float4(pos, 1.0f), gTransform);
+	vertex.Color = col;
+	vertex.TexCoord = texCoord;
+	vertex.Channel = channel;
+
 	//Append it to the TriangleStream
+	triStream.Append(vertex);
 }
 
 [maxvertexcount(4)]
 void MainGS(point VS_DATA vertex[1], inout TriangleStream<GS_DATA> triStream)
 {
-	//REMOVE THIS >
-	GS_DATA dummyData = (GS_DATA)0; //Just some dummy data
-	triStream.Append(dummyData); //The geometry shader needs to emit something, see what happens if it doesn't emit anything.
-	//< STOP REMOVING
+	float3 position = vertex[0].Position;
+	float4 color = vertex[0].Color;
+	float2 texCoord = vertex[0].TexCoord;
+	int channel = vertex[0].Channel;
+	float2 charSize = vertex[0].CharSize;
 
 	//Create a Quad using the character information of the given vertex
 	//Note that the Vertex.CharSize is in screenspace, TextureCoordinates aren't ;) [Range 0 > 1]
 
 	//1. Vertex Left-Top
-	//CreateVertex(...);
+	CreateVertex(triStream, position, color, texCoord, channel);
 
 	//2. Vertex Right-Top
-	//...
+	float3 posTwo = { position.x + charSize.x, position.y, position.z };
+	float2 texCoordTwo = { texCoord.x + (charSize.x / gTextureSize.x), texCoord.y };
+	CreateVertex(triStream, posTwo, color, texCoordTwo, channel);
 
 	//3. Vertex Left-Bottom
-	//...
+	float3 posThree = { position.x, position.y + charSize.y, position.z };
+	float2 texCoordThree = { texCoord.x, texCoord.y + (charSize.y / gTextureSize.y) };
+	CreateVertex(triStream, posThree, color, texCoordThree, channel);
 
 	//4. Vertex Right-Bottom
-	//...
+	float3 posFour = { position.x + charSize.x, position.y + charSize.y, position.z };
+	float2 texCoordFour = { texCoord.x + (charSize.x / gTextureSize.x), texCoord.y + (charSize.y / gTextureSize.y) };
+	CreateVertex(triStream, posFour, color, texCoordFour, channel);
 }
 
 //PIXEL SHADER
@@ -90,7 +103,10 @@ float4 MainPS(GS_DATA input) : SV_TARGET{
 	//You can iterate a float4 just like an array, using the index operator
 	//Also, don't forget to colorize ;) [Vertex.Color]
 
-	return input.Color; //TEMP
+	float4 sampledTexture = gSpriteTexture.Sample(samPoint, input.TexCoord);
+	float channel = sampledTexture[input.Channel];
+
+	return input.Color * channel;
 }
 
 // Default Technique
