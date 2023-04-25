@@ -107,7 +107,9 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	//Construct the full path to the page texture file
 	//	>> page texture should be stored next to the .fnt file, pageName contains the name of the texture file
 	//	>> full texture path = asset parent_path of .fnt file (see loadInfo.assetFullPath > get parent_path) + pageName (filesystem::path::append)
-	std::filesystem::path texturePath = loadInfo.assetFullPath.parent_path() / pageName;
+	std::filesystem::path texturePath = loadInfo.assetFullPath.parent_path();
+	texturePath.append(pageName);
+
 	//	>> Load the texture (ContentManager::Load<TextureData>) & Store [fontDesc.pTexture]	
 	fontDesc.pTexture = ContentManager::Load<TextureData>(texturePath);
 

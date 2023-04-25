@@ -136,7 +136,7 @@ void Character::Update(const SceneContext& sceneContext)
 		else
 		{
 			//m_TotalVelocity.y is zero
-			m_TotalVelocity.y = 0.f;
+			m_TotalVelocity.y = -0.01f;
 		}
 
 		//************
