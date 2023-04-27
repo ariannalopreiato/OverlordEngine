@@ -114,6 +114,7 @@ void ShadowMapRenderer::DrawMesh(const SceneContext& sceneContext, MeshFilter* p
 
 	//2. Retrieve the correct TechniqueContext for m_GeneratorTechniqueContexts
 	auto techContext = m_GeneratorTechniqueContexts[int(type)];
+	m_pShadowMapGenerator->SetTechnique(int(type));
 
 	//3. Set the relevant variables on the ShadowMapMaterial
 	//		- world of the mesh
@@ -135,7 +136,7 @@ void ShadowMapRenderer::DrawMesh(const SceneContext& sceneContext, MeshFilter* p
 	const UINT offset{ 0 };
 	for (const auto& mesh : pMeshFilter->GetMeshes())
 	{
-		const auto& vertexBufferData = pMeshFilter->GetVertexBufferData(sceneContext, m_pShadowMapGenerator, mesh.id);
+		const auto& vertexBufferData = pMeshFilter->GetVertexBufferData(techContext.inputLayoutID);
 		sceneContext.d3dContext.pDeviceContext->IASetVertexBuffers(0, 1, &vertexBufferData.pVertexBuffer, &vertexBufferData.VertexStride, &offset);
 
 		sceneContext.d3dContext.pDeviceContext->IASetIndexBuffer(mesh.buffers.pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
