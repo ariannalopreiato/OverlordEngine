@@ -49,10 +49,8 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	// BLOCK 0 *
 	//**********
 	//Retrieve the blockId and blockSize
-	const auto blockId = pReader->Read<char>();
-	const auto blockSize = pReader->Read<int>();
-	blockSize;
-	blockId;
+	auto blockId = pReader->Read<char>();
+	auto blockSize = pReader->Read<int>();
 
 	//Retrieve the FontSize [fontDesc.fontSize]
 	fontDesc.fontSize = pReader->Read<short>();
@@ -66,23 +64,22 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	{
 		Logger::LogError(L"Failed to parse font data: invalid font name");
 	}
-	fontDesc.fontName = std::wstring(fontName.begin(), fontName.end());
+	fontDesc.fontName = fontName;
 
 	//**********
 	// BLOCK 1 *
 	//**********
 	//Retrieve the blockId and blockSize
-	const auto blockId1 = pReader->Read<char>();
-	const auto blockSize1 = pReader->Read<int>();
-	blockSize1;
-	blockId1;
+	blockId = pReader->Read<char>();
+	blockSize = pReader->Read<int>();
+	pReader->MoveBufferPosition(4);
 
 	//Retrieve Texture Width & Height [fontDesc.textureWidth/textureHeight]
-	fontDesc.textureWidth = pReader->Read<short>();
-	fontDesc.textureHeight = pReader->Read<short>();
+	fontDesc.textureWidth = pReader->Read<unsigned short>();
+	fontDesc.textureHeight = pReader->Read<unsigned short>();
 
 	//Retrieve PageCount
-	const auto pageCount = pReader->Read<char>();
+	const auto pageCount = pReader->Read<unsigned short>();
 	//> if pagecount > 1
 	if (pageCount > 1)
 	{
@@ -91,16 +88,15 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	}
 	
 	//Advance to Block2 (Move Reader)
-	pReader->MoveBufferPosition(blockSize1 - 10);
+	pReader->MoveBufferPosition(blockSize - 10);
 
 	//**********
 	// BLOCK 2 *
 	//**********
 	//Retrieve the blockId and blockSize
-	const auto blockId2 = pReader->Read<char>();
-	const auto blockSize2 = pReader->Read<int>();
-	blockSize2;
-	blockId2;
+	blockId = pReader->Read<char>();
+	blockSize = pReader->Read<int>();
+
 	//Retrieve the PageName (BinaryReader::ReadNullString)
 	const std::wstring pageName = pReader->ReadNullString();
 
@@ -117,36 +113,34 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	// BLOCK 3 *
 	//**********
 	//Retrieve the blockId and blockSize
-	const auto blockId3 = pReader->Read<char>();
-	const auto blockSize3 = pReader->Read<int>();
-	blockSize3;
-	blockId3;
+	blockId = pReader->Read<char>();
+	blockSize = pReader->Read<int>();
 
 	//Retrieve Character Count (see documentation)
-	const auto charCount = pReader->Read<int>();
+	const int charCount = blockSize / 20;
 
 	//Create loop for Character Count, and:
 	for (int i = 0; i < charCount; i++)
 	{
 		//> Retrieve CharacterId (store Local) and cast to a 'wchar_t'
-		const auto charId = static_cast<wchar_t>(pReader->Read<int>());
+		const auto charId = static_cast<wchar_t>(pReader->Read<unsigned int>());
 
 		//> Create instance of FontMetric (struct)
-		FontMetric fontMetric;
+		FontMetric fontMetric{};
 
 		//	> Set Character (CharacterId) [FontMetric::character]
-		fontMetric.character = charId;
+		fontMetric.character = wchar_t(charId);
 
 		//	> Retrieve Xposition (store Local)
-		const auto xPos = pReader->Read<short>();
+		const auto xPos = pReader->Read<unsigned short>();
 		//	> Retrieve Yposition (store Local)
-		const auto yPos = pReader->Read<short>();
+		const auto yPos = pReader->Read<unsigned short>();
 
 		//Retrieve & Set Width [FontMetric::width]
-		fontMetric.width = pReader->Read<short>();
+		fontMetric.width = pReader->Read<unsigned short>();
 
 		//Retrieve & Set Height [FontMetric::height]
-		fontMetric.height = pReader->Read<short>();
+		fontMetric.height = pReader->Read<unsigned short>();
 
 		//Retrieve & Set OffsetX [FontMetric::offsetX]
 		fontMetric.offsetX = pReader->Read<short>();
@@ -158,27 +152,38 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 		fontMetric.advanceX = pReader->Read<short>();
 
 		//Retrieve & Set Page [FontMetric::page]
-		fontMetric.page = pReader->Read<char>();
+		fontMetric.page = pReader->Read<unsigned char>();
 
 		//	> Retrieve Channel (BITFIELD!!!) 
-		const auto channel = pReader->Read<char>();
+		const auto channel = pReader->Read<unsigned char>();
 		
 		//	> See documentation for BitField meaning [FontMetrix::channel]
-		fontMetric.channel = (channel & 1) != 0;
-		fontMetric.channel = (channel & 2) != 0;
-		fontMetric.channel = (channel & 4) != 0;
-		fontMetric.channel = (channel & 8) != 0;
+		switch (channel)
+		{
+		case 1:
+			fontMetric.channel = 2;
+			break;
+		case 2:
+			fontMetric.channel = 1;
+			break;
+		case 4:
+			fontMetric.channel = 0;
+			break;
+		case 8:
+			fontMetric.channel = 3;
+			break;
+		default:
+			break;
+		}
 
 		//	> Calculate Texture Coordinates using Xposition, Yposition, fontDesc.TextureWidth & fontDesc.TextureHeight [FontMetric::texCoord]
-		auto left = static_cast<float>(xPos) / static_cast<float>(fontDesc.textureWidth);
-		auto top = static_cast<float>(yPos) / static_cast<float>(fontDesc.textureHeight);
-		fontMetric.texCoord.x = left + (static_cast<float>(fontMetric.width) / static_cast<float>(fontDesc.textureWidth));
-		fontMetric.texCoord.y = top + (static_cast<float>(fontMetric.height) / static_cast<float>(fontDesc.textureHeight));
+		fontMetric.texCoord.x = static_cast<float>(xPos) / static_cast<float>(fontDesc.textureWidth);
+		fontMetric.texCoord.y = static_cast<float>(yPos) / static_cast<float>(fontDesc.textureHeight);
 
 		//> Insert new FontMetric to the metrics [font.metrics] map
 		//	> key = (wchar_t) charId
 		//	> value = new FontMetric
-		fontDesc.metrics[charId] = fontMetric;
+		fontDesc.metrics.insert(std::pair(wchar_t(charId), fontMetric));
 		//(loop restarts till all metrics are parsed)
 	}
 
