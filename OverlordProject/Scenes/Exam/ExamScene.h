@@ -1,6 +1,6 @@
 #pragma once
 
-class Player;
+class Character;
 class ExamScene : public GameScene
 {
 public:
@@ -19,7 +19,17 @@ protected:
 	void OnGUI() override;
 
 private:
+	void InitializePlayer();
 	void Reset();
 
-	Player* m_pPlayer{};
+	enum InputIds
+	{
+		CharacterMoveLeft,
+		CharacterMoveRight,
+		CharacterMoveForward,
+		CharacterMoveBackward,
+		CharacterJump
+	};
+
+	Character* m_pPlayer{};
 };
