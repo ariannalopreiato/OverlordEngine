@@ -2,6 +2,8 @@
 #include "ExamScene.h"
 #include "Prefabs/Character.h"
 #include "Materials/ColorMaterial.h"
+#include "Materials/DiffuseMaterial.h"
+#include "Prefabs/CollectiblePrefab.h"
 
 void ExamScene::Initialize()
 {
@@ -20,20 +22,25 @@ void ExamScene::Initialize()
 	characterDesc.actionId_MoveRight = CharacterMoveRight;
 	characterDesc.actionId_Jump = CharacterJump;
 
-	m_pPlayer = AddChild(new Character(characterDesc));
-	//m_pPlayer = new Player(L"Textures/body.png", L"Meshes/link.ovm");
-	
+	float pivotOffset = 1.3f;
+	m_pPlayer = AddChild(new Character(characterDesc, L"Textures/body.png", L"Meshes/link.ovm", pivotOffset));
+	m_pPlayer->ScalePlayerMesh(0.015f);
 	InitializePlayer();
 
-	//Simple Level
+	//Level
+	const auto pLevelMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
+
 	const auto pLevelObject = AddChild(new GameObject());
-	const auto pLevelMesh = pLevelObject->AddComponent(new ModelComponent(L"Meshes/windfall.ovm"));
-	pLevelMesh->SetMaterial(MaterialManager::Get()->CreateMaterial<ColorMaterial>());
+	const auto pLevelMesh = pLevelObject->AddComponent(new ModelComponent(L"Meshes/Level/windfall.ovm"));
+	pLevelMesh->SetMaterial(pLevelMaterial);
 
 	const auto pLevelActor = pLevelObject->AddComponent(new RigidBodyComponent(true));
-	const auto pPxTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/windfall.ovpt");
+	const auto pPxTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Level/windfall.ovpt");
 	pLevelActor->AddCollider(PxTriangleMeshGeometry(pPxTriangleMesh, PxMeshScale({ .015f, .015f, .015f })), *pDefaultMaterial);
 	pLevelObject->GetTransform()->Scale(.015f, .015f, .015f);
+
+	//Collectibles
+	InitializeCollectibles();
 
 	//Input
 	auto inputAction = InputAction(CharacterMoveLeft, InputState::down, 'A');
@@ -59,10 +66,7 @@ void ExamScene::Initialize()
 
 void ExamScene::Update()
 {
-	std::cout << " POSITION" << std::endl;
-	std::cout << m_pPlayer->GetTransform()->GetPosition().x << std::endl;
-	std::cout << m_pPlayer->GetTransform()->GetPosition().y << std::endl;
-	std::cout << m_pPlayer->GetTransform()->GetPosition().z << std::endl;
+	
 }
 
 void ExamScene::Draw()
@@ -77,10 +81,25 @@ void ExamScene::OnGUI()
 void ExamScene::InitializePlayer()
 {
 	//reposition player
-	m_pPlayer->GetTransform()->Translate(48.f, 6.f, -160.f);
+	m_pPlayer->GetTransform()->Translate(15.f, 3.f, -49.f);
+}
+
+void ExamScene::InitializeCollectibles()
+{
+	if (!m_Collectibles.empty())
+	{
+		for (auto& collectible : m_Collectibles)
+		{
+			SafeDelete(collectible);
+		}
+		m_Collectibles.clear();
+	}
+
+	m_Collectibles.emplace_back(AddChild(new CollectiblePrefab(L"Textures/rupee.png", L"Meshes/rupee.ovm", { 15.f, 2.f, -49.f }, { 90.f, 0.f, 0.f })));
 }
 
 void ExamScene::Reset()
 {
 	InitializePlayer();
+	InitializeCollectibles();
 }

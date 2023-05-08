@@ -8,8 +8,8 @@
 //#define W6
 //#define W7
 //#define W8
-// #define W9
-// #define W10
+//#define W9
+//#define W10
 
 /*MILESTONE Content*/
 //#define MILESTONE_1
@@ -106,9 +106,9 @@ void MainGame::Initialize()
 #endif
 
 #ifdef W4
-	//SceneManager::Get()->AddGameScene(new ModelTestScene());
-	//SceneManager::Get()->AddGameScene(new UberMaterialScene());
-	//SceneManager::Get()->AddGameScene(new SpikyScene());
+	SceneManager::Get()->AddGameScene(new ModelTestScene());
+	SceneManager::Get()->AddGameScene(new UberMaterialScene());
+	SceneManager::Get()->AddGameScene(new SpikyScene());
 	SceneManager::Get()->AddGameScene(new SpriteTestScene());
 #endif
 

@@ -1,6 +1,7 @@
 #pragma once
 
 class Character;
+class CollectiblePrefab;
 class ExamScene : public GameScene
 {
 public:
@@ -20,6 +21,7 @@ protected:
 
 private:
 	void InitializePlayer();
+	void InitializeCollectibles();
 	void Reset();
 
 	enum InputIds
@@ -28,8 +30,11 @@ private:
 		CharacterMoveRight,
 		CharacterMoveForward,
 		CharacterMoveBackward,
-		CharacterJump
+		CharacterJump,
+		CharacterRoll,
+		CharacterClimb
 	};
 
 	Character* m_pPlayer{};
+	std::vector<CollectiblePrefab*> m_Collectibles;
 };

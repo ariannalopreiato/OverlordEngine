@@ -34,7 +34,7 @@ struct CharacterDesc
 class Character : public GameObject
 {
 public:
-	Character(const CharacterDesc& characterDesc);
+	Character(const CharacterDesc& characterDesc, const std::wstring& texture = L"", const std::wstring& model = L"", float pivotOffset = 0);
 	~Character() override = default;
 
 	Character(const Character& other) = delete;
@@ -42,6 +42,7 @@ public:
 	Character& operator=(const Character& other) = delete;
 	Character& operator=(Character&& other) noexcept = delete;
 
+	void ScalePlayerMesh(float scale);
 	void DrawImGui();
 
 protected:
@@ -51,6 +52,11 @@ protected:
 private:
 	CameraComponent* m_pCameraComponent{};
 	ControllerComponent* m_pControllerComponent{};
+
+	std::wstring m_Texture;
+	std::wstring m_Model;
+	GameObject* m_ModelMesh;
+	float m_PivotOffset;
 
 	CharacterDesc m_CharacterDesc;
 	float m_TotalPitch{}, m_TotalYaw{};				//Total camera Pitch(X) and Yaw(Y) rotation

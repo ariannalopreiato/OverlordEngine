@@ -1,10 +1,14 @@
 #include "stdafx.h"
 #include "Character.h"
+#include "Materials/DiffuseMaterial_Skinned.h"
 
-Character::Character(const CharacterDesc& characterDesc) :
+Character::Character(const CharacterDesc& characterDesc, const std::wstring& texture, const std::wstring& model, float pivotOffset) :
 	m_CharacterDesc{ characterDesc },
 	m_MoveAcceleration(characterDesc.maxMoveSpeed / characterDesc.moveAccelerationTime),
-	m_FallAcceleration(characterDesc.maxFallSpeed / characterDesc.fallAccelerationTime)
+	m_FallAcceleration(characterDesc.maxFallSpeed / characterDesc.fallAccelerationTime),
+	m_Texture{ texture },
+	m_Model{ model },
+	m_PivotOffset{ pivotOffset }
 {}
 
 void Character::Initialize(const SceneContext& /*sceneContext*/)
@@ -18,7 +22,24 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	m_pCameraComponent = pCamera->GetComponent<CameraComponent>();
 	m_pCameraComponent->SetActive(true); //Uncomment to make this camera the active camera
 	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * .5f, moveBack);
+
+	if (!m_Texture.empty() && !m_Model.empty())
+	{
+		const auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
+		pSkinnedMaterial->SetDiffuseTexture(m_Texture);
+
+		m_ModelMesh = AddChild(new GameObject);
+		auto pModel = m_ModelMesh->AddComponent(new ModelComponent(m_Model));
+		pModel->GetTransform()->Translate(0.f, -m_PivotOffset, 0.f);
+		pModel->SetMaterial(pSkinnedMaterial);
+	}
 }
+
+void Character::ScalePlayerMesh(float scale)
+{
+	m_ModelMesh->GetTransform()->Scale(scale);
+}
+
 
 void Character::Update(const SceneContext& sceneContext)
 {
@@ -153,6 +174,7 @@ void Character::Update(const SceneContext& sceneContext)
 		//Also, it can be usefull to use a seperate RayCast to check if the character is grounded (more responsive)
 	}
 }
+
 
 void Character::DrawImGui()
 {
