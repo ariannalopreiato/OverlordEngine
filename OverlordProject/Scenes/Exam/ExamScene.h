@@ -2,6 +2,7 @@
 
 class Character;
 class CollectiblePrefab;
+class Ladder;
 class ExamScene : public GameScene
 {
 public:
@@ -22,6 +23,7 @@ protected:
 private:
 	void InitializePlayer();
 	void InitializeCollectibles();
+	void PositionLaddersTrigger();
 	void Reset();
 
 	enum InputIds
@@ -37,4 +39,5 @@ private:
 
 	Character* m_pPlayer{};
 	std::vector<CollectiblePrefab*> m_Collectibles;
+	std::vector<Ladder*> m_Ladders;
 };

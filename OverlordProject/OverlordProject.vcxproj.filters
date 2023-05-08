@@ -38,6 +38,7 @@
     <ClCompile Include="Scenes\Week 10\PostProcessingScene.cpp" />
     <ClCompile Include="Materials\Post\PostGrayscale.cpp" />
     <ClCompile Include="Materials\Post\PostBlur.cpp" />
+    <ClCompile Include="Prefabs\Ladder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -76,5 +77,6 @@
     <ClInclude Include="Scenes\Week 10\PostProcessingScene.h" />
     <ClInclude Include="Materials\Post\PostGrayscale.h" />
     <ClInclude Include="Materials\Post\PostBlur.h" />
+    <ClInclude Include="Prefabs\Ladder.h" />
   </ItemGroup>
 </Project>

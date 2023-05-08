@@ -4,6 +4,7 @@
 #include "Materials/ColorMaterial.h"
 #include "Materials/DiffuseMaterial.h"
 #include "Prefabs/CollectiblePrefab.h"
+#include "Prefabs/Ladder.h"
 
 void ExamScene::Initialize()
 {
@@ -39,6 +40,9 @@ void ExamScene::Initialize()
 	pLevelActor->AddCollider(PxTriangleMeshGeometry(pPxTriangleMesh, PxMeshScale({ .015f, .015f, .015f })), *pDefaultMaterial);
 	pLevelObject->GetTransform()->Scale(.015f, .015f, .015f);
 
+	//Ladders
+	PositionLaddersTrigger();
+
 	//Collectibles
 	InitializeCollectibles();
 
@@ -66,7 +70,10 @@ void ExamScene::Initialize()
 
 void ExamScene::Update()
 {
-	
+	//std::cout << "POSITION" << std::endl;
+	//std::cout << m_pPlayer->GetTransform()->GetPosition().x << std::endl;
+	//std::cout << m_pPlayer->GetTransform()->GetPosition().y << std::endl;
+	//std::cout << m_pPlayer->GetTransform()->GetPosition().z << std::endl;
 }
 
 void ExamScene::Draw()
@@ -82,6 +89,7 @@ void ExamScene::InitializePlayer()
 {
 	//reposition player
 	m_pPlayer->GetTransform()->Translate(15.f, 3.f, -49.f);
+	//m_pPlayer->GetTransform()->Translate(8.9f, 17.f, 50.f); big ladder
 }
 
 void ExamScene::InitializeCollectibles()
@@ -95,7 +103,21 @@ void ExamScene::InitializeCollectibles()
 		m_Collectibles.clear();
 	}
 
-	m_Collectibles.emplace_back(AddChild(new CollectiblePrefab(L"Textures/rupee.png", L"Meshes/rupee.ovm", { 15.f, 2.f, -49.f }, { 90.f, 0.f, 0.f })));
+	m_Collectibles.emplace_back(AddChild(new CollectiblePrefab(L"Textures/rupee.png", L"Meshes/rupee.ovm", { 1.37f, 1.12f, -47.6f }, { 90.f, 0.f, 0.f })));
+}
+
+void ExamScene::PositionLaddersTrigger()
+{
+	XMFLOAT3 ladderDimensions{ 0.8f, 5.9f, 0.5f };
+	m_Ladders.emplace_back(AddChild(new Ladder(ladderDimensions, { -2.f, 18.7f, 9.f }, {0.f, 30.f, 0.f})));
+	m_Ladders.emplace_back(AddChild(new Ladder(ladderDimensions, { 17.4f, 18.7f, 10.6f }, { 0.f, -35.f, 0.f })));
+	XMFLOAT3 bigLadderDimensions{ 0.8f, 20.f, 0.5f };
+	m_Ladders.emplace_back(AddChild(new Ladder(bigLadderDimensions, { 10.7f, 40.7f, 47.1f }, { 0.f, -35.f, 0.f })));
+
+	for (const auto& ladder : m_Ladders)
+	{
+		ladder->SetPlayer(m_pPlayer);
+	}
 }
 
 void ExamScene::Reset()
