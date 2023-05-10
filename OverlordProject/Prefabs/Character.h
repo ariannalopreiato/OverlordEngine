@@ -44,6 +44,8 @@ public:
 
 	void ScalePlayerMesh(float scale);
 	void DrawImGui();
+	void SetIsClimbing(bool isClimbing) { m_CanClimb = isClimbing; }
+	bool GetIsClimbing() { return m_CanClimb; }
 
 protected:
 	void Initialize(const SceneContext&) override;
@@ -57,6 +59,9 @@ private:
 	std::wstring m_Model;
 	GameObject* m_ModelMesh;
 	float m_PivotOffset;
+
+	bool m_CanClimb = false;
+	bool m_IsGrounded = true;
 
 	CharacterDesc m_CharacterDesc;
 	float m_TotalPitch{}, m_TotalYaw{};				//Total camera Pitch(X) and Yaw(Y) rotation

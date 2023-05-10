@@ -28,6 +28,7 @@ private:
 	void PostInitialize() const;
 	void WindowStateChanged(int state, bool active) const;
 	void Update();
+	void LateUpdate();
 	void Draw() const;
 	void OnGUI() const;
 

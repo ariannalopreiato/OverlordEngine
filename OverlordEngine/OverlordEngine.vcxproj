@@ -102,6 +102,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Components\CameraMovement.h" />
     <ClInclude Include="Components\ControllerComponent.h" />
     <ClInclude Include="Components\ParticleEmitterComponent.h" />
     <ClInclude Include="Graphics\ShadowMapRenderer.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Components\CameraMovement.cpp" />
     <ClCompile Include="Components\ControllerComponent.cpp" />
     <ClCompile Include="Components\ParticleEmitterComponent.cpp" />
     <ClCompile Include="Graphics\ShadowMapRenderer.cpp" />

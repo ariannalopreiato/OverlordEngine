@@ -31,12 +31,12 @@ void Ladder::Initialize(const SceneContext&)
 			if (triggerAction == PxTriggerAction::ENTER)
 			{
 				//if (otherObjectPtr == m_pPlayer)
-				m_IsOnLadder = true;
+				m_pPlayer->SetIsClimbing(true);
 			}
 			if (triggerAction == PxTriggerAction::LEAVE)
 			{
 				//if (otherObjectPtr == m_pPlayer)
-				m_IsOnLadder = false;
+				m_pPlayer->SetIsClimbing(false);
 			}
 		});
 }

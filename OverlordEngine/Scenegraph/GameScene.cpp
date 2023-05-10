@@ -149,6 +149,18 @@ void GameScene::RootUpdate()
 	m_pPhysxProxy->Update(m_SceneContext);
 }
 
+void GameScene::RootLateUpdate()
+{
+	//User-Scene Update
+	LateUpdate();
+
+	//Root-Scene Update
+	for (const auto pChild : m_pChildren)
+	{
+		pChild->RootLateUpdate(m_SceneContext);
+	}
+}
+
 void GameScene::RootDraw()
 {
 #pragma region SHADOW PASS

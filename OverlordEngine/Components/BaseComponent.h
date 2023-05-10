@@ -23,6 +23,7 @@ protected:
 	virtual void Initialize(const SceneContext& sceneContext) = 0;
 	virtual void PostInitialize(const SceneContext& /*sceneContext*/){}
 	virtual void Update(const SceneContext& /*sceneContext*/){}
+	virtual void LateUpdate(const SceneContext& /*sceneContext*/) {}
 	virtual void Draw(const SceneContext& /*sceneContext*/){}
 	virtual void ShadowMapDraw(const SceneContext&) {} //update_W9
 	virtual void PostDraw(const SceneContext&) {} //update_W9

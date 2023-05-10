@@ -139,6 +139,12 @@ void SceneManager::Update()
 	ASSERT_IF(m_ActiveScene == nullptr, L"No Active Scene Set!")
 }
 
+void SceneManager::LateUpdate()
+{
+	if (m_ActiveScene != nullptr)
+		m_ActiveScene->RootLateUpdate();
+}
+
 void SceneManager::Draw() const
 {
 	if (m_ActiveScene != nullptr)

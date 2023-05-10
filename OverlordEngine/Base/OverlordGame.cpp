@@ -447,6 +447,7 @@ void OverlordGame::GameLoop() const
 	//UPDATE
 	InputManager::UpdateInputStates(ImGui::GetIO().WantCaptureMouse || ImGui::GetIO().WantCaptureKeyboard);
 	SceneManager::Get()->Update();
+	SceneManager::Get()->LateUpdate();
 
 	//****
 	//DRAW

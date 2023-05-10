@@ -42,6 +42,7 @@ protected:
 	virtual void Initialize() = 0;
 	virtual void PostInitialize() {};
 	virtual void Update() {};
+	virtual void LateUpdate() {};
 	virtual void Draw() {};
 	virtual void PostDraw() {};
 	virtual void ShadowDraw() {};
@@ -57,6 +58,7 @@ private:
 	void RootInitialize(const GameContext& /*gameContext*/);
 	void RootPostInitialize();
 	void RootUpdate();
+	void RootLateUpdate();
 	void RootDraw();
 	void RootOnSceneActivated();
 	void RootOnSceneDeactivated();

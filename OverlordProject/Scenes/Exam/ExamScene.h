@@ -17,6 +17,7 @@ public:
 protected:
 	void Initialize() override;
 	void Update() override;
+	void LateUpdate() override;
 	void Draw() override;
 	void OnGUI() override;
 
@@ -25,6 +26,7 @@ private:
 	void InitializeCollectibles();
 	void PositionLaddersTrigger();
 	void Reset();
+	void LoadLevel();
 
 	enum InputIds
 	{

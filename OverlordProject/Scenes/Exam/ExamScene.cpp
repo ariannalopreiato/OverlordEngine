@@ -5,6 +5,8 @@
 #include "Materials/DiffuseMaterial.h"
 #include "Prefabs/CollectiblePrefab.h"
 #include "Prefabs/Ladder.h"
+#include "Components/CameraMovement.h"
+#include "Materials/Shadow/DiffuseMaterial_Shadow.h"
 
 void ExamScene::Initialize()
 {
@@ -28,17 +30,15 @@ void ExamScene::Initialize()
 	m_pPlayer->ScalePlayerMesh(0.015f);
 	InitializePlayer();
 
-	//Level
-	const auto pLevelMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
+	//Camera
+	const auto cameraObj = AddChild(new GameObject());
+	/*auto cameraMovement = */cameraObj->AddComponent(new CameraMovement(m_pPlayer));
+	auto cameraComponent = cameraObj->AddComponent(new CameraComponent());
+	SetActiveCamera(cameraComponent);
 
-	const auto pLevelObject = AddChild(new GameObject());
-	const auto pLevelMesh = pLevelObject->AddComponent(new ModelComponent(L"Meshes/Level/windfall.ovm"));
-	pLevelMesh->SetMaterial(pLevelMaterial);
+	cameraObj->GetTransform()->Translate(10.f, 3.f, -49.f);
 
-	const auto pLevelActor = pLevelObject->AddComponent(new RigidBodyComponent(true));
-	const auto pPxTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Level/windfall.ovpt");
-	pLevelActor->AddCollider(PxTriangleMeshGeometry(pPxTriangleMesh, PxMeshScale({ .015f, .015f, .015f })), *pDefaultMaterial);
-	pLevelObject->GetTransform()->Scale(.015f, .015f, .015f);
+	LoadLevel();
 
 	//Ladders
 	PositionLaddersTrigger();
@@ -74,6 +74,10 @@ void ExamScene::Update()
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().x << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().y << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().z << std::endl;
+}
+
+void ExamScene::LateUpdate()
+{
 }
 
 void ExamScene::Draw()
@@ -124,4 +128,99 @@ void ExamScene::Reset()
 {
 	InitializePlayer();
 	InitializeCollectibles();
+}
+
+void ExamScene::LoadLevel()
+{
+	const auto pDefaultMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
+
+	const int texAmount = 32;
+
+	std::vector<std::wstring> textures;
+
+	textures.reserve(texAmount);
+
+	textures.emplace_back(L"Textures/Level/m_leaf05.png"); //1
+
+	textures.emplace_back(L"Textures/Level/m_mado02.png");
+
+	textures.emplace_back(L"Textures/Level/wood04.png"); //3
+
+	textures.emplace_back(L"Textures/Level/rotennuno85.png"); //4
+
+	textures.emplace_back(L"Textures/Level/rotennuno4.png"); //5
+
+	textures.emplace_back(L"Textures/Level/m_ren16.png");
+
+	textures.emplace_back(L"Textures/Level/a_kusa.png"); //7
+
+	textures.emplace_back(L"Textures/Level/m_siba04.png");
+
+	textures.emplace_back(L"Textures/Level/m_miti05.png"); //9
+
+	textures.emplace_back(L"Textures/Level/m_komono11.png");
+
+	textures.emplace_back(L"Textures/Level/gakkou03.png"); //11
+
+	textures.emplace_back(L"Textures/Level/m_kabe33.png");
+
+	textures.emplace_back(L"Textures/Level/m_ki13.png");
+
+	textures.emplace_back(L"Textures/Level/a_kusa_yane.png");
+
+	textures.emplace_back(L"Textures/Level/m_siba04.png"); //15
+
+	textures.emplace_back(L"Textures/Level/m_yuka10.png"); //16
+
+	textures.emplace_back(L"Textures/Level/m_ren15.png"); //17
+
+	textures.emplace_back(L"Textures/Level/m_mado08.png");
+
+	textures.emplace_back(L"Textures/Level/a_tuta.png");
+
+	textures.emplace_back(L"Textures/Level/wood06.png");
+
+	textures.emplace_back(L"Textures/Level/k_taru05.png");
+
+	textures.emplace_back(L"Textures/Level/gakkou03.png"); 
+
+	textures.emplace_back(L"Textures/Level/k_taru04.png"); //23
+
+	textures.emplace_back(L"Textures/Level/m_leaf01.png"); //24
+
+	textures.emplace_back(L"Textures/Level/m_leaf09.png"); //25
+
+	textures.emplace_back(L"Textures/Level/a_iwa.png"); //26
+
+	textures.emplace_back(L"Textures/Level/a_kysakiwa.png");
+
+	textures.emplace_back(L"Textures/Level/rotennuno70.png");
+
+	textures.emplace_back(L"Textures/Level/m_yane08.png"); //29
+
+	textures.emplace_back(L"Textures/Level/m_ki12.png");
+
+	textures.emplace_back(L"Textures/Level/wood01.png"); //31
+
+	textures.emplace_back(L"Textures/Level/m_kabe38.png");
+
+
+
+
+	const auto pLevelObject = AddChild(new GameObject());
+	const auto pLevelMesh = pLevelObject->AddComponent(new ModelComponent(L"Meshes/Level/windfall.ovm"));
+
+	const auto pLevelActor = pLevelObject->AddComponent(new RigidBodyComponent(true));
+	const auto pPxTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Level/windfall.ovpt");
+	pLevelActor->AddCollider(PxTriangleMeshGeometry(pPxTriangleMesh, PxMeshScale({ .015f, .015f, .015f })), *pDefaultMaterial);
+	pLevelObject->GetTransform()->Scale(.015f, .015f, .015f);
+
+
+
+	for (UINT8 i = 0; i < textures.size(); ++i)
+	{
+		auto mat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
+		mat->SetDiffuseTexture(textures[int(i)]);
+		pLevelMesh->SetMaterial(mat, i);
+	}
 }
