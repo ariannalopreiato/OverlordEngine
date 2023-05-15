@@ -93,6 +93,9 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Materials\BasicMaterial.cpp" />
+    <ClCompile Include="Materials\BasicMaterial_Deferred.cpp" />
+    <ClCompile Include="Prefabs\CameraMovement.cpp" />
     <ClCompile Include="Prefabs\Ladder.cpp" />
     <ClCompile Include="Materials\Post\PostGrayscale.cpp" />
     <ClCompile Include="Materials\Post\PostBlur.cpp" />
@@ -106,6 +109,7 @@
     <ClCompile Include="Prefabs\BoneObject.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial.cpp" />
     <ClCompile Include="Scenes\Week 10\PostProcessingScene.cpp" />
+    <ClCompile Include="Scenes\Week 11\DeferredRenderingScene.cpp" />
     <ClCompile Include="Scenes\Week 4\ModelTestScene.cpp" />
     <ClCompile Include="Scenes\Week 3\PongScene.cpp" />
     <ClCompile Include="Scenes\Week 3\ComponentTestScene.cpp" />
@@ -150,6 +154,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Materials\BasicMaterial.h" />
+    <ClInclude Include="Materials\BasicMaterial_Deferred.h" />
+    <ClInclude Include="Prefabs\CameraMovement.h" />
     <ClInclude Include="Prefabs\Ladder.h" />
     <ClInclude Include="Materials\Post\PostGrayscale.h" />
     <ClInclude Include="Materials\Post\PostBlur.h" />
@@ -163,6 +170,7 @@
     <ClInclude Include="Prefabs\BoneObject.h" />
     <ClInclude Include="Materials\DiffuseMaterial.h" />
     <ClInclude Include="Scenes\Week 10\PostProcessingScene.h" />
+    <ClInclude Include="Scenes\Week 11\DeferredRenderingScene.h" />
     <ClInclude Include="Scenes\Week 4\ModelTestScene.h" />
     <ClInclude Include="Scenes\Week 3\PongScene.h" />
     <ClInclude Include="Scenes\Week 3\ComponentTestScene.h" />

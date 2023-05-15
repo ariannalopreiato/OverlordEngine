@@ -3,6 +3,7 @@
 class Character;
 class CollectiblePrefab;
 class Ladder;
+class SpriteFont;
 class ExamScene : public GameScene
 {
 public:
@@ -13,6 +14,8 @@ public:
 	ExamScene(ExamScene&& other) noexcept = delete;
 	ExamScene& operator=(const ExamScene& other) = delete;
 	ExamScene& operator=(ExamScene&& other) noexcept = delete;
+
+	void IncreasePoints();
 
 protected:
 	void Initialize() override;
@@ -27,6 +30,8 @@ private:
 	void PositionLaddersTrigger();
 	void Reset();
 	void LoadLevel();
+	void CheckForCollectibles();
+	void DisplayPoints();
 
 	enum InputIds
 	{
@@ -39,7 +44,9 @@ private:
 		CharacterClimb
 	};
 
+	SpriteFont* m_pFont;
 	Character* m_pPlayer{};
 	std::vector<CollectiblePrefab*> m_Collectibles;
 	std::vector<Ladder*> m_Ladders;
+	int m_CurrentPoints{ 0 };
 };

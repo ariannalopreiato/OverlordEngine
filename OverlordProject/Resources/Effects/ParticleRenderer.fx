@@ -74,9 +74,9 @@ void CreateVertex(inout TriangleStream<GS_DATA> triStream, float3 pos, float2 te
 
 	//Step 3. Assign texCoord to (GS_DATA object).TexCoord
 	//This is a little formula to do texture rotation by transforming the texture coordinates (Can cause artifacts)
-	texCoord -= float2(0.5f,0.5f);
-	texCoord = mul(texCoord, uvRotation);
-	texCoord += float2(0.5f,0.5f);
+	//texCoord -= float2(0.5f,0.5f);
+	//texCoord = mul(texCoord, uvRotation);
+	//texCoord += float2(0.5f,0.5f);
 	obj.TexCoord = texCoord;
 
 	//Step 4. Assign color to (GS_DATA object).Color

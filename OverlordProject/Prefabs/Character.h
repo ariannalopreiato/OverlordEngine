@@ -46,6 +46,7 @@ public:
 	void DrawImGui();
 	void SetIsClimbing(bool isClimbing) { m_CanClimb = isClimbing; }
 	bool GetIsClimbing() { return m_CanClimb; }
+	XMFLOAT3 GetVelocity() const { return m_TotalVelocity; }
 
 protected:
 	void Initialize(const SceneContext&) override;

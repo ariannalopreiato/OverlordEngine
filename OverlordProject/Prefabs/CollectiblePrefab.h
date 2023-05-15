@@ -11,6 +11,8 @@ public:
 	CollectiblePrefab& operator=(const CollectiblePrefab& other) = delete;
 	CollectiblePrefab& operator=(CollectiblePrefab&& other) noexcept = delete;
 
+	bool GetIsCollected() { return m_IsCollected; }
+
 protected:
 	void Initialize(const SceneContext& sceneContext) override;
 	void Update(const SceneContext& sceneContext) override;
@@ -24,4 +26,5 @@ private:
 	GameObject* m_ModelMesh;
 	float m_PivotOffset;
 	float m_Rotate;
+	bool m_IsCollected{ false };
 };

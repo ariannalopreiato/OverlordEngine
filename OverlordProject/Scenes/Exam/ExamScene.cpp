@@ -5,13 +5,15 @@
 #include "Materials/DiffuseMaterial.h"
 #include "Prefabs/CollectiblePrefab.h"
 #include "Prefabs/Ladder.h"
-#include "Components/CameraMovement.h"
+#include "Prefabs/CameraMovement.h"
 #include "Materials/Shadow/DiffuseMaterial_Shadow.h"
 
 void ExamScene::Initialize()
 {
-	m_SceneContext.settings.enableOnGUI = true;
+	m_SceneContext.settings.enableOnGUI = false;
 	m_SceneContext.settings.drawGrid = false;
+
+	m_pFont = ContentManager::Load<SpriteFont>(L"SpriteFonts/Consolas_32.fnt");
 
 	//Ground Plane
 	const auto pDefaultMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
@@ -33,8 +35,8 @@ void ExamScene::Initialize()
 	//Camera
 	const auto cameraObj = AddChild(new GameObject());
 	/*auto cameraMovement = */cameraObj->AddComponent(new CameraMovement(m_pPlayer));
-	auto cameraComponent = cameraObj->AddComponent(new CameraComponent());
-	SetActiveCamera(cameraComponent);
+	//auto cameraComponent = cameraObj->AddComponent(new CameraComponent());
+	//SetActiveCamera(cameraComponent);
 
 	cameraObj->GetTransform()->Translate(10.f, 3.f, -49.f);
 
@@ -68,12 +70,19 @@ void ExamScene::Initialize()
 	//SKYBOX
 }
 
+void ExamScene::OnGUI()
+{
+
+}
+
 void ExamScene::Update()
 {
 	//std::cout << "POSITION" << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().x << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().y << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().z << std::endl;
+	CheckForCollectibles();
+	DisplayPoints();
 }
 
 void ExamScene::LateUpdate()
@@ -84,9 +93,9 @@ void ExamScene::Draw()
 {
 }
 
-void ExamScene::OnGUI()
+void ExamScene::IncreasePoints()
 {
-
+	++m_CurrentPoints;
 }
 
 void ExamScene::InitializePlayer()
@@ -176,13 +185,13 @@ void ExamScene::LoadLevel()
 
 	textures.emplace_back(L"Textures/Level/m_mado08.png");
 
-	textures.emplace_back(L"Textures/Level/a_tuta.png");
-
-	textures.emplace_back(L"Textures/Level/wood06.png");
+	textures.emplace_back(L"Textures/Level/a_tuta.png");	
 
 	textures.emplace_back(L"Textures/Level/k_taru05.png");
 
 	textures.emplace_back(L"Textures/Level/gakkou03.png"); 
+
+	textures.emplace_back(L"Textures/Level/wood06.png");
 
 	textures.emplace_back(L"Textures/Level/k_taru04.png"); //23
 
@@ -223,4 +232,23 @@ void ExamScene::LoadLevel()
 		mat->SetDiffuseTexture(textures[int(i)]);
 		pLevelMesh->SetMaterial(mat, i);
 	}
+}
+
+void ExamScene::CheckForCollectibles()
+{
+	for (const auto& obj : m_Collectibles)
+	{
+		if (obj->GetIsCollected())
+		{
+			RemoveChild(obj);
+			m_Collectibles.erase(std::remove(m_Collectibles.begin(), m_Collectibles.end(), obj));
+			++m_CurrentPoints;
+		}
+	}
+}
+
+void ExamScene::DisplayPoints()
+{	
+	std::string point = "x" + std::to_string(m_CurrentPoints);
+	TextRenderer::Get()->DrawText(m_pFont, StringUtil::utf8_decode(point), XMFLOAT2(50.f, 50.f), XMFLOAT4{Colors::LightGoldenrodYellow});
 }
