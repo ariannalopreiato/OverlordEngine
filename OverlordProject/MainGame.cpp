@@ -7,7 +7,7 @@
 //#define W5
 //#define W6
 //#define W7
-#//define W8
+//#define W8
 //#define W9
 //#define W10
 //#define W11
@@ -85,6 +85,7 @@
 #endif
 
 #ifdef EXAM
+#include "Scenes/Exam/MainMenu.h"
 #include "Scenes/Exam/ExamScene.h"
 #endif
 
@@ -170,6 +171,7 @@ void MainGame::Initialize()
 #endif
 
 #ifdef EXAM
+	SceneManager::Get()->AddGameScene(new MainMenu());
 	SceneManager::Get()->AddGameScene(new ExamScene());
 #endif
 }
