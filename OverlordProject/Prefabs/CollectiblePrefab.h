@@ -3,7 +3,7 @@
 class CollectiblePrefab final : public GameObject
 {
 public:
-	CollectiblePrefab(const std::wstring& texture, const std::wstring& model, const XMFLOAT3& position = { 0.f, 0.f, 0.f }, const XMFLOAT3& rotation = { 0.f, 0.f, 0.f }, const XMFLOAT3& scale = {1.f, 1.f, 1.f}, float pivotOffset = 0.f);
+	CollectiblePrefab(const std::wstring& texture, const std::wstring& model, int value = 1, const XMFLOAT3& position = { 0.f, 0.f, 0.f }, const XMFLOAT3& rotation = { 0.f, 0.f, 0.f }, const XMFLOAT3& scale = {1.f, 1.f, 1.f}, float pivotOffset = 0.f);
 	~CollectiblePrefab() override = default;
 
 	CollectiblePrefab(const CollectiblePrefab& other) = delete;
@@ -12,6 +12,7 @@ public:
 	CollectiblePrefab& operator=(CollectiblePrefab&& other) noexcept = delete;
 
 	bool GetIsCollected() { return m_IsCollected; }
+	int GetValue() { return m_Value; }
 
 protected:
 	void Initialize(const SceneContext& sceneContext) override;
@@ -27,4 +28,5 @@ private:
 	float m_PivotOffset;
 	float m_Rotate;
 	bool m_IsCollected{ false };
+	int m_Value{ 0 };
 };

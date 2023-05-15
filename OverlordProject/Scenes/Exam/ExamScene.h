@@ -49,4 +49,6 @@ private:
 	std::vector<CollectiblePrefab*> m_Collectibles;
 	std::vector<Ladder*> m_Ladders;
 	int m_CurrentPoints{ 0 };
+	float m_GameDuration;
+	float m_CurrentTime;
 };

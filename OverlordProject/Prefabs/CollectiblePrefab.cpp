@@ -2,9 +2,10 @@
 #include "CollectiblePrefab.h"
 #include "Materials/DiffuseMaterial.h"
 
-CollectiblePrefab::CollectiblePrefab(const std::wstring& texture, const std::wstring& model, const XMFLOAT3& position, const XMFLOAT3& rotation, const XMFLOAT3& scale, float pivotOffset)
+CollectiblePrefab::CollectiblePrefab(const std::wstring& texture, const std::wstring& model, int value, const XMFLOAT3& position, const XMFLOAT3& rotation, const XMFLOAT3& scale, float pivotOffset)
 	: m_Texture{ texture }
 	, m_Model{ model }
+	, m_Value {value}
 	, m_Position{ position }
 	, m_Rotation{ rotation }
 	, m_Scale{ scale }

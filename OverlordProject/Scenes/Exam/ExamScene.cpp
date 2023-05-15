@@ -13,7 +13,7 @@ void ExamScene::Initialize()
 	m_SceneContext.settings.enableOnGUI = false;
 	m_SceneContext.settings.drawGrid = false;
 
-	m_pFont = ContentManager::Load<SpriteFont>(L"SpriteFonts/Consolas_32.fnt");
+	m_pFont = ContentManager::Load<SpriteFont>(L"SpriteFonts/Sheerwood_32.fnt");
 
 	//Ground Plane
 	const auto pDefaultMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
@@ -110,13 +110,12 @@ void ExamScene::InitializeCollectibles()
 	if (!m_Collectibles.empty())
 	{
 		for (auto& collectible : m_Collectibles)
-		{
-			SafeDelete(collectible);
-		}
+			RemoveChild(collectible);
+
 		m_Collectibles.clear();
 	}
 
-	m_Collectibles.emplace_back(AddChild(new CollectiblePrefab(L"Textures/rupee.png", L"Meshes/rupee.ovm", { 1.37f, 1.12f, -47.6f }, { 90.f, 0.f, 0.f })));
+	m_Collectibles.emplace_back(AddChild(new CollectiblePrefab(L"Textures/rupee.png", L"Meshes/rupee.ovm", 1, { 1.37f, 1.12f, -47.6f }, { 90.f, 0.f, 0.f })));
 }
 
 void ExamScene::PositionLaddersTrigger()
@@ -240,9 +239,10 @@ void ExamScene::CheckForCollectibles()
 	{
 		if (obj->GetIsCollected())
 		{
+			m_CurrentPoints += obj->GetValue();
 			RemoveChild(obj);
 			m_Collectibles.erase(std::remove(m_Collectibles.begin(), m_Collectibles.end(), obj));
-			++m_CurrentPoints;
+			//todo collected sound
 		}
 	}
 }
