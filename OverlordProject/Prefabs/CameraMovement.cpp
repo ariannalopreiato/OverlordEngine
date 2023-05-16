@@ -41,14 +41,14 @@ void CameraMovement::FollowPlayer()
     XMVECTOR forward = XMVectorSubtract(XMLoadFloat3(&m_pPlayer->GetTransform()->GetPosition()), XMLoadFloat3(&GetTransform()->GetPosition()));
     forward = XMVector3Normalize(forward);
 
-    //get the up vector
+    //get the world up vector
     XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-    //get the right vector
+    //get the right vector to the current camera
     XMVECTOR right = XMVector3Cross(up, forward);
     right = XMVector3Normalize(right);
 
-    //get the axis around which you rotate
+    //get the up vector of the camera
     up = XMVector3Cross(forward, right);
     up = XMVector3Normalize(up);
 
