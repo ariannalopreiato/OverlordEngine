@@ -7,6 +7,7 @@
 #include "Prefabs/Ladder.h"
 #include "Prefabs/CameraMovement.h"
 #include "Materials/Shadow/DiffuseMaterial_Shadow.h"
+#include "Materials/Post/PostBloom.h"
 
 void ExamScene::Initialize()
 {
@@ -28,15 +29,15 @@ void ExamScene::Initialize()
 	characterDesc.actionId_Jump = CharacterJump;
 
 	float pivotOffset = 1.3f;
-	m_pPlayer = AddChild(new Character(characterDesc, L"Textures/body.png", L"Meshes/link.ovm", pivotOffset));
+	m_pPlayer = AddChild(new Character(characterDesc, L"Textures/body.png", L"Meshes/link.ovm", pivotOffset, true));
 	m_pPlayer->ScalePlayerMesh(0.015f);
 	InitializePlayer();
 
 	//Camera
 	const auto cameraObj = AddChild(new GameObject());
 	/*auto cameraMovement = */cameraObj->AddComponent(new CameraMovement(m_pPlayer));
-	//auto cameraComponent = cameraObj->AddComponent(new CameraComponent());
-	//SetActiveCamera(cameraComponent);
+	auto cameraComponent = cameraObj->AddComponent(new CameraComponent());
+	SetActiveCamera(cameraComponent);
 
 	cameraObj->GetTransform()->Translate(10.f, 3.f, -49.f);
 
@@ -68,6 +69,10 @@ void ExamScene::Initialize()
 
 
 	//SKYBOX
+
+	//POST PROCESSING - BLOOM
+	auto bloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
+	AddPostProcessingEffect(bloom);
 }
 
 void ExamScene::OnGUI()

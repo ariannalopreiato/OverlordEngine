@@ -2,12 +2,13 @@
 #include "Character.h"
 #include "Materials/DiffuseMaterial_Skinned.h"
 
-Character::Character(const CharacterDesc& characterDesc, const std::wstring& texture, const std::wstring& model, float pivotOffset) :
+Character::Character(const CharacterDesc& characterDesc, const std::wstring& texture, const std::wstring& model, float pivotOffset, bool isAnimated) :
 	m_CharacterDesc{ characterDesc },
 	m_MoveAcceleration(characterDesc.maxMoveSpeed / characterDesc.moveAccelerationTime),
 	m_FallAcceleration(characterDesc.maxFallSpeed / characterDesc.fallAccelerationTime),
 	m_Texture{ texture },
 	m_Model{ model },
+	m_IsAnimated{ isAnimated },
 	m_PivotOffset{ pivotOffset }
 {}
 
@@ -31,7 +32,28 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 		m_ModelMesh = AddChild(new GameObject);
 		auto pModel = m_ModelMesh->AddComponent(new ModelComponent(m_Model));
 		pModel->GetTransform()->Translate(0.f, -m_PivotOffset, 0.f);
-		pModel->SetMaterial(pSkinnedMaterial);
+		pModel->SetMaterial(pSkinnedMaterial);	
+
+		if (m_IsAnimated)
+		{
+			m_AnimationClipId = 0;
+			pAnimator = pModel->GetAnimator();
+			pAnimator->SetAnimation(m_AnimationClipId);
+			pAnimator->SetAnimationSpeed(m_AnimationSpeed);
+
+			//Gather Clip Names
+			m_ClipCount = pAnimator->GetClipCount();
+			m_ClipNames = new char* [m_ClipCount];
+			for (UINT i{ 0 }; i < m_ClipCount; ++i)
+			{
+				auto clipName = StringUtil::utf8_encode(pAnimator->GetClip(static_cast<int>(i)).name);
+				const auto clipSize = clipName.size();
+				m_ClipNames[i] = new char[clipSize + 1];
+				strncpy_s(m_ClipNames[i], clipSize + 1, clipName.c_str(), clipSize);
+			}
+
+			pAnimator->Play();
+		}
 	}
 }
 

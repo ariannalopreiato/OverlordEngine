@@ -34,7 +34,7 @@ struct CharacterDesc
 class Character : public GameObject
 {
 public:
-	Character(const CharacterDesc& characterDesc, const std::wstring& texture = L"", const std::wstring& model = L"", float pivotOffset = 0);
+	Character(const CharacterDesc& characterDesc, const std::wstring& texture = L"", const std::wstring& model = L"", float pivotOffset = 0, bool isAnimated = false);
 	~Character() override = default;
 
 	Character(const Character& other) = delete;
@@ -63,6 +63,16 @@ private:
 
 	bool m_CanClimb = false;
 	bool m_IsGrounded = true;
+
+	bool m_IsAnimated = false;
+
+	ModelAnimator* pAnimator{};
+
+	int m_AnimationClipId{ 0 };
+	float m_AnimationSpeed{ 1.f };
+
+	char** m_ClipNames{};
+	UINT m_ClipCount{};
 
 	CharacterDesc m_CharacterDesc;
 	float m_TotalPitch{}, m_TotalYaw{};				//Total camera Pitch(X) and Yaw(Y) rotation

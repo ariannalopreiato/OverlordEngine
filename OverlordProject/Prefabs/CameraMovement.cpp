@@ -6,9 +6,11 @@
 #include "Prefabs/Character.h"
 
 CameraMovement::CameraMovement(GameObject* player)
-	:m_pPlayer(player)
+	: m_pPlayer(player)
 {
     m_CurrentDistance = 10.f;
+    XMFLOAT3 worldForward{ 0, 0, -1 };
+    m_WorldForward = XMLoadFloat3(&worldForward);
 }
 
 void CameraMovement::Initialize(const SceneContext& /*sceneContext*/)
@@ -33,34 +35,28 @@ void CameraMovement::CameraRotation()
 
 void CameraMovement::FollowPlayer()
 {
-    XMVECTOR playerForward = XMLoadFloat3(&m_pPlayer->GetTransform()->GetForward());
+    //https://stackoverflow.com/questions/1171849/finding-quaternion-representing-the-rotation-from-one-vector-to-another
 
-    m_VectorToPlayer = (XMLoadFloat3(&GetTransform()->GetPosition()) - XMLoadFloat3(&m_pPlayer->GetTransform()->GetPosition()));
+    //vector between the player position and the camera position
+    XMVECTOR forward = XMVectorSubtract(XMLoadFloat3(&m_pPlayer->GetTransform()->GetPosition()), XMLoadFloat3(&GetTransform()->GetPosition()));
+    forward = XMVector3Normalize(forward);
 
-    auto pos = m_pPlayer->GetTransform()->GetPosition();
-    if (!dynamic_cast<Character*>(m_pPlayer)) return;
+    //get the up vector
+    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-    auto player = dynamic_cast<Character*>(m_pPlayer);
+    //get the right vector
+    XMVECTOR right = XMVector3Cross(up, forward);
+    right = XMVector3Normalize(right);
 
-    auto forward = player->GetVelocity();
-    if (forward.x == 0 && forward.z == 0) return;
+    //get the axis around which you rotate
+    up = XMVector3Cross(forward, right);
+    up = XMVector3Normalize(up);
 
-    XMFLOAT3 camToPlayer = { GetTransform()->GetPosition().x - m_pPlayer->GetTransform()->GetPosition().x,
-    GetTransform()->GetPosition().y - m_pPlayer->GetTransform()->GetPosition().y ,
-    GetTransform()->GetPosition().z - m_pPlayer->GetTransform()->GetPosition().z };
-    float angle = float(atan2(-camToPlayer.x, -camToPlayer.z) * 180 / M_PI);
+    XMMATRIX viewMatrix = XMMatrixLookToLH(XMLoadFloat3(&GetTransform()->GetPosition()), forward, up);
 
-    GetTransform()->Rotate(30, angle, 0);
-
-
-    auto forwardLength = sqrtf(forward.x * forward.x + forward.y * forward.y + forward.z * forward.z);
-    XMFLOAT3 forwardNormalized = { forward.x / forwardLength, forward.y / forwardLength, forward.z / forwardLength };
-    const auto length = 6;
-    pos.y += 3;
-    pos.x -= forwardNormalized.x * length;
-    pos.z -= forwardNormalized.z * length;
-
-    GetTransform()->Translate(pos);
+    XMVECTOR rotationQuaternion = XMQuaternionRotationMatrix(viewMatrix);
+    rotationQuaternion = XMQuaternionConjugate(rotationQuaternion);
+    GetTransform()->Rotate(rotationQuaternion);
 }
 
 void CameraMovement::GetCloserToPlayer()

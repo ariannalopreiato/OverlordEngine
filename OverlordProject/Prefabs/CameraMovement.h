@@ -24,6 +24,7 @@ protected:
 
 private:
 	XMVECTOR m_VectorToPlayer{ };
+	XMVECTOR m_WorldForward{ };
 
 	float m_CurrentDistance;
 	float m_MaxDistance;
