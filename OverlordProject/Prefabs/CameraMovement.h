@@ -5,7 +5,7 @@ class Camera;
 class CameraMovement : public BaseComponent
 {
 public:
-	CameraMovement(GameObject* player);
+	CameraMovement(GameObject* player, XMFLOAT3 cameraOffset);
 	~CameraMovement() = default;
 
 	CameraMovement(const CameraMovement& other) = delete;
@@ -14,8 +14,9 @@ public:
 	CameraMovement& operator=(CameraMovement&& other) noexcept = delete;
 
 	void CameraRotation();
-	void FollowPlayer();
+	void KeepPlayerCentered();
 	void GetCloserToPlayer();
+	void FollowPlayer();
 
 protected:
 	void Initialize(const SceneContext& /*sceneContext*/);
@@ -23,12 +24,12 @@ protected:
 	void LateUpdate(const SceneContext& /*sceneContext*/);
 
 private:
-	XMVECTOR m_VectorToPlayer{ };
-	XMVECTOR m_WorldForward{ };
 
 	float m_CurrentDistance;
 	float m_MaxDistance;
 	float m_MinDistance;
+
+	XMFLOAT3 m_CameraOffset;
 
 	GameObject* m_pPlayer{ nullptr };
 

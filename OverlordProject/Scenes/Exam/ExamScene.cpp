@@ -35,7 +35,7 @@ void ExamScene::Initialize()
 
 	//Camera
 	const auto cameraObj = AddChild(new GameObject());
-	/*auto cameraMovement = */cameraObj->AddComponent(new CameraMovement(m_pPlayer));
+	/*auto cameraMovement = */cameraObj->AddComponent(new CameraMovement(m_pPlayer, {8.f, 4.f, 6.f}));
 	auto cameraComponent = cameraObj->AddComponent(new CameraComponent());
 	SetActiveCamera(cameraComponent);
 

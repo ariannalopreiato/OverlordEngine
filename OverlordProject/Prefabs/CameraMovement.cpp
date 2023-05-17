@@ -5,16 +5,17 @@
 #include <math.h>
 #include "Prefabs/Character.h"
 
-CameraMovement::CameraMovement(GameObject* player)
+CameraMovement::CameraMovement(GameObject* player, XMFLOAT3 cameraOffset)
 	: m_pPlayer(player)
+    , m_CameraOffset(cameraOffset)
 {
     m_CurrentDistance = 10.f;
     XMFLOAT3 worldForward{ 0, 0, -1 };
-    m_WorldForward = XMLoadFloat3(&worldForward);
 }
 
 void CameraMovement::Initialize(const SceneContext& /*sceneContext*/)
 {
+    KeepPlayerCentered();
     FollowPlayer();
 }
 
@@ -25,6 +26,7 @@ void CameraMovement::Update(const SceneContext& /*sceneContext*/)
 
 void CameraMovement::LateUpdate(const SceneContext& /*sceneContext*/)
 {
+    KeepPlayerCentered();
     FollowPlayer();
 }
 
@@ -33,10 +35,8 @@ void CameraMovement::CameraRotation()
 
 }
 
-void CameraMovement::FollowPlayer()
+void CameraMovement::KeepPlayerCentered()
 {
-    //https://stackoverflow.com/questions/1171849/finding-quaternion-representing-the-rotation-from-one-vector-to-another
-
     //vector between the player position and the camera position
     XMVECTOR forward = XMVectorSubtract(XMLoadFloat3(&m_pPlayer->GetTransform()->GetPosition()), XMLoadFloat3(&GetTransform()->GetPosition()));
     forward = XMVector3Normalize(forward);
@@ -62,4 +62,11 @@ void CameraMovement::FollowPlayer()
 void CameraMovement::GetCloserToPlayer()
 {
 
+}
+
+void CameraMovement::FollowPlayer()
+{
+    XMVECTOR offset = XMLoadFloat3(&m_CameraOffset);
+    auto playerPos = XMLoadFloat3(&m_pPlayer->GetTransform()->GetPosition());
+    GetTransform()->Translate(playerPos + offset);
 }
