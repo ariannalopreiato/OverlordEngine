@@ -74,9 +74,32 @@ VS_OUTPUT VS(VS_INPUT input)
 float4 PS(VS_OUTPUT input) :SV_TARGET
 {
 	//Directional LightPass Logic
-	//...
+	int2 screenCoord = input.Position.xy;
+	int3 loadCoord = int3(screenCoord, 0);
 
-	return float4(1,1,1,1);
+	//Calculate pixel world position for depth view
+	float depth = gTextureDepth.Load(loadCoord).r;
+	float3 p = DepthToWorldPosition_QUAD(depth, input.TexCoord, gMatrixViewProjInv);
+
+	float3 v = normalize(p - gEyePos); //view direction
+
+	float3 diffuse = gTextureDiffuse.Load(loadCoord).rgb; 
+	float4 specular = gTextureSpecular.Load(loadCoord); 
+	float shininess = exp2(specular.a * 10.5f);
+	float3 normal = gTextureNormal.Load(loadCoord).xyz;
+	float3 lightDirection = normalize(gDirectionalLight.Direction.xyz);
+
+	//Material
+	Material mat = (Material)0;
+	mat.Diffuse = diffuse;
+	mat.Specular = specular.rgb;
+	mat.Shininess = shininess;
+
+	//Do lighting
+	LightingResult result = DoDirectionalLighting(gDirectionalLight, mat, lightDirection, v, normal);
+	
+	//finalColor = diffuse + specular + ambient;
+	return float4((mat.Diffuse * result.Diffuse) + (mat.Specular * result.Specular), 1.0f); //+ambient
 }
 
 //TECHNIQUE

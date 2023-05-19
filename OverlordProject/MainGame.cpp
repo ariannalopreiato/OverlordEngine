@@ -14,9 +14,9 @@
 
 /*MILESTONE Content*/
 //#define MILESTONE_1
-// #define MILESTONE_2
+#define MILESTONE_2
 
-#define EXAM
+//#define EXAM
 
 #pragma region Lab/Milestone Includes
 #ifdef W3
@@ -92,15 +92,15 @@
 #pragma endregion
 
 //Game is preparing
-void MainGame::OnGamePreparing(GameContext& /*gameContext*/)
+void MainGame::OnGamePreparing(GameContext& gameContext)
 {
 	//Here you can change some game settings before engine initialize
 	//gameContext.windowWidth=... (default is 1280)
 	//gameContext.windowHeight=... (default is 720)
 
-	//gameContext.windowTitle = L"GP2 - Milestone 1 (2023) | (2DAE13) Doe John";
-	//gameContext.windowTitle = L"GP2 - Milestone 2 (2023) | (2DAE13) Doe John";
-	//gameContext.windowTitle = L"GP2 - Exam Project (2023) | (2DAE13) Doe John";
+	//gameContext.windowTitle = L"GP2 - Milestone 1 (2023) | (2DAE07) Lopreiato Arianna";
+	gameContext.windowTitle = L"GP2 - Milestone 2 (2023) | (2DAE07) Lopreiato Arianna";
+	//gameContext.windowTitle = L"GP2 - Exam Project (2023) | (2DAE07) Lopreiato Arianna";
 }
 
 void MainGame::Initialize()
@@ -168,6 +168,7 @@ void MainGame::Initialize()
 	SceneManager::Get()->AddGameScene(new ShadowMappingScene());
 	SceneManager::Get()->AddGameScene(new ParticleScene());
 	SceneManager::Get()->AddGameScene(new PostProcessingScene());
+	SceneManager::Get()->AddGameScene(new DeferredRenderingScene());
 #endif
 
 #ifdef EXAM

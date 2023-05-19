@@ -203,8 +203,55 @@ PS_Output MainPS(VS_Output input){
 
 	PS_Output output = (PS_Output)0;
 
-	//Fill GBuffer
-	//...
+	//DIFFUSE
+	float4 diffuse = gDiffuseColor;
+	if (gUseDiffuseMap)
+	{
+		diffuse *= gDiffuseMap.Sample(gTextureSampler, input.TexCoord);
+	}
+
+	output.Diffuse = diffuse;
+
+	//ALPHA
+	float alpha = diffuse.a * gOpacityLevel;
+	clip(alpha - 0.1f);
+
+	//AMBIENT
+	float4 ambient = gAmbientColor;
+	ambient *= diffuse;
+	ambient *= gAmbientIntensity;
+
+	//set ambient (light accumulation)
+	output.LightAccumulation = ambient;
+
+	//NORMAL
+	float3 normal = input.Normal;
+	if (gUseNormalMap)
+	{
+		float3x3 TBN = float3x3(
+			normalize(input.Tangent),
+			normalize(input.Binormal),
+			normalize(input.Normal)
+			);
+
+		normal = gNormalMap.Sample(gTextureSampler, input.TexCoord).xyz;
+		normal = normal * 2.0f - 1.0f;
+		normal = mul(normal, TBN);
+	}
+
+	output.Normal = float4(normal, 0);
+
+	//SPECULAR
+	float3 specular = gSpecularColor.rgb;
+	if (gUseSpecularMap)
+	{
+		specular *= gSpecularMap.Sample(gTextureSampler, input.TexCoord).rgb;
+	}
+
+	float shininess = log2(gShininess) / 10.5f;
+
+	output.Specular = float4(specular, shininess);
+
 
 	return output;
 }

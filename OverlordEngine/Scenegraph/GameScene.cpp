@@ -182,6 +182,9 @@ void GameScene::RootDraw()
 #pragma endregion
 
 #pragma region USER PASS
+	//DEFFERED BEGIN
+	DeferredRenderer::Get()->Begin(m_SceneContext);
+	
 	//USER_PASS
 	//+++++++++
 	//User-Scene Draw
@@ -192,6 +195,9 @@ void GameScene::RootDraw()
 	{
 		pChild->RootDraw(m_SceneContext);
 	}
+
+	//DEFERRED END
+	DeferredRenderer::Get()->End(m_SceneContext);
 
 	//SpriteRenderer Draw
 	SpriteRenderer::Get()->Draw(m_SceneContext);

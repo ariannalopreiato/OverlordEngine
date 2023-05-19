@@ -10,10 +10,10 @@ void DeferredRenderingScene::Initialize()
 {
 	//Settings
 	//********
-	//m_SceneContext.useDeferredRendering = true;
+	m_SceneContext.useDeferredRendering = true;
 
 	m_SceneContext.settings.drawGrid = false;
-	//m_SceneContext.settings.enableOnGUI = true;
+	m_SceneContext.settings.enableOnGUI = true;
 
 	//Sponza Mesh
 	//***********
@@ -64,7 +64,7 @@ void DeferredRenderingScene::Initialize()
 
 	//Directional
 	auto& dirLight = m_SceneContext.pLights->GetDirectionalLight();
-	dirLight.isEnabled = true;
+	dirLight.isEnabled = false;
 	dirLight.direction = { -0.577f, -0.577f, 0.577f , 1.0f };
 
 	//Spot Light
@@ -112,7 +112,7 @@ void DeferredRenderingScene::Update()
 
 void DeferredRenderingScene::OnGUI()
 {
-	//DeferredRenderer::Get()->DrawImGui();
+	DeferredRenderer::Get()->DrawImGui();
 
 	ImGui::Checkbox("Flashlight Mode", &m_FlashLightMode);
 }
@@ -124,34 +124,34 @@ void DeferredRenderingScene::LoadSponzaMesh(const std::wstring& meshName, const 
 	const auto pModel = new ModelComponent(meshPath);
 
 	//Material
-	//if (m_SceneContext.useDeferredRendering)
-	//{
-	//	//BASIC-EFFECT_DEFERRED
-	//	//*********************
-	//	const auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred>();
-	//	pModel->SetMaterial(pMaterial);
-	//	pMaterial->UseTransparency(useTransparency);
+	if (m_SceneContext.useDeferredRendering)
+	{
+		//BASIC-EFFECT_DEFERRED
+		//*********************
+		const auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred>();
+		pModel->SetMaterial(pMaterial);
+		pMaterial->UseTransparency(useTransparency);
 
-	//	//Diffuse
-	//	std::wstring texPath{};
-	//	if(GetSponzaTexture(meshName, L"Diffuse", L"", texPath))
-	//	{
-	//		pMaterial->SetDiffuseMap(texPath);
-	//	}
+		//Diffuse
+		std::wstring texPath{};
+		if(GetSponzaTexture(meshName, L"Diffuse", L"", texPath))
+		{
+			pMaterial->SetDiffuseMap(texPath);
+		}
 
-	//	//Specular
-	//	if (GetSponzaTexture(meshName, L"Specular", specularMap, texPath))
-	//	{
-	//		pMaterial->SetSpecularMap(texPath);
-	//	}
+		//Specular
+		if (GetSponzaTexture(meshName, L"Specular", specularMap, texPath))
+		{
+			pMaterial->SetSpecularMap(texPath);
+		}
 
-	//	//Normal
-	//	if (GetSponzaTexture(meshName, L"Normal", normalMap, texPath))
-	//	{
-	//		pMaterial->SetNormalMap(texPath);
-	//	}
-	//}
-	//else
+		//Normal
+		if (GetSponzaTexture(meshName, L"Normal", normalMap, texPath))
+		{
+			pMaterial->SetNormalMap(texPath);
+		}
+	}
+	else
 	{
 		//BASIC-EFFECT
 		//************
