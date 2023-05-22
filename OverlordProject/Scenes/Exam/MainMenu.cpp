@@ -19,13 +19,13 @@ void MainMenu::Initialize()
 	m_StartButton->AddComponent(new SpriteComponent(L"Textures/button.png", { 0.5f,0.5f }, { 1.f,1.f,1.f,.5f }));
 	AddChild(m_StartButton);
 
-	m_StartButton->GetTransform()->Translate(m_SceneContext.windowWidth / 2.f, m_SceneContext.windowHeight / 2.f, .8f);
+	m_StartButton->GetTransform()->Translate(m_SceneContext.windowWidth / 2.f + 400.f, m_SceneContext.windowHeight / 2.f, .8f);
 
 	m_EndButton = new GameObject();
 	m_EndButton->AddComponent(new SpriteComponent(L"Textures/button.png", { 0.5f,0.5f }, { 1.f,1.f,1.f,.5f }));
 	AddChild(m_EndButton);
 
-	m_EndButton->GetTransform()->Translate(m_SceneContext.windowWidth / 2.f, m_SceneContext.windowHeight / 2.f, .7f);
+	m_EndButton->GetTransform()->Translate(m_SceneContext.windowWidth / 2.f + 400.f, m_SceneContext.windowHeight / 2.f + 200.f, .7f);
 
 	const auto pMaterial = PxGetPhysics().createMaterial(.5f, .5f, .5f);
 
@@ -35,17 +35,23 @@ void MainMenu::Initialize()
 
 void MainMenu::Update()
 {
-	if (InputManager::IsMouseButton(InputState::pressed, VK_RBUTTON))
+	if (InputManager::IsMouseButton(InputState::pressed, VK_LBUTTON))
 	{
-		if (const auto pPickedObject = m_SceneContext.pCamera->Pick())
+		if (m_StartButton->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{
-			RemoveChild(pPickedObject, true);
+			//Load new scene
+			SceneManager::Get()->NextScene();
+		}
+		if (m_EndButton->GetComponent<SpriteComponent>()->IsMouseOverSprite())
+		{
+			//Exit the game? close visual studio?
 		}
 	}
-
 	TextRenderer::Get()->DrawText(m_pFont, StringUtil::utf8_decode("Start"), XMFLOAT2(50.f, 50.f), XMFLOAT4{ Colors::LightGoldenrodYellow });
 }
 
 void MainMenu::OnGUI()
 {
 }
+
+

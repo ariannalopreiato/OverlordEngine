@@ -19,6 +19,8 @@ public:
 	void SetColor(const XMFLOAT4& color) { m_Color = color; }
 	void SetTexture(const std::wstring& spriteAsset);
 
+	bool IsMouseOverSprite();
+
 protected:
 	void Initialize(const SceneContext& sceneContext) override;
 	void Draw(const SceneContext& sceneContext) override;

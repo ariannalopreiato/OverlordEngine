@@ -8,6 +8,7 @@
 #include "Prefabs/CameraMovement.h"
 #include "Materials/Shadow/DiffuseMaterial_Shadow.h"
 #include "Materials/Post/PostBloom.h"
+#include "Prefabs/TimerPrefab.h"
 
 void ExamScene::Initialize()
 {
@@ -65,6 +66,10 @@ void ExamScene::Initialize()
 	inputAction = InputAction(CharacterJump, InputState::pressed, VK_SPACE, -1, XINPUT_GAMEPAD_A);
 	m_SceneContext.pInput->AddInputAction(inputAction);	
 
+	//TIMER
+	m_Timer = AddChild((new TimerPrefab(120, XMFLOAT2{0.f, 0.f})));
+	
+
 	//BACKGROUND MUSIC
 
 
@@ -86,8 +91,12 @@ void ExamScene::Update()
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().x << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().y << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().z << std::endl;
-	CheckForCollectibles();
-	DisplayPoints();
+
+	if (!m_Timer->IsTimeOut())
+	{
+		CheckForCollectibles();
+		DisplayPoints();
+	}
 }
 
 void ExamScene::LateUpdate()
@@ -216,7 +225,6 @@ void ExamScene::LoadLevel()
 	textures.emplace_back(L"Textures/Level/wood01.png"); //31
 
 	textures.emplace_back(L"Textures/Level/m_kabe38.png");
-
 
 
 

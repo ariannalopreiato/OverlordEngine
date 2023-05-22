@@ -4,6 +4,7 @@ class Character;
 class CollectiblePrefab;
 class Ladder;
 class SpriteFont;
+class TimerPrefab;
 class ExamScene : public GameScene
 {
 public:
@@ -51,4 +52,5 @@ private:
 	int m_CurrentPoints{ 0 };
 	float m_GameDuration;
 	float m_CurrentTime;
+	TimerPrefab* m_Timer;
 };

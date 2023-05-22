@@ -64,8 +64,8 @@ void PostProcessingScene::Initialize()
 	AddPostProcessingEffect(m_pPostBlur);
 	//If you already have shadow mapping working you can change the code above to use the shadow variant shaders
 
-	//m_pPostBloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
-	//AddPostProcessingEffect(m_pPostBloom);
+	m_pPostBloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
+	AddPostProcessingEffect(m_pPostBloom);
 }
 
 void PostProcessingScene::OnGUI()
@@ -78,7 +78,7 @@ void PostProcessingScene::OnGUI()
 	ImGui::Checkbox("Blur PP", &isEnabled);
 	m_pPostBlur->SetIsEnabled(isEnabled);
 
-	//isEnabled = m_pPostBloom->IsEnabled();
-	//ImGui::Checkbox("Bloom PP", &isEnabled);
-	//m_pPostBloom->SetIsEnabled(isEnabled);
+	isEnabled = m_pPostBloom->IsEnabled();
+	ImGui::Checkbox("Bloom PP", &isEnabled);
+	m_pPostBloom->SetIsEnabled(isEnabled);
 }

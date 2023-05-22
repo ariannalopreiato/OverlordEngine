@@ -45,6 +45,7 @@
     <ClCompile Include="Materials\BasicMaterial_Deferred.cpp" />
     <ClCompile Include="Scenes\Exam\MainMenu.cpp" />
     <ClCompile Include="Materials\Post\PostBloom.cpp" />
+    <ClCompile Include="Prefabs\TimerPrefab.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -90,5 +91,6 @@
     <ClInclude Include="Materials\BasicMaterial_Deferred.h" />
     <ClInclude Include="Scenes\Exam\MainMenu.h" />
     <ClInclude Include="Materials\Post\PostBloom.h" />
+    <ClInclude Include="Prefabs\TimerPrefab.h" />
   </ItemGroup>
 </Project>

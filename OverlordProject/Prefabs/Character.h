@@ -48,6 +48,8 @@ public:
 	bool GetIsClimbing() { return m_CanClimb; }
 	XMFLOAT3 GetVelocity() const { return m_TotalVelocity; }
 
+	void SetActiveCamera(CameraComponent* camera) { m_pCameraComponent = camera; }
+
 protected:
 	void Initialize(const SceneContext&) override;
 	void Update(const SceneContext&) override;

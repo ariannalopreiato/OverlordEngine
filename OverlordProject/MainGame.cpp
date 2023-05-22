@@ -14,9 +14,9 @@
 
 /*MILESTONE Content*/
 //#define MILESTONE_1
-#define MILESTONE_2
+//#define MILESTONE_2
 
-//#define EXAM
+#define EXAM
 
 #pragma region Lab/Milestone Includes
 #ifdef W3

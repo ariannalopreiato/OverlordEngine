@@ -65,8 +65,8 @@ void Character::ScalePlayerMesh(float scale)
 
 void Character::Update(const SceneContext& sceneContext)
 {
-	if (m_pCameraComponent->IsActive())
-	{
+	/*if (m_pCameraComponent->IsActive())
+	{*/
 		constexpr float epsilon{ 0.001f }; //Constant that can be used to compare if a float is near zero
 
 		//***************
@@ -193,9 +193,17 @@ void Character::Update(const SceneContext& sceneContext)
 
 		//********
 		//ROTATION
-		//float targetAngle = XMConvertToDegrees(atan2(-m_TotalVelocity.x, m_TotalVelocity.x));
+		// substract the camera position from the character one and normalize!!!!
+		//auto pos = XMLoadFloat3(&GetTransform()->GetPosition());
+		//pos -= XMLoadFloat3(&m_pCameraComponent->GetTransform()->GetPosition());
+		//XMFLOAT3 finalPos;
+		//pos = XMVector3Normalize(pos);
+		//XMStoreFloat3(&finalPos, pos);
+		//GetTransform()->Translate(finalPos);
 
-		////targetAngle += 180; // resample value from [-180, 180] to [0, 360]
+		//float targetAngle = XMConvertToDegrees(atan2(-m_TotalVelocity.x, m_TotalVelocity.x));
+		
+		//targetAngle += 180; // resample value from [-180, 180] to [0, 360]
 
 		//GetTransform()->Rotate(0, targetAngle, 0);
 
@@ -234,7 +242,7 @@ void Character::Update(const SceneContext& sceneContext)
 		m_pControllerComponent->Move(displacement);
 		//The above is a simple implementation of Movement Dynamics, adjust the code to further improve the movement logic and behaviour.
 		//Also, it can be usefull to use a seperate RayCast to check if the character is grounded (more responsive)
-	}
+	//}
 }
 
 
