@@ -30,9 +30,9 @@ private:
 	int actionId_MoveLeft{ -1 };
 	int actionId_MoveRight{ -1 };
 
-	float m_CurrentDistance;
-	float m_MaxDistance;
-	float m_MinDistance;
+	//float m_CurrentDistance;
+	//float m_MaxDistance;
+	//float m_MinDistance;
 
 	XMFLOAT3 m_CameraOffset;
 
@@ -40,4 +40,7 @@ private:
 
 	float m_RotatingSpeed{ 5.f };
 	float m_RotationDirection{ 0.f };
+
+	float m_CameraHeight;
+	float m_CameraDistance;
 };
