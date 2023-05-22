@@ -13,12 +13,12 @@ public:
 	CameraMovement& operator=(const CameraMovement& other) = delete;
 	CameraMovement& operator=(CameraMovement&& other) noexcept = delete;
 
-	void CameraRotation();
+	void CameraRotation(const SceneContext& sceneContext);
 	void KeepPlayerCentered();
 	void GetCloserToPlayer();
 	void FollowPlayer();
-	XMVECTOR GetCurrentForward() { return m_Forward; }
-	XMVECTOR GetCurrentRight() { return m_Right; }
+
+	void SetCameraMovement(int moveLeft, int moveRight);
 
 
 protected:
@@ -27,6 +27,8 @@ protected:
 	void LateUpdate(const SceneContext& /*sceneContext*/);
 
 private:
+	int actionId_MoveLeft{ -1 };
+	int actionId_MoveRight{ -1 };
 
 	float m_CurrentDistance;
 	float m_MaxDistance;
@@ -36,8 +38,6 @@ private:
 
 	GameObject* m_pPlayer{ nullptr };
 
-	XMVECTOR m_Forward;
-
-	XMVECTOR m_Right;
-
+	float m_RotatingSpeed{ 5.f };
+	float m_RotationDirection{ 0.f };
 };

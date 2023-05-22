@@ -44,6 +44,8 @@ void ExamScene::Initialize()
 
 	m_pPlayer->SetCameraMovement(cameraMovement);
 
+	cameraMovement->SetCameraMovement(MoveCameraLeft, MoveCameraRight);
+
 	LoadLevel();
 
 	//Ladders
@@ -67,6 +69,12 @@ void ExamScene::Initialize()
 
 	inputAction = InputAction(CharacterJump, InputState::pressed, VK_SPACE, -1, XINPUT_GAMEPAD_A);
 	m_SceneContext.pInput->AddInputAction(inputAction);	
+
+	inputAction = InputAction(MoveCameraLeft, InputState::down, VK_LEFT);
+	m_SceneContext.pInput->AddInputAction(inputAction);
+
+	inputAction = InputAction(MoveCameraRight, InputState::down, VK_RIGHT);
+	m_SceneContext.pInput->AddInputAction(inputAction);
 
 	//TIMER
 	m_Timer = AddChild((new TimerPrefab(120, XMFLOAT2{0.f, 0.f})));

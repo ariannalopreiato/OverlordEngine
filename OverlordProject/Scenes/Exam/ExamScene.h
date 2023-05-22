@@ -42,7 +42,9 @@ private:
 		CharacterMoveBackward,
 		CharacterJump,
 		CharacterRoll,
-		CharacterClimb
+		CharacterClimb,
+		MoveCameraLeft,
+		MoveCameraRight
 	};
 
 	SpriteFont* m_pFont;
