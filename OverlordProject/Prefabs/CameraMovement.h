@@ -15,7 +15,7 @@ public:
 
 	void CameraRotation(const SceneContext& sceneContext);
 	void KeepPlayerCentered();
-	void GetCloserToPlayer();
+	void GetCloserToPlayer(CollisionGroup ignoreGroups = CollisionGroup::None);
 	void FollowPlayer();
 
 	void SetCameraMovement(int moveLeft, int moveRight);

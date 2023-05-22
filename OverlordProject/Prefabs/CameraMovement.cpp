@@ -19,18 +19,19 @@ void CameraMovement::Initialize(const SceneContext& /*sceneContext*/)
 {
     FollowPlayer();
     KeepPlayerCentered();
+    GetCloserToPlayer();
 }
 
 void CameraMovement::Update(const SceneContext& /*sceneContext*/)
 {
-   
 }
 
 void CameraMovement::LateUpdate(const SceneContext& sceneContext)
 {
     FollowPlayer();
     CameraRotation(sceneContext);
-    KeepPlayerCentered();       
+    KeepPlayerCentered();
+    /*GetCloserToPlayer();*/
 }
 
 void CameraMovement::CameraRotation(const SceneContext& sceneContext)
@@ -88,24 +89,25 @@ void CameraMovement::KeepPlayerCentered()
     GetTransform()->Rotate(rotationQuaternion);
 }
 
-void CameraMovement::GetCloserToPlayer()
+void CameraMovement::GetCloserToPlayer(CollisionGroup ignoreGroups)
 {
-    auto pos = GetTransform()->GetPosition(); //link
-    PxVec3 rayStart = { pos.x, pos.y, pos.z }; //link position
-    auto currDistance = XMVectorSubtract(XMLoadFloat3(&pos), XMLoadFloat3(&m_pPlayer->GetTransform()->GetPosition()));
+    auto playerPos = m_pPlayer->GetTransform()->GetPosition(); 
+    PxVec3 rayStart = { playerPos.x, playerPos.y, playerPos.z }; 
+    auto currDistance = XMVectorSubtract(XMLoadFloat3(&playerPos), XMLoadFloat3(&GetTransform()->GetPosition()));
     XMFLOAT3 rayDirection;
     XMStoreFloat3(&rayDirection, currDistance);
 
     PxVec3 direction = PxVec3({ rayDirection.x, rayDirection.y, rayDirection.z }).getNormalized();
 
     PxQueryFilterData filterData{};
-    //filterData.data.word0 = ~UINT(ignoreGroups);
+    filterData.data.word0 = ~UINT(ignoreGroups);
 
     PxRaycastBuffer hit{};
-    //if (m_pScene->GetPhysxProxy()->Raycast(rayStart, direction, PX_MAX_F32, hit, PxHitFlag::eDEFAULT, filterData))
-    //{
-        //return static_cast<RigidBodyComponent*>(hit.block.actor->userData)->GetGameObject();
-    //}
+    if (m_pScene->GetPhysxProxy()->Raycast(rayStart, direction, PX_MAX_F32, hit, PxHitFlag::eDEFAULT, filterData))
+    {
+        auto pos = hit.block.position;
+        GetTransform()->Translate(pos.x, pos.y, pos.z);
+    }
     //return nullptr;
 
     //if hit, get hit pos and move camera to that position + small offset
