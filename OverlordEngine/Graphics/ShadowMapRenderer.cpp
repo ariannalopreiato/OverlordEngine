@@ -86,7 +86,8 @@ void ShadowMapRenderer::Begin(const SceneContext& sceneContext)
 	auto eyePosition = XMLoadFloat4(&light.position);
 	auto direction = XMLoadFloat4(&light.direction);
 	auto focusPosition = eyePosition + direction;
-	auto viewMatrix = XMMatrixLookAtLH(eyePosition, focusPosition, direction);
+
+	auto viewMatrix = XMMatrixLookAtLH(eyePosition, focusPosition, {0.f, 1.f, 0.f});
 
 	//- Use the Projection & View Matrix to calculate the ViewProjection of this Light, store in m_LightVP
 	XMStoreFloat4x4(&m_LightVP, XMMatrixMultiply(viewMatrix, projMatrix));

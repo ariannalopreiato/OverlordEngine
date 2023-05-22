@@ -90,15 +90,33 @@ void CameraMovement::KeepPlayerCentered()
 
 void CameraMovement::GetCloserToPlayer()
 {
+    auto pos = GetTransform()->GetPosition(); //link
+    PxVec3 rayStart = { pos.x, pos.y, pos.z }; //link position
+    auto currDistance = XMVectorSubtract(XMLoadFloat3(&pos), XMLoadFloat3(&m_pPlayer->GetTransform()->GetPosition()));
+    XMFLOAT3 rayDirection;
+    XMStoreFloat3(&rayDirection, currDistance);
 
+    PxVec3 direction = PxVec3({ rayDirection.x, rayDirection.y, rayDirection.z }).getNormalized();
+
+    PxQueryFilterData filterData{};
+    //filterData.data.word0 = ~UINT(ignoreGroups);
+
+    PxRaycastBuffer hit{};
+    //if (m_pScene->GetPhysxProxy()->Raycast(rayStart, direction, PX_MAX_F32, hit, PxHitFlag::eDEFAULT, filterData))
+    //{
+        //return static_cast<RigidBodyComponent*>(hit.block.actor->userData)->GetGameObject();
+    //}
+    //return nullptr;
+
+    //if hit, get hit pos and move camera to that position + small offset
 }
 
 void CameraMovement::FollowPlayer()
-{
-    //vector between the camera position and the player position
+{  
     auto pos = GetTransform()->GetPosition();
     pos.y -= m_CameraHeight;
 
+    //vector between the camera position and the player position
     auto currDistance = XMVectorSubtract(XMLoadFloat3(&pos), XMLoadFloat3(&m_pPlayer->GetTransform()->GetPosition()));
     float currLength;
     XMStoreFloat(&currLength, XMVector3Length(currDistance));
