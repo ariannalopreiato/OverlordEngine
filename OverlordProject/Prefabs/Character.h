@@ -31,6 +31,7 @@ struct CharacterDesc
 	int actionId_Jump{ -1 };
 };
 
+class CameraMovement;
 class Character : public GameObject
 {
 public:
@@ -49,6 +50,7 @@ public:
 	XMFLOAT3 GetVelocity() const { return m_TotalVelocity; }
 
 	void SetActiveCamera(CameraComponent* camera) { m_pCameraComponent = camera; }
+	void SetCameraMovement(CameraMovement* camera) { m_pCameraMovement = camera; }
 
 protected:
 	void Initialize(const SceneContext&) override;
@@ -57,6 +59,7 @@ protected:
 private:
 	CameraComponent* m_pCameraComponent{};
 	ControllerComponent* m_pControllerComponent{};
+	CameraMovement* m_pCameraMovement{};
 
 	std::wstring m_Texture;
 	std::wstring m_Model;

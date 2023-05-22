@@ -16,7 +16,7 @@ CameraMovement::CameraMovement(GameObject* player, XMFLOAT3 cameraOffset)
 void CameraMovement::Initialize(const SceneContext& /*sceneContext*/)
 {
     KeepPlayerCentered();
-    FollowPlayer();
+    //FollowPlayer();
 }
 
 void CameraMovement::Update(const SceneContext& /*sceneContext*/)
@@ -27,7 +27,7 @@ void CameraMovement::Update(const SceneContext& /*sceneContext*/)
 void CameraMovement::LateUpdate(const SceneContext& /*sceneContext*/)
 {
     KeepPlayerCentered();
-    FollowPlayer();
+    //FollowPlayer();
 }
 
 void CameraMovement::CameraRotation()
@@ -40,6 +40,7 @@ void CameraMovement::KeepPlayerCentered()
     //vector between the player position and the camera position
     XMVECTOR forward = XMVectorSubtract(XMLoadFloat3(&m_pPlayer->GetTransform()->GetPosition()), XMLoadFloat3(&GetTransform()->GetPosition()));
     forward = XMVector3Normalize(forward);
+    m_Forward = forward;
 
     //get the world up vector
     XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -47,6 +48,7 @@ void CameraMovement::KeepPlayerCentered()
     //get the right vector to the current camera
     XMVECTOR right = XMVector3Cross(up, forward);
     right = XMVector3Normalize(right);
+    m_Right = right;
 
     //get the up vector of the camera
     up = XMVector3Cross(forward, right);

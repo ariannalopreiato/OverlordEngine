@@ -17,6 +17,9 @@ public:
 	void KeepPlayerCentered();
 	void GetCloserToPlayer();
 	void FollowPlayer();
+	XMVECTOR GetCurrentForward() { return m_Forward; }
+	XMVECTOR GetCurrentRight() { return m_Right; }
+
 
 protected:
 	void Initialize(const SceneContext& /*sceneContext*/);
@@ -32,5 +35,9 @@ private:
 	XMFLOAT3 m_CameraOffset;
 
 	GameObject* m_pPlayer{ nullptr };
+
+	XMVECTOR m_Forward;
+
+	XMVECTOR m_Right;
 
 };

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Character.h"
 #include "Materials/DiffuseMaterial_Skinned.h"
+#include "CameraMovement.h"
 
 Character::Character(const CharacterDesc& characterDesc, const std::wstring& texture, const std::wstring& model, float pivotOffset, bool isAnimated) :
 	m_CharacterDesc{ characterDesc },
@@ -125,19 +126,12 @@ void Character::Update(const SceneContext& sceneContext)
 			look.y = float(sceneContext.pInput->GetMouseMovement().y);
 		}
 
-
-		//Optional: in case look.x AND look.y are near zero, you could use the Right ThumbStickPosition for look
-
 		//************************
 		//GATHERING TRANSFORM INFO
 
-		//Retrieve the TransformComponent
-		auto transform = GetTransform();
-
-		//Retrieve the forward & right vector (as XMVECTOR) from the TransformComponent
-		XMVECTOR forward = XMLoadFloat3(&transform->GetForward());
-		XMVECTOR right = XMLoadFloat3(&transform->GetRight());
-		XMVECTOR up = XMLoadFloat3(&transform->GetUp());
+		//Retrieve the forward & right vector (as XMVECTOR) from the current camera
+		auto forward = m_pCameraMovement->GetCurrentForward();
+		auto right = m_pCameraMovement->GetCurrentRight();
 
 		if (m_pCameraComponent->IsActive())
 		{
@@ -164,7 +158,7 @@ void Character::Update(const SceneContext& sceneContext)
 		if (abs(move.x) > epsilon || abs(move.z) > epsilon || abs(move.y) > epsilon)
 		{
 			//Calculate & Store the current direction (m_CurrentDirection) >> based on the forward/right vectors and the pressed input
-			XMStoreFloat3(&m_CurrentDirection, XMVector3Normalize(move.x * right + move.z * forward + move.y * up));
+			XMStoreFloat3(&m_CurrentDirection, XMVector3Normalize(move.x * right + move.z * forward));
 
 			//Increase the current MoveSpeed with the current Acceleration (m_MoveSpeed)
 			m_MoveSpeed += currentAcceleration;
@@ -193,19 +187,9 @@ void Character::Update(const SceneContext& sceneContext)
 
 		//********
 		//ROTATION
-		// substract the camera position from the character one and normalize!!!!
-		//auto pos = XMLoadFloat3(&GetTransform()->GetPosition());
-		//pos -= XMLoadFloat3(&m_pCameraComponent->GetTransform()->GetPosition());
-		//XMFLOAT3 finalPos;
-		//pos = XMVector3Normalize(pos);
-		//XMStoreFloat3(&finalPos, pos);
-		//GetTransform()->Translate(finalPos);
+		float targetAngle = XMConvertToDegrees(atan2(m_TotalVelocity.x, m_TotalVelocity.z));
 
-		//float targetAngle = XMConvertToDegrees(atan2(-m_TotalVelocity.x, m_TotalVelocity.x));
-		
-		//targetAngle += 180; // resample value from [-180, 180] to [0, 360]
-
-		//GetTransform()->Rotate(0, targetAngle, 0);
+		GetTransform()->Rotate(0, targetAngle - 180, 0);
 
 		//## Vertical Movement (Jump/Fall)
 		//If the Controller Component is NOT grounded (= freefall)	

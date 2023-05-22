@@ -36,11 +36,13 @@ void ExamScene::Initialize()
 
 	//Camera
 	const auto cameraObj = AddChild(new GameObject());
-	/*auto cameraMovement = */cameraObj->AddComponent(new CameraMovement(m_pPlayer, {8.f, 4.f, 6.f}));
+	auto cameraMovement = cameraObj->AddComponent(new CameraMovement(m_pPlayer, {8.f, 4.f, 6.f}));
 	auto cameraComponent = cameraObj->AddComponent(new CameraComponent());
 	SetActiveCamera(cameraComponent);
 
 	cameraObj->GetTransform()->Translate(10.f, 3.f, -49.f);
+
+	m_pPlayer->SetCameraMovement(cameraMovement);
 
 	LoadLevel();
 
