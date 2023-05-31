@@ -28,7 +28,7 @@ void LifeManager::RemoveLife()
 		auto transform = m_Hearts[m_CurrentLife - 1]->GetTransform();
 		auto pos = transform->GetPosition();
 
-		pos.z = 0.f;
+		pos.z = m_Back;
 
 		transform->Translate(pos);
 
@@ -44,7 +44,7 @@ void LifeManager::AddLife()
 		auto transform = m_Hearts[m_CurrentLife]->GetTransform();
 		auto pos = transform->GetPosition();
 
-		pos.z = 0.5f;
+		pos.z = m_Front;
 
 		transform->Translate(pos);
 
@@ -76,21 +76,23 @@ void LifeManager::DrawAllLives()
 	{
 		auto emptyHeart = new GameObject();
 		m_EmptyHearts.push_back(emptyHeart);
-		emptyHeart->AddComponent(new SpriteComponent(L"Textures/HeartEmpty.png", { 0.5f,0.5f }, { 1.f,1.f,1.f,1.f }));
+		emptyHeart->AddComponent(new SpriteComponent(L"Textures/Heart/HeartEmpty.png", { 0.5f,0.5f }, { 1.f,1.f,1.f,1.f }));
 		AddChild(m_EmptyHearts[i]);
 
 		auto heart = new GameObject();
 		m_Hearts.push_back(heart);
-		heart->AddComponent(new SpriteComponent(L"Textures/Heart.png", { 0.5f,0.5f }, { 1.f,1.f,1.f,1.f }));
+		heart->AddComponent(new SpriteComponent(L"Textures/Heart/Heart.png", { 0.5f,0.5f }, { 1.f,1.f,1.f,1.f }));
 		AddChild(m_Hearts[i]);
 
 		XMFLOAT2 dimensions = emptyHeart->GetComponent<SpriteComponent>()->GetDimensions();
+
+		m_Position.z = m_Back;
 
 		emptyHeart->GetTransform()->Translate(m_Position);
 		emptyHeart->GetTransform()->Scale(m_Dimensions);
 
 		XMFLOAT3 frontPosition = m_Position;
-		frontPosition.z = -0.5f;
+		frontPosition.z = m_Front;
 		heart->GetTransform()->Translate(frontPosition);
 		heart->GetTransform()->Scale(m_Dimensions);
 

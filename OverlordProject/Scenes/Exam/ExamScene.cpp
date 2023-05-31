@@ -31,7 +31,7 @@ void ExamScene::Initialize()
 	characterDesc.actionId_Jump = CharacterJump;
 
 	float pivotOffset = 1.3f;
-	m_pPlayer = AddChild(new Character(characterDesc, L"Textures/body.png", L"Meshes/link.ovm", pivotOffset, true));
+	m_pPlayer = AddChild(new Character(characterDesc, L"Textures/body.png", L"Meshes/Player/link.ovm", pivotOffset, true));
 	m_pPlayer->ScalePlayerMesh(0.015f);
 	InitializePlayer();
 
@@ -78,7 +78,7 @@ void ExamScene::Initialize()
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
 	//TIMER
-	m_Timer = AddChild((new TimerPrefab(120, XMFLOAT2{0.f, 0.f})));
+	m_pTimer = AddChild((new TimerPrefab(120, XMFLOAT2{0.f, 0.f})));
 
 	//POINTS
 	m_TotalPoints = 10;
@@ -94,7 +94,7 @@ void ExamScene::Initialize()
 	//AddPostProcessingEffect(bloom);
 
 	//LIFE
-	m_LifeManager = AddChild(new LifeManager(3, {0.13f, 0.13f, 0.13f}, {20.f, 80.f, 0.f}));
+	m_pLifeManager = AddChild(new LifeManager(3, {0.13f, 0.13f, 0.13f}, {20.f, 80.f, 0.f}));
 }
 
 void ExamScene::OnGUI()
@@ -110,7 +110,7 @@ void ExamScene::Update()
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().z << std::endl;
 
 	//if there is still time -> update the points
-	if (!m_Timer->IsTimeOut())
+	if (!m_pTimer->IsTimeOut())
 	{
 		CheckForCollectibles();
 		DisplayPoints();
@@ -127,6 +127,9 @@ void ExamScene::Update()
 		//else
 			//call lose menu
 	}	
+
+	//if(m_pLifeManager->IsDead())
+		//call lose menu
 }
 
 void ExamScene::LateUpdate()
@@ -158,15 +161,47 @@ void ExamScene::InitializePlayer()
 
 void ExamScene::InitializeCollectibles()
 {
-	if (!m_Collectibles.empty())
+	if (!m_pCollectibles.empty())
 	{
-		for (auto& collectible : m_Collectibles)
+		for (auto& collectible : m_pCollectibles)
 			RemoveChild(collectible);
 
-		m_Collectibles.clear();
+		m_pCollectibles.clear();
 	}
 
-	m_Collectibles.emplace_back(AddChild(new CollectiblePrefab(L"Textures/rupee.png", L"Meshes/rupee.ovm", 1, { 1.37f, 1.12f, -47.6f }, { 90.f, 0.f, 0.f })));
+	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, { 1.37f, 1.12f, -47.6f }, { 90.f, 0.f, 0.f })));
+
+	for (const auto& collectible : m_pCollectibles)
+	{
+		const auto pMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
+		auto model = collectible->GetModel();
+
+		pMaterial->SetDiffuseTexture(L"Textures/rupee.png");
+		model->SetMaterial(pMaterial);
+	}
+
+
+	if (!m_pHearts.empty())
+	{
+		for (auto& collectible : m_pHearts)
+			RemoveChild(collectible);
+
+		m_pHearts.clear();
+	}
+
+	m_pHearts.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/heart.ovm", 1, { 4.37f, 1.12f, -47.6f }, { 0.f, 0.f, 0.f }, {1.2f, 1.2f, 1.2f})));
+
+	for (const auto& heart : m_pHearts)
+	{
+		const auto pMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
+		auto model = heart->GetModel();
+
+		//pMaterial->SetDiffuseTexture(L"Textures/Heart/mat_gd_heart_ut2.png");
+		//model->SetMaterial(pMaterial, 0);
+
+		pMaterial->SetDiffuseTexture(L"Textures/Heart/mat_gd_heart_utu.png");
+		model->SetMaterial(pMaterial, 1);
+	}
 }
 
 //void ExamScene::PositionLaddersTrigger()
@@ -285,14 +320,26 @@ void ExamScene::LoadLevel()
 
 void ExamScene::CheckForCollectibles()
 {
-	for (const auto& obj : m_Collectibles)
+	for (const auto& obj : m_pCollectibles)
 	{
 		if (obj->GetIsCollected())
 		{
 			m_CurrentPoints += obj->GetValue();
 			RemoveChild(obj);
-			m_Collectibles.erase(std::remove(m_Collectibles.begin(), m_Collectibles.end(), obj));
+			m_pCollectibles.erase(std::remove(m_pCollectibles.begin(), m_pCollectibles.end(), obj));
+			m_pLifeManager->RemoveLife();
 			//todo collected sound
+		}
+	}
+
+	for (const auto& obj : m_pHearts)
+	{
+		if (obj->GetIsCollected())
+		{
+			m_pLifeManager->AddLife();
+			RemoveChild(obj);
+			m_pHearts.erase(std::remove(m_pHearts.begin(), m_pHearts.end(), obj));
+			//todo collected heart sound
 		}
 	}
 }

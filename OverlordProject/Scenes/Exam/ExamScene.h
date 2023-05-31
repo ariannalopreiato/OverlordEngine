@@ -51,11 +51,12 @@ private:
 
 	SpriteFont* m_pFont;
 	Character* m_pPlayer{};
-	std::vector<CollectiblePrefab*> m_Collectibles{};
+	std::vector<CollectiblePrefab*> m_pCollectibles{};
+	std::vector<CollectiblePrefab*> m_pHearts{};
 	int m_CurrentPoints{ 0 };
 	int m_TotalPoints{};
 	float m_GameDuration;
 	float m_CurrentTime;
-	TimerPrefab* m_Timer{};
-	LifeManager* m_LifeManager{};
+	TimerPrefab* m_pTimer{};
+	LifeManager* m_pLifeManager{};
 };

@@ -30,4 +30,6 @@ private:
 	XMFLOAT3 m_Dimensions{};
 	std::vector<GameObject*> m_EmptyHearts;
 	std::vector<GameObject*> m_Hearts;
+	float m_Front{ 0.f };
+	float m_Back{ 0.5f };
 };

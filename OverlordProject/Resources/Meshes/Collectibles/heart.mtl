@@ -1,0 +1,16 @@
+newmtl mat_gd_heart_ut2
+Ka 0 0 0
+Kd 0.4705882 0.4705882 0.4705882
+d 1
+Tr 1
+map_Ka mat_gd_heart_ut2.png
+map_Kd mat_gd_heart_ut2.png
+map_d mat_gd_heart_ut2.png
+newmtl mat_gd_heart_utu
+Ka 0 0 0
+Kd 0.4705882 0.4705882 0.4705882
+d 1
+Tr 1
+map_Ka mat_gd_heart_utu.png
+map_Kd mat_gd_heart_utu.png
+map_d mat_gd_heart_utu.png

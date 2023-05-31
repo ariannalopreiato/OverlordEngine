@@ -2,10 +2,9 @@
 #include "CollectiblePrefab.h"
 #include "Materials/DiffuseMaterial.h"
 
-CollectiblePrefab::CollectiblePrefab(const std::wstring& texture, const std::wstring& model, int value, const XMFLOAT3& position, const XMFLOAT3& rotation, const XMFLOAT3& scale, float pivotOffset)
-	: m_Texture{ texture }
-	, m_Model{ model }
-	, m_Value {value}
+CollectiblePrefab::CollectiblePrefab(const std::wstring& model, int value, const XMFLOAT3& position, const XMFLOAT3& rotation, const XMFLOAT3& scale, float pivotOffset)
+	: m_Model{ model }
+	, m_Value{ value }
 	, m_Position{ position }
 	, m_Rotation{ rotation }
 	, m_Scale{ scale }
@@ -14,25 +13,24 @@ CollectiblePrefab::CollectiblePrefab(const std::wstring& texture, const std::wst
 
 void CollectiblePrefab::Initialize(const SceneContext& /*sceneContext*/)
 {
-	const auto pMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
 	auto& physx = PxGetPhysics();
 	auto pMaterialPhys = physx.createMaterial(0.f, 0.f, 1.f);
-	pMaterial->SetDiffuseTexture(m_Texture);
+	
 
-	m_ModelMesh = AddChild(new GameObject);
-	auto pModel = m_ModelMesh->AddComponent(new ModelComponent(m_Model));
+	m_pModelMesh = AddChild(new GameObject);
+	auto pModel = m_pModelMesh->AddComponent(new ModelComponent(m_Model));
 	m_Position.y -= m_PivotOffset;
 	pModel->GetTransform()->Translate(m_Position);
 	pModel->GetTransform()->Scale(m_Scale);
-	m_ModelMesh->GetTransform()->Rotate(m_Rotation);
-	pModel->SetMaterial(pMaterial);
+	m_pModelMesh->GetTransform()->Rotate(m_Rotation);
+	
 
-	auto pRigidBody = m_ModelMesh->AddComponent(new RigidBodyComponent(true));
+	auto pRigidBody = m_pModelMesh->AddComponent(new RigidBodyComponent(true));
 	float size{ .5f };
 	pRigidBody->AddCollider(PxBoxGeometry{ size / 2, size / 2, size / 2 }, *pMaterialPhys, true);
 
 	
-	m_ModelMesh->SetOnTriggerCallBack([=](GameObject*, GameObject* /*otherObjectPtr*/, PxTriggerAction triggerAction)
+	m_pModelMesh->SetOnTriggerCallBack([=](GameObject*, GameObject* /*otherObjectPtr*/, PxTriggerAction triggerAction)
 		{
 			if (triggerAction == PxTriggerAction::ENTER)
 			{
