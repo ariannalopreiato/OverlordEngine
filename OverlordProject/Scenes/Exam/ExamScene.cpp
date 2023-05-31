@@ -78,11 +78,10 @@ void ExamScene::Initialize()
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
 	//TIMER
-	m_pTimer = AddChild((new TimerPrefab(120, XMFLOAT2{0.f, 0.f})));
+	m_pTimer = AddChild((new TimerPrefab(120, XMFLOAT2{ m_SceneContext.windowWidth/2 - 50.f, 10.f})));
 
 	//POINTS
 	m_TotalPoints = 10;
-	
 
 	//BACKGROUND MUSIC
 
@@ -347,5 +346,5 @@ void ExamScene::CheckForCollectibles()
 void ExamScene::DisplayPoints()
 {	
 	std::string point = "x" + std::to_string(m_CurrentPoints);
-	TextRenderer::Get()->DrawText(m_pFont, StringUtil::utf8_decode(point), XMFLOAT2(50.f, 50.f), XMFLOAT4{Colors::LightGoldenrodYellow});
+	TextRenderer::Get()->DrawText(m_pFont, StringUtil::utf8_decode(point), XMFLOAT2(1200.f, 10.f), XMFLOAT4{Colors::LightGoldenrodYellow});
 }
