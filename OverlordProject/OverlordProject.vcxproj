@@ -93,6 +93,8 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scenes\Exam\GameOver.cpp" />
+    <ClCompile Include="Scenes\Exam\PauseMenu.cpp" />
     <ClCompile Include="Prefabs\LifeManager.cpp" />
     <ClCompile Include="Materials\Post\PostBloom.cpp" />
     <ClCompile Include="Scenes\Exam\MainMenu.cpp" />
@@ -151,6 +153,7 @@
     <ClCompile Include="Scenes\Week 4\UberMaterialScene.cpp" />
     <ClCompile Include="Materials\UberMaterial.cpp" />
     <ClCompile Include="Prefabs\TimerPrefab.cpp" />
+    <ClCompile Include="Scenes\Exam\WinScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OverlordEngine\OverlordEngine.vcxproj">
@@ -158,6 +161,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scenes\Exam\GameOver.h" />
+    <ClInclude Include="Scenes\Exam\PauseMenu.h" />
     <ClInclude Include="Prefabs\LifeManager.h" />
     <ClInclude Include="Materials\Post\PostBloom.h" />
     <ClInclude Include="Scenes\Exam\MainMenu.h" />
@@ -203,6 +208,7 @@
     <ClInclude Include="Scenes\Week 4\UberMaterialScene.h" />
     <ClInclude Include="Materials\UberMaterial.h" />
     <ClInclude Include="Prefabs\TimerPrefab.h" />
+    <ClInclude Include="Scenes\Exam\WinScreen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

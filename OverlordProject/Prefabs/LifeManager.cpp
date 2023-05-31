@@ -62,10 +62,10 @@ bool LifeManager::IsDead()
 
 void LifeManager::Reset()
 {
+	while (m_CurrentLife < m_MaxLife)
+		AddLife();
+
 	m_CurrentLife = m_MaxLife;
-	m_EmptyHearts.clear();
-	m_Hearts.clear();
-	DrawAllLives();
 }
 
 void LifeManager::DrawAllLives()

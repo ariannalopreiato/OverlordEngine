@@ -27,7 +27,10 @@ XMFLOAT2 SpriteComponent::GetDimensions()
 bool SpriteComponent::IsMouseOverSprite()
 {
 	auto mousePos = m_pScene->GetSceneContext().pInput->GetMousePosition();
+	auto scale = GetTransform()->GetScale();
 	auto size = m_pTexture->GetDimension();
+	size.x *= scale.x;
+	size.y *= scale.y;
 	auto pos = GetTransform()->GetPosition();
 	
 	if (mousePos.x > pos.x - size.x / 2 && mousePos.x < pos.x + size.x / 2

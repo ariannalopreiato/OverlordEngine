@@ -19,5 +19,4 @@ private:
 	GameObject* m_pSprite{};
 	GameObject* m_StartButton{};
 	GameObject* m_EndButton{};
-	SpriteFont* m_pFont;
 };

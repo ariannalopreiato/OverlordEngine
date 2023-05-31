@@ -87,6 +87,9 @@
 #ifdef EXAM
 #include "Scenes/Exam/MainMenu.h"
 #include "Scenes/Exam/ExamScene.h"
+#include "Scenes/Exam/PauseMenu.h"
+#include "Scenes/Exam/GameOver.h"
+#include "Scenes/Exam/WinScreen.h"
 #endif
 
 #pragma endregion
@@ -99,8 +102,8 @@ void MainGame::OnGamePreparing(GameContext& gameContext)
 	//gameContext.windowHeight=... (default is 720)
 
 	//gameContext.windowTitle = L"GP2 - Milestone 1 (2023) | (2DAE07) Lopreiato Arianna";
-	gameContext.windowTitle = L"GP2 - Milestone 2 (2023) | (2DAE07) Lopreiato Arianna";
-	//gameContext.windowTitle = L"GP2 - Exam Project (2023) | (2DAE07) Lopreiato Arianna";
+	//gameContext.windowTitle = L"GP2 - Milestone 2 (2023) | (2DAE07) Lopreiato Arianna";
+	gameContext.windowTitle = L"GP2 - Exam Project (2023) | (2DAE07) Lopreiato Arianna";
 }
 
 void MainGame::Initialize()
@@ -173,6 +176,9 @@ void MainGame::Initialize()
 
 #ifdef EXAM
 	SceneManager::Get()->AddGameScene(new MainMenu());
+	SceneManager::Get()->AddGameScene(new WinScreen());
+	SceneManager::Get()->AddGameScene(new GameOver());
+	SceneManager::Get()->AddGameScene(new PauseMenu());
 	SceneManager::Get()->AddGameScene(new ExamScene());
 #endif
 }

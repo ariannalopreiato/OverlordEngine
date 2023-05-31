@@ -9,7 +9,7 @@ class LifeManager;
 class ExamScene : public GameScene
 {
 public:
-	ExamScene() : GameScene(L"2DAE07 - Lopreiato Arianna - Exam 2023") {}
+	ExamScene() : GameScene(L"Exam Scene") {}
 	~ExamScene() override = default;
 
 	ExamScene(const ExamScene& other) = delete;

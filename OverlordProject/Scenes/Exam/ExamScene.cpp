@@ -78,7 +78,7 @@ void ExamScene::Initialize()
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
 	//TIMER
-	m_pTimer = AddChild((new TimerPrefab(120, XMFLOAT2{ m_SceneContext.windowWidth/2 - 50.f, 10.f})));
+	m_pTimer = AddChild((new TimerPrefab(12, XMFLOAT2{ m_SceneContext.windowWidth/2 - 50.f, 10.f})));
 
 	//POINTS
 	m_TotalPoints = 10;
@@ -115,20 +115,32 @@ void ExamScene::Update()
 		DisplayPoints();
 
 		//check if all the rupees have been collected
-		//if(CheckGameWon())
-			//call win menu
+		if (CheckGameWon())
+		{
+			Reset();
+			SceneManager::Get()->SetActiveGameScene(L"Win Screen");
+		}
 	}
 	else //if the time runs out
 	{
 		//check if all the rupees have been collected
-		//if(CheckGameWon())
-			//call win menu
-		//else
-			//call lose menu
+		if (CheckGameWon())
+		{
+			Reset();
+			SceneManager::Get()->SetActiveGameScene(L"Win Screen");
+		}
+		else
+		{
+			Reset();
+			SceneManager::Get()->SetActiveGameScene(L"Game Over");
+		}
 	}	
 
-	//if(m_pLifeManager->IsDead())
-		//call lose menu
+	if (m_pLifeManager->IsDead())
+	{
+		Reset();
+		SceneManager::Get()->SetActiveGameScene(L"Game Over");
+	}
 }
 
 void ExamScene::LateUpdate()
@@ -222,6 +234,8 @@ void ExamScene::Reset()
 	InitializePlayer();
 	InitializeCollectibles();
 	m_CurrentPoints = 0;
+	m_pLifeManager->Reset();
+	m_pTimer->Reset();
 }
 
 void ExamScene::LoadLevel()

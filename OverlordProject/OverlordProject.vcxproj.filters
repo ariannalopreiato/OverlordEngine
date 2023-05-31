@@ -47,6 +47,9 @@
     <ClCompile Include="Materials\Post\PostBloom.cpp" />
     <ClCompile Include="Prefabs\TimerPrefab.cpp" />
     <ClCompile Include="Prefabs\LifeManager.cpp" />
+    <ClCompile Include="Scenes\Exam\PauseMenu.cpp" />
+    <ClCompile Include="Scenes\Exam\GameOver.cpp" />
+    <ClCompile Include="Scenes\Exam\WinScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -94,5 +97,8 @@
     <ClInclude Include="Materials\Post\PostBloom.h" />
     <ClInclude Include="Prefabs\TimerPrefab.h" />
     <ClInclude Include="Prefabs\LifeManager.h" />
+    <ClInclude Include="Scenes\Exam\PauseMenu.h" />
+    <ClInclude Include="Scenes\Exam\GameOver.h" />
+    <ClInclude Include="Scenes\Exam\WinScreen.h" />
   </ItemGroup>
 </Project>
