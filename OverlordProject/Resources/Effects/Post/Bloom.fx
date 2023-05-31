@@ -64,7 +64,7 @@ float4 PS(PS_INPUT input) : SV_Target
     float3 brightness = dot(sceneColor.rgb, float3(0.2126, 0.7152, 0.0722));
 
     // Check if the pixel is bright enough to contribute to the bloom effect
-    float bloomThreshold = 0.5f; // Adjust this threshold to control the amount of bloom
+    float bloomThreshold = 0.8f; // Adjust to control the amount of bloom
     float4 bloomColor = float4(saturate((brightness - bloomThreshold) / (1.0f - bloomThreshold)), 1.0f);
 
     // Store the bright pixels in the brightTexture

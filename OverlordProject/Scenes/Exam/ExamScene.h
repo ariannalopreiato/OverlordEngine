@@ -46,7 +46,8 @@ private:
 		CharacterRoll,
 		CharacterClimb,
 		MoveCameraLeft,
-		MoveCameraRight
+		MoveCameraRight,
+		Pause
 	};
 
 	SpriteFont* m_pFont;
@@ -59,4 +60,5 @@ private:
 	float m_CurrentTime;
 	TimerPrefab* m_pTimer{};
 	LifeManager* m_pLifeManager{};
+	int actionId_Pause{ -1 };
 };

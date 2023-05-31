@@ -77,8 +77,11 @@ void ExamScene::Initialize()
 	inputAction = InputAction(MoveCameraRight, InputState::down, VK_RIGHT);
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
+	//inputAction = InputAction(Pause, InputState::pressed, VK_DELETE);
+	//m_SceneContext.pInput->AddInputAction(inputAction);
+
 	//TIMER
-	m_pTimer = AddChild((new TimerPrefab(12, XMFLOAT2{ m_SceneContext.windowWidth/2 - 50.f, 10.f})));
+	m_pTimer = AddChild((new TimerPrefab(120, XMFLOAT2{ m_SceneContext.windowWidth/2 - 50.f, 10.f})));
 
 	//POINTS
 	m_TotalPoints = 10;
@@ -89,8 +92,8 @@ void ExamScene::Initialize()
 	//SKYBOX
 
 	//POST PROCESSING - BLOOM
-	//auto bloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
-	//AddPostProcessingEffect(bloom);
+	auto bloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
+	AddPostProcessingEffect(bloom);
 
 	//LIFE
 	m_pLifeManager = AddChild(new LifeManager(3, {0.13f, 0.13f, 0.13f}, {20.f, 80.f, 0.f}));
@@ -113,6 +116,11 @@ void ExamScene::Update()
 	{
 		CheckForCollectibles();
 		DisplayPoints();
+
+		if (InputAction(Pause, InputState::pressed, 'P').isTriggered)
+		{
+			SceneManager::Get()->SetActiveGameScene(L"Pause Screen");
+		}
 
 		//check if all the rupees have been collected
 		if (CheckGameWon())
