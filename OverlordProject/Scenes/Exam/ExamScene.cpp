@@ -9,6 +9,7 @@
 #include "Materials/Shadow/DiffuseMaterial_Shadow.h"
 #include "Materials/Post/PostBloom.h"
 #include "Prefabs/TimerPrefab.h"
+#include "Prefabs/LifeManager.h"
 
 void ExamScene::Initialize()
 {
@@ -49,7 +50,7 @@ void ExamScene::Initialize()
 	LoadLevel();
 
 	//Ladders
-	PositionLaddersTrigger();
+	//PositionLaddersTrigger();
 
 	//Collectibles
 	InitializeCollectibles();
@@ -78,6 +79,9 @@ void ExamScene::Initialize()
 
 	//TIMER
 	m_Timer = AddChild((new TimerPrefab(120, XMFLOAT2{0.f, 0.f})));
+
+	//POINTS
+	m_TotalPoints = 10;
 	
 
 	//BACKGROUND MUSIC
@@ -86,8 +90,11 @@ void ExamScene::Initialize()
 	//SKYBOX
 
 	//POST PROCESSING - BLOOM
-	auto bloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
-	AddPostProcessingEffect(bloom);
+	//auto bloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
+	//AddPostProcessingEffect(bloom);
+
+	//LIFE
+	m_LifeManager = AddChild(new LifeManager(3, {0.13f, 0.13f, 0.13f}, {20.f, 80.f, 0.f}));
 }
 
 void ExamScene::OnGUI()
@@ -102,16 +109,28 @@ void ExamScene::Update()
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().y << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().z << std::endl;
 
+	//if there is still time -> update the points
 	if (!m_Timer->IsTimeOut())
 	{
 		CheckForCollectibles();
 		DisplayPoints();
+
+		//check if all the rupees have been collected
+		//if(CheckGameWon())
+			//call win menu
 	}
+	else //if the time runs out
+	{
+		//check if all the rupees have been collected
+		//if(CheckGameWon())
+			//call win menu
+		//else
+			//call lose menu
+	}	
 }
 
 void ExamScene::LateUpdate()
-{
-}
+{}
 
 void ExamScene::Draw()
 {
@@ -120,6 +139,14 @@ void ExamScene::Draw()
 void ExamScene::IncreasePoints()
 {
 	++m_CurrentPoints;
+}
+
+bool ExamScene::CheckGameWon()
+{
+	if (m_CurrentPoints == m_TotalPoints)
+		return true;
+
+	return false;
 }
 
 void ExamScene::InitializePlayer()
@@ -142,24 +169,25 @@ void ExamScene::InitializeCollectibles()
 	m_Collectibles.emplace_back(AddChild(new CollectiblePrefab(L"Textures/rupee.png", L"Meshes/rupee.ovm", 1, { 1.37f, 1.12f, -47.6f }, { 90.f, 0.f, 0.f })));
 }
 
-void ExamScene::PositionLaddersTrigger()
-{
-	XMFLOAT3 ladderDimensions{ 0.8f, 5.9f, 0.5f };
-	m_Ladders.emplace_back(AddChild(new Ladder(ladderDimensions, { -2.f, 18.7f, 9.f }, {0.f, 30.f, 0.f})));
-	m_Ladders.emplace_back(AddChild(new Ladder(ladderDimensions, { 17.4f, 18.7f, 10.6f }, { 0.f, -35.f, 0.f })));
-	XMFLOAT3 bigLadderDimensions{ 0.8f, 20.f, 0.5f };
-	m_Ladders.emplace_back(AddChild(new Ladder(bigLadderDimensions, { 10.7f, 40.7f, 47.1f }, { 0.f, -35.f, 0.f })));
-
-	for (const auto& ladder : m_Ladders)
-	{
-		ladder->SetPlayer(m_pPlayer);
-	}
-}
+//void ExamScene::PositionLaddersTrigger()
+//{
+//	XMFLOAT3 ladderDimensions{ 0.8f, 5.9f, 0.5f };
+//	m_Ladders.emplace_back(AddChild(new Ladder(ladderDimensions, { -2.f, 18.7f, 9.f }, {0.f, 30.f, 0.f})));
+//	m_Ladders.emplace_back(AddChild(new Ladder(ladderDimensions, { 17.4f, 18.7f, 10.6f }, { 0.f, -35.f, 0.f })));
+//	XMFLOAT3 bigLadderDimensions{ 0.8f, 20.f, 0.5f };
+//	m_Ladders.emplace_back(AddChild(new Ladder(bigLadderDimensions, { 10.7f, 40.7f, 47.1f }, { 0.f, -35.f, 0.f })));
+//
+//	for (const auto& ladder : m_Ladders)
+//	{
+//		ladder->SetPlayer(m_pPlayer);
+//	}
+//}
 
 void ExamScene::Reset()
 {
 	InitializePlayer();
 	InitializeCollectibles();
+	m_CurrentPoints = 0;
 }
 
 void ExamScene::LoadLevel()
@@ -245,7 +273,6 @@ void ExamScene::LoadLevel()
 	const auto pPxTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Level/windfall.ovpt");
 	pLevelActor->AddCollider(PxTriangleMeshGeometry(pPxTriangleMesh, PxMeshScale({ .015f, .015f, .015f })), *pDefaultMaterial);
 	pLevelObject->GetTransform()->Scale(.015f, .015f, .015f);
-
 
 
 	for (UINT8 i = 0; i < textures.size(); ++i)

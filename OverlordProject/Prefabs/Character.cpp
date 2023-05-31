@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Character.h"
-#include "Materials/DiffuseMaterial_Skinned.h"
+#include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
 #include "CameraMovement.h"
 
 Character::Character(const CharacterDesc& characterDesc, const std::wstring& texture, const std::wstring& model, float pivotOffset, bool isAnimated) :
@@ -27,7 +27,7 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 
 	if (!m_Texture.empty() && !m_Model.empty())
 	{
-		const auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
+		const auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
 		pSkinnedMaterial->SetDiffuseTexture(m_Texture);
 
 		m_ModelMesh = AddChild(new GameObject);
@@ -35,32 +35,14 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 		pModel->GetTransform()->Translate(0.f, -m_PivotOffset, 0.f);
 		pModel->SetMaterial(pSkinnedMaterial);	
 
-		if (m_IsAnimated)
-		{
-			m_AnimationClipId = 0;
-			pAnimator = pModel->GetAnimator();
-			pAnimator->SetAnimation(m_AnimationClipId);
-			pAnimator->SetAnimationSpeed(m_AnimationSpeed);
-
-			//Gather Clip Names
-			m_ClipCount = pAnimator->GetClipCount();
-			m_ClipNames = new char* [m_ClipCount];
-			for (UINT i{ 0 }; i < m_ClipCount; ++i)
-			{
-				auto clipName = StringUtil::utf8_encode(pAnimator->GetClip(static_cast<int>(i)).name);
-				const auto clipSize = clipName.size();
-				m_ClipNames[i] = new char[clipSize + 1];
-				strncpy_s(m_ClipNames[i], clipSize + 1, clipName.c_str(), clipSize);
-			}
-
-			pAnimator->Play();
-		}
+		m_pAnimator = pModel->GetAnimator();
 	}
 }
 
 void Character::ScalePlayerMesh(float scale)
 {
-	m_ModelMesh->GetTransform()->Scale(scale);
+	if(m_ModelMesh)
+		m_ModelMesh->GetTransform()->Scale(scale);
 }
 
 

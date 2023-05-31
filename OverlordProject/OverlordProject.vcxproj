@@ -93,6 +93,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Prefabs\LifeManager.cpp" />
     <ClCompile Include="Materials\Post\PostBloom.cpp" />
     <ClCompile Include="Scenes\Exam\MainMenu.cpp" />
     <ClCompile Include="Materials\BasicMaterial.cpp" />
@@ -157,6 +158,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Prefabs\LifeManager.h" />
     <ClInclude Include="Materials\Post\PostBloom.h" />
     <ClInclude Include="Scenes\Exam\MainMenu.h" />
     <ClInclude Include="Materials\BasicMaterial.h" />

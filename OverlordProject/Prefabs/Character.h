@@ -71,7 +71,7 @@ private:
 
 	bool m_IsAnimated = false;
 
-	ModelAnimator* pAnimator{};
+	ModelAnimator* m_pAnimator{};
 
 	int m_AnimationClipId{ 0 };
 	float m_AnimationSpeed{ 1.f };

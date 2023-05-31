@@ -40,10 +40,10 @@ void CameraMovement::CameraRotation(const SceneContext& sceneContext)
     m_RotationDirection = 0.f;
 
     if (sceneContext.pInput->IsActionTriggered(actionId_MoveLeft))
-        m_RotationDirection += 1.f;
+        m_RotationDirection += -1.f;
 
     if (sceneContext.pInput->IsActionTriggered(actionId_MoveRight))
-        m_RotationDirection += -1.f;
+        m_RotationDirection += 1.f;
 
     if (m_RotationDirection != 0.f)
     {//calculate the rotation angle (rotation speed * dt * rotation direction)

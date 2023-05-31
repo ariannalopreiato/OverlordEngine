@@ -15,7 +15,7 @@ void ShadowMappingScene::Initialize()
 	//Materials
 	//*********
 	const auto pPeasantMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-	pPeasantMaterial->SetDiffuseTexture(L"Textures/PeasantGirl_Diffuse.png");
+	pPeasantMaterial->SetDiffuseTexture(L"Textures/body.png");
 
 	const auto pGroundMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
 	pGroundMaterial->SetDiffuseTexture(L"Textures/GroundBrick.jpg");
@@ -31,17 +31,17 @@ void ShadowMappingScene::Initialize()
 
 	AddChild(pGroundObj);
 
-	//Character Mesh
+	//Character Mesh 
 	//**************
 	const auto pObject = AddChild(new GameObject);
-	const auto pModel = pObject->AddComponent(new ModelComponent(L"Meshes/PeasantGirl.ovm"));
+	const auto pModel = pObject->AddComponent(new ModelComponent(L"Meshes/link.ovm"));
 	pModel->SetMaterial(pPeasantMaterial);
 
 	pObject->GetTransform()->Scale(0.1f, 0.1f, 0.1f);
 
 	if (const auto pAnimator = pModel->GetAnimator())
 	{
-		pAnimator->SetAnimation(2);
+		pAnimator->SetAnimation(0);
 		pAnimator->Play();
 	}
 

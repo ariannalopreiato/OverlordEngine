@@ -46,6 +46,7 @@
     <ClCompile Include="Scenes\Exam\MainMenu.cpp" />
     <ClCompile Include="Materials\Post\PostBloom.cpp" />
     <ClCompile Include="Prefabs\TimerPrefab.cpp" />
+    <ClCompile Include="Prefabs\LifeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -92,5 +93,6 @@
     <ClInclude Include="Scenes\Exam\MainMenu.h" />
     <ClInclude Include="Materials\Post\PostBloom.h" />
     <ClInclude Include="Prefabs\TimerPrefab.h" />
+    <ClInclude Include="Prefabs\LifeManager.h" />
   </ItemGroup>
 </Project>

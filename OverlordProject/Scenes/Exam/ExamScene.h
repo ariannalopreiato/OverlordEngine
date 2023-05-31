@@ -5,6 +5,7 @@ class CollectiblePrefab;
 class Ladder;
 class SpriteFont;
 class TimerPrefab;
+class LifeManager;
 class ExamScene : public GameScene
 {
 public:
@@ -17,6 +18,7 @@ public:
 	ExamScene& operator=(ExamScene&& other) noexcept = delete;
 
 	void IncreasePoints();
+	bool CheckGameWon();
 
 protected:
 	void Initialize() override;
@@ -28,7 +30,7 @@ protected:
 private:
 	void InitializePlayer();
 	void InitializeCollectibles();
-	void PositionLaddersTrigger();
+	//void PositionLaddersTrigger();
 	void Reset();
 	void LoadLevel();
 	void CheckForCollectibles();
@@ -49,10 +51,11 @@ private:
 
 	SpriteFont* m_pFont;
 	Character* m_pPlayer{};
-	std::vector<CollectiblePrefab*> m_Collectibles;
-	std::vector<Ladder*> m_Ladders;
+	std::vector<CollectiblePrefab*> m_Collectibles{};
 	int m_CurrentPoints{ 0 };
+	int m_TotalPoints{};
 	float m_GameDuration;
 	float m_CurrentTime;
-	TimerPrefab* m_Timer;
+	TimerPrefab* m_Timer{};
+	LifeManager* m_LifeManager{};
 };
