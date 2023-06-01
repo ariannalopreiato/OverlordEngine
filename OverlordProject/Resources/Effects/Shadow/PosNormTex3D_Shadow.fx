@@ -38,6 +38,34 @@ RasterizerState Solid
 	CullMode = FRONT;
 };
 
+DepthStencilState EnableDepth
+{
+	DepthEnable = TRUE;
+	DepthWriteMask = ALL;
+};
+
+RasterizerState NoCulling
+{
+	CullMode = NONE;
+};
+
+BlendState EnableBlending
+{
+	BlendEnable[0] = TRUE;
+	SrcBlend = SRC_ALPHA;
+	DestBlend = INV_SRC_ALPHA;
+};
+
+DepthStencilState NoDepth
+{
+	DepthEnable = FALSE;
+};
+
+RasterizerState BackCulling
+{
+	CullMode = BACK;
+};
+
 struct VS_INPUT
 {
 	float3 pos : POSITION;
@@ -51,17 +79,6 @@ struct VS_OUTPUT
 	float3 normal : NORMAL;
 	float2 texCoord : TEXCOORD;
 	float4 lPos : TEXCOORD1;
-};
-
-DepthStencilState EnableDepth
-{
-	DepthEnable = TRUE;
-	DepthWriteMask = ALL;
-};
-
-RasterizerState NoCulling
-{
-	CullMode = NONE;
 };
 
 //--------------------------------------------------------------------------------------
@@ -138,16 +155,16 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	float shadowValue = EvaluateShadowMap(input.lPos);
 	shadowValue = (shadowValue / 2) + 0.5f;
 	float4 diffuseColor = gDiffuseMap.Sample(samLinear,input.texCoord);
-	float3 color_rgb = diffuseColor.rgb;
+	float3 color_rgb= diffuseColor.rgb;
 	float color_a = diffuseColor.a;
-
+	
 	//HalfLambert Diffuse :)
 	float diffuseStrength = dot(input.normal, -gLightDirection);
 	diffuseStrength = diffuseStrength * 0.5 + 0.5;
 	diffuseStrength = saturate(diffuseStrength);
-	color_rgb *= diffuseStrength;
+	color_rgb = color_rgb * diffuseStrength;
 
-	return float4(color_rgb * shadowValue , color_a);
+	return float4(color_rgb * shadowValue , color_a );
 }
 
 //--------------------------------------------------------------------------------------
@@ -163,6 +180,12 @@ technique11 Default
 		SetVertexShader( CompileShader( vs_4_0, VS() ) );
 		SetGeometryShader( NULL );
 		SetPixelShader( CompileShader( ps_4_0, PS() ) );
+
+		//SetRasterizerState(BackCulling);
+		//SetBlendState(EnableBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		////SetDepthStencilState(NoDepth,0);
+		//SetVertexShader(CompileShader(vs_4_0, VS()));
+		//SetPixelShader(CompileShader(ps_4_0, PS()));
     }
 }
 

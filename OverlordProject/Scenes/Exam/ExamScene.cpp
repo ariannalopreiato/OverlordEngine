@@ -77,9 +77,6 @@ void ExamScene::Initialize()
 	inputAction = InputAction(MoveCameraRight, InputState::down, VK_RIGHT);
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
-	//inputAction = InputAction(Pause, InputState::pressed, VK_DELETE);
-	//m_SceneContext.pInput->AddInputAction(inputAction);
-
 	//TIMER
 	m_pTimer = AddChild((new TimerPrefab(120, XMFLOAT2{ m_SceneContext.windowWidth/2 - 50.f, 10.f})));
 
@@ -117,9 +114,9 @@ void ExamScene::Update()
 		CheckForCollectibles();
 		DisplayPoints();
 
-		if (InputAction(Pause, InputState::pressed, 'P').isTriggered)
+		if (InputManager::IsKeyboardKey(InputState::released, VK_DELETE))
 		{
-			SceneManager::Get()->SetActiveGameScene(L"Pause Screen");
+			SceneManager::Get()->SetActiveGameScene(L"Pause Menu");
 		}
 
 		//check if all the rupees have been collected
@@ -256,70 +253,10 @@ void ExamScene::LoadLevel()
 
 	textures.reserve(texAmount);
 
-	textures.emplace_back(L"Textures/Level/m_leaf05.png"); //1
-
-	textures.emplace_back(L"Textures/Level/m_mado02.png");
-
-	textures.emplace_back(L"Textures/Level/wood04.png"); //3
-
-	textures.emplace_back(L"Textures/Level/rotennuno85.png"); //4
-
-	textures.emplace_back(L"Textures/Level/rotennuno4.png"); //5
-
-	textures.emplace_back(L"Textures/Level/m_ren16.png");
-
-	textures.emplace_back(L"Textures/Level/a_kusa.png"); //7
-
-	textures.emplace_back(L"Textures/Level/m_siba04.png");
-
-	textures.emplace_back(L"Textures/Level/m_miti05.png"); //9
-
-	textures.emplace_back(L"Textures/Level/m_komono11.png");
-
-	textures.emplace_back(L"Textures/Level/gakkou03.png"); //11
-
-	textures.emplace_back(L"Textures/Level/m_kabe33.png");
-
-	textures.emplace_back(L"Textures/Level/m_ki13.png");
-
-	textures.emplace_back(L"Textures/Level/a_kusa_yane.png");
-
-	textures.emplace_back(L"Textures/Level/m_siba04.png"); //15
-
-	textures.emplace_back(L"Textures/Level/m_yuka10.png"); //16
-
-	textures.emplace_back(L"Textures/Level/m_ren15.png"); //17
-
-	textures.emplace_back(L"Textures/Level/m_mado08.png");
-
-	textures.emplace_back(L"Textures/Level/a_tuta.png");	
-
-	textures.emplace_back(L"Textures/Level/k_taru05.png");
-
-	textures.emplace_back(L"Textures/Level/gakkou03.png"); 
-
-	textures.emplace_back(L"Textures/Level/wood06.png");
-
-	textures.emplace_back(L"Textures/Level/k_taru04.png"); //23
-
-	textures.emplace_back(L"Textures/Level/m_leaf01.png"); //24
-
-	textures.emplace_back(L"Textures/Level/m_leaf09.png"); //25
-
-	textures.emplace_back(L"Textures/Level/a_iwa.png"); //26
-
-	textures.emplace_back(L"Textures/Level/a_kysakiwa.png");
-
-	textures.emplace_back(L"Textures/Level/rotennuno70.png");
-
-	textures.emplace_back(L"Textures/Level/m_yane08.png"); //29
-
-	textures.emplace_back(L"Textures/Level/m_ki12.png");
-
-	textures.emplace_back(L"Textures/Level/wood01.png"); //31
-
-	textures.emplace_back(L"Textures/Level/m_kabe38.png");
-
+	for (int i = 0; i < texAmount; ++i)
+	{
+		textures.emplace_back(L"Textures/Level/" + std::to_wstring(i) + L".png");
+	}	
 
 
 	const auto pLevelObject = AddChild(new GameObject());
