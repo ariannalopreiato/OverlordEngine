@@ -28,7 +28,7 @@ protected:
 	void OnGUI() override;
 
 private:
-	void InitializePlayer();
+	void PositionPlayer();
 	void InitializeCollectibles();
 	//void PositionLaddersTrigger();
 	void Reset();

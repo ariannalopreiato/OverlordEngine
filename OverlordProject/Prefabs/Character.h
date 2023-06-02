@@ -35,7 +35,7 @@ class CameraMovement;
 class Character : public GameObject
 {
 public:
-	Character(const CharacterDesc& characterDesc, const std::wstring& texture = L"", const std::wstring& model = L"", float pivotOffset = 0, bool isAnimated = false);
+	Character(const CharacterDesc& characterDesc);
 	~Character() override = default;
 
 	Character(const Character& other) = delete;
@@ -60,11 +60,6 @@ private:
 	CameraComponent* m_pCameraComponent{};
 	ControllerComponent* m_pControllerComponent{};
 	CameraMovement* m_pCameraMovement{};
-
-	std::wstring m_Texture;
-	std::wstring m_Model;
-	GameObject* m_ModelMesh;
-	float m_PivotOffset;
 
 	bool m_CanClimb = false;
 	bool m_IsGrounded = true;

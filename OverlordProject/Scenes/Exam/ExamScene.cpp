@@ -42,10 +42,9 @@ void ExamScene::Initialize()
 	characterDesc.actionId_MoveRight = CharacterMoveRight;
 	characterDesc.actionId_Jump = CharacterJump;
 
-	float pivotOffset = 1.3f;
-	m_pPlayer = AddChild(new Character(characterDesc, L"Textures/body.png", L"Meshes/Player/link.ovm", pivotOffset, true));
-	m_pPlayer->ScalePlayerMesh(0.015f);
-	InitializePlayer();
+	m_pPlayer = AddChild(new Character(characterDesc));
+
+	PositionPlayer();
 
 	//CAMERA
 	const auto cameraObj = AddChild(new GameObject());
@@ -188,11 +187,10 @@ bool ExamScene::CheckGameWon()
 	return false;
 }
 
-void ExamScene::InitializePlayer()
+void ExamScene::PositionPlayer()
 {
 	//reposition player
 	m_pPlayer->GetTransform()->Translate(15.f, 3.f, -49.f);
-	//m_pPlayer->GetTransform()->Translate(8.9f, 17.f, 50.f); big ladder
 }
 
 void ExamScene::InitializeCollectibles()
@@ -270,7 +268,7 @@ void ExamScene::InitializeCollectibles()
 
 void ExamScene::Reset()
 {
-	InitializePlayer();
+	PositionPlayer();
 	InitializeCollectibles();
 	m_CurrentPoints = 0;
 	m_pLifeManager->Reset();

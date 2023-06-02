@@ -1,16 +1,14 @@
 #include "stdafx.h"
 #include "Character.h"
 #include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
+#include "Materials/DiffuseMaterial_Skinned.h"
+#include "Materials/DiffuseMaterial.h"
 #include "CameraMovement.h"
 
-Character::Character(const CharacterDesc& characterDesc, const std::wstring& texture, const std::wstring& model, float pivotOffset, bool isAnimated) :
+Character::Character(const CharacterDesc& characterDesc) :
 	m_CharacterDesc{ characterDesc },
 	m_MoveAcceleration(characterDesc.maxMoveSpeed / characterDesc.moveAccelerationTime),
-	m_FallAcceleration(characterDesc.maxFallSpeed / characterDesc.fallAccelerationTime),
-	m_Texture{ texture },
-	m_Model{ model },
-	m_IsAnimated{ isAnimated },
-	m_PivotOffset{ pivotOffset }
+	m_FallAcceleration(characterDesc.maxFallSpeed / characterDesc.fallAccelerationTime)
 {}
 
 void Character::Initialize(const SceneContext& /*sceneContext*/)
@@ -18,31 +16,52 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	//Controller
 	m_pControllerComponent = AddComponent(new ControllerComponent(m_CharacterDesc.controller));
 
-	//Camera
-	float moveBack = -13.f;
-	const auto pCamera = AddChild(new FixedCamera());
-	m_pCameraComponent = pCamera->GetComponent<CameraComponent>();
-	m_pCameraComponent->SetActive(true); //Uncomment to make this camera the active camera
-	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * .5f, moveBack);
+	//Model component + textures	
+	auto pModel = AddComponent(new ModelComponent(L"Meshes/Player/link.ovm"));
+	pModel->GetTransform()->Scale(0.015f);
 
-	if (!m_Texture.empty() && !m_Model.empty())
-	{
-		const auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-		pSkinnedMaterial->SetDiffuseTexture(m_Texture);
+	const auto pSwordMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pSwordMaterial->SetDiffuseTexture(L"Textures/Character/sheath.png");
+	const auto pMouthMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pMouthMaterial->SetDiffuseTexture(L"Textures/Character/mouth1.png");
+	const auto pBodyMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pBodyMaterial->SetDiffuseTexture(L"Textures/Character/body.png");
+	const auto pEyebrowRMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pEyebrowRMaterial->SetDiffuseTexture(L"Textures/Character/eyebrow1.png");
+	const auto pEyebrowLMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pEyebrowLMaterial->SetDiffuseTexture(L"Textures/Character/eyebrow1.png");
+	const auto pPupilRMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pPupilRMaterial->SetDiffuseTexture(L"Textures/Character/pupil.png");
+	const auto pEyeRMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pEyeRMaterial->SetDiffuseTexture(L"Textures/Character/eyeRight.png");
+	const auto pPupilLMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pPupilLMaterial->SetDiffuseTexture(L"Textures/Character/pupil.png");
+	const auto pEyeLMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pEyeLMaterial->SetDiffuseTexture(L"Textures/Character/eyeLeft.png");
 
-		m_ModelMesh = AddChild(new GameObject);
-		auto pModel = m_ModelMesh->AddComponent(new ModelComponent(m_Model));
-		pModel->GetTransform()->Translate(0.f, -m_PivotOffset, 0.f);
-		pModel->SetMaterial(pSkinnedMaterial);	
+	pModel->SetMaterial(pSwordMaterial, 1);
+	pModel->SetMaterial(pMouthMaterial, 3);
+	pModel->SetMaterial(pEyeRMaterial, 4);
+	pModel->SetMaterial(pPupilRMaterial, 5);
+	pModel->SetMaterial(pEyeLMaterial, 6);
+	pModel->SetMaterial(pPupilLMaterial, 7);
+	pModel->SetMaterial(pEyebrowRMaterial, 0);
+	pModel->SetMaterial(pEyebrowLMaterial, 2);
+	pModel->SetMaterial(pBodyMaterial, 8);
 
-		m_pAnimator = pModel->GetAnimator();
-	}
+	float pivotOffset = 5.f;
+	pModel->GetTransform()->Translate(0.f, -pivotOffset, 0.f);
+
+	m_pAnimator = pModel->GetAnimator();
+	m_pAnimator->GetClipCount();
+	m_pAnimator->SetAnimation(1);
+	m_pAnimator->Play();
 }
 
 void Character::ScalePlayerMesh(float scale)
 {
-	if(m_ModelMesh)
-		m_ModelMesh->GetTransform()->Scale(scale);
+	if(GetComponent<ModelComponent>())
+		GetComponent<ModelComponent>()->GetTransform()->Scale(scale);
 }
 
 
