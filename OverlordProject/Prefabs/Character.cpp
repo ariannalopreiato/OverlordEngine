@@ -54,8 +54,7 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 
 	m_pAnimator = pModel->GetAnimator();
 	m_pAnimator->GetClipCount();
-	m_pAnimator->SetAnimation(1);
-	m_pAnimator->Play();
+	SetAnimation(idle);
 }
 
 void Character::ScalePlayerMesh(float scale)
@@ -141,6 +140,8 @@ void Character::Update(const SceneContext& sceneContext)
 		//Make sure the current MoveSpeed stays below the maximum MoveSpeed (CharacterDesc::maxMoveSpeed)
 		if (m_MoveSpeed > m_CharacterDesc.maxMoveSpeed)
 			m_MoveSpeed = m_CharacterDesc.maxMoveSpeed;
+
+		SetAnimation(run);
 	}
 	//Else (character is not moving, or stopped moving)
 	else
@@ -201,6 +202,12 @@ void Character::Update(const SceneContext& sceneContext)
 	m_pControllerComponent->Move(displacement);
 	//The above is a simple implementation of Movement Dynamics, adjust the code to further improve the movement logic and behaviour.
 	//Also, it can be usefull to use a seperate RayCast to check if the character is grounded (more responsive)
+}
+
+void Character::SetAnimation(AnimationState state)
+{
+	m_pAnimator->SetAnimation(state);
+	m_pAnimator->Play();
 }
 
 

@@ -52,11 +52,20 @@ public:
 	void SetActiveCamera(CameraComponent* camera) { m_pCameraComponent = camera; }
 	void SetCameraMovement(CameraMovement* camera) { m_pCameraMovement = camera; }
 
+	enum AnimationState
+	{
+		idle,
+		run,
+		jump
+	};
+
 protected:
 	void Initialize(const SceneContext&) override;
 	void Update(const SceneContext&) override;
 
 private:
+	void SetAnimation(AnimationState state);
+
 	CameraComponent* m_pCameraComponent{};
 	ControllerComponent* m_pControllerComponent{};
 	CameraMovement* m_pCameraMovement{};
