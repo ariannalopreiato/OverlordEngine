@@ -46,8 +46,7 @@ private:
 		CharacterRoll,
 		CharacterClimb,
 		MoveCameraLeft,
-		MoveCameraRight,
-		Pause
+		MoveCameraRight
 	};
 
 	SpriteFont* m_pFont;
@@ -61,4 +60,7 @@ private:
 	TimerPrefab* m_pTimer{};
 	LifeManager* m_pLifeManager{};
 	int actionId_Pause{ -1 };
+
+	bool m_DrawShadowMap{ false };
+	float m_ShadowMapScale{ 0.3f };
 };

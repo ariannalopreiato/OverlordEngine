@@ -50,6 +50,7 @@
     <ClCompile Include="Scenes\Exam\PauseMenu.cpp" />
     <ClCompile Include="Scenes\Exam\GameOver.cpp" />
     <ClCompile Include="Scenes\Exam\WinScreen.cpp" />
+    <ClCompile Include="Materials\SkyboxMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -100,5 +101,6 @@
     <ClInclude Include="Scenes\Exam\PauseMenu.h" />
     <ClInclude Include="Scenes\Exam\GameOver.h" />
     <ClInclude Include="Scenes\Exam\WinScreen.h" />
+    <ClInclude Include="Materials\SkyboxMaterial.h" />
   </ItemGroup>
 </Project>

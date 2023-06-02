@@ -1,0 +1,46 @@
+*********************
+ORIGINAL GAME
+*********************
+The Legend of Zelda The Wind Waker - Nintendo
+
+
+*********************
+SKYBOX
+*********************
+https://github.com/UnityTechnologies/open-project-1 
+
+
+*********************
+CHARACTER + TEXTURES
+*********************
+Link
+Game: Legend of Zelda: Wind Waker
+© 2002 Nintendo
+Ripped by Mystie from The VG Resource.
+https://www.models-resource.com/gamecube/legendofzeldathewindwaker/model/7795/
+
+
+*********************
+LEVEL + TEXTURES
+*********************
+https://www.models-resource.com/gamecube/legendofzeldathewindwaker/model/30704/
+
+
+*********************
+RUPEE
+*********************
+https://www.models-resource.com/nintendo_switch/thelegendofzeldalinksawakening/model/36899/
+
+
+*********************
+HEART
+*********************
+https://www.models-resource.com/ds_dsi/legendofzeldaphantomhourglass/model/28860/
+
+
+*********************
+FONTS
+*********************
+https://zeldauniverse.net/media/fonts/#:~:text=Sherwood,The%20Wind%20Waker%20game%20logo.
+
+https://famfonts.com/legend-of-zelda-wind-waker/

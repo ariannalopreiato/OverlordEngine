@@ -34,7 +34,7 @@ void ShadowMappingScene::Initialize()
 	//Character Mesh 
 	//**************
 	const auto pObject = AddChild(new GameObject);
-	const auto pModel = pObject->AddComponent(new ModelComponent(L"Meshes/link.ovm"));
+	const auto pModel = pObject->AddComponent(new ModelComponent(L"Meshes/PeasantGirl.ovm"));
 	pModel->SetMaterial(pPeasantMaterial);
 
 	pObject->GetTransform()->Scale(0.1f, 0.1f, 0.1f);
@@ -73,5 +73,4 @@ void ShadowMappingScene::OnGUI()
 {
 	ImGui::Checkbox("Draw ShadowMap", &m_DrawShadowMap);
 	ImGui::SliderFloat("ShadowMap Scale", &m_ShadowMapScale, 0.f, 1.f);
-	//MaterialManager::Get()->GetMaterial(2)->DrawImGui();
 }
