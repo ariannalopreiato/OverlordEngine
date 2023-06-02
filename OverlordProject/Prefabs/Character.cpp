@@ -17,7 +17,10 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	m_pControllerComponent = AddComponent(new ControllerComponent(m_CharacterDesc.controller));
 
 	//Model component + textures	
-	auto pModel = AddComponent(new ModelComponent(L"Meshes/Player/link.ovm"));
+	auto pModelMesh = AddChild(new GameObject);
+	auto pModel = pModelMesh->AddComponent(new ModelComponent(L"Meshes/Player/link.ovm"));
+	float pivotOffset = 1.5f;
+	pModel->GetTransform()->Translate(0.f, -pivotOffset, 0.f);
 	pModel->GetTransform()->Scale(0.015f);
 
 	const auto pSwordMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
@@ -48,9 +51,6 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	pModel->SetMaterial(pEyebrowRMaterial, 0);
 	pModel->SetMaterial(pEyebrowLMaterial, 2);
 	pModel->SetMaterial(pBodyMaterial, 8);
-
-	float pivotOffset = 5.f;
-	pModel->GetTransform()->Translate(0.f, -pivotOffset, 0.f);
 
 	m_pAnimator = pModel->GetAnimator();
 	m_pAnimator->GetClipCount();
