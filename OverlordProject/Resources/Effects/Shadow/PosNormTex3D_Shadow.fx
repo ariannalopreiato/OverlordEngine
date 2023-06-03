@@ -57,6 +57,27 @@ BlendState EnableBlending
 	DestBlend = INV_SRC_ALPHA;
 };
 
+BlendState AlphaBlending
+{
+	BlendEnable[0] = TRUE;
+	SrcBlend = SRC_ALPHA;
+	DestBlend = INV_SRC_ALPHA;
+	BlendOp = ADD;
+	SrcBlendAlpha = ONE;
+	DestBlendAlpha = ZERO;
+	BlendOpAlpha = ADD;
+	RenderTargetWriteMask[0] = 0x0f;
+};
+
+DepthStencilState DisableDepthWriting
+{
+	//Enable Depth Rendering
+	DepthEnable = TRUE;
+
+	//Disable Depth Writing
+	DepthWriteMask = ZERO;
+};
+
 DepthStencilState NoDepth
 {
 	DepthEnable = FALSE;
@@ -153,20 +174,6 @@ float EvaluateShadowMap(float4 lpos)
 //--------------------------------------------------------------------------------------
 float4 PS(VS_OUTPUT input) : SV_TARGET
 {
-	//float shadowValue = EvaluateShadowMap(input.lPos);
-	//shadowValue = (shadowValue / 2) + 0.5f;
-	//float4 diffuseColor = gDiffuseMap.Sample(samLinear,input.texCoord);
-	//float3 color_rgb= diffuseColor.rgb;
-	//float color_a = diffuseColor.a;
-	//
-	////HalfLambert Diffuse :)
-	//float diffuseStrength = dot(input.normal, -gLightDirection);
-	//diffuseStrength = diffuseStrength * 0.5 + 0.5;
-	//diffuseStrength = saturate(diffuseStrength);
-	//color_rgb = color_rgb * diffuseStrength;
-
-	//return float4(color_rgb * shadowValue , color_a );
-
 	float shadowValue = EvaluateShadowMap(input.lPos);
 	shadowValue = (shadowValue / 2) + 0.5f;
 	float4 diffuseColor = gDiffuseMap.Sample(samLinear,input.texCoord);
@@ -175,17 +182,12 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 
 	//HalfLambert Diffuse :)
 	float diffuseStrength = dot(input.normal, -gLightDirection);
-	//diffuseStrength = diffuseStrength * 0.5 + 0.5;
-
-	float threshold = 0.6f;
-
-	if (diffuseStrength > threshold)
-		diffuseStrength = 1.f;
-	else
-		diffuseStrength = 0.6f;
-
-	//diffuseStrength = saturate(diffuseStrength);
+	diffuseStrength = diffuseStrength * 0.5 + 0.5;
+	diffuseStrength = saturate(diffuseStrength);
 	color_rgb *= diffuseStrength + ambientColor;
+
+	if (color_a < 1.f)
+		discard;
 
 	return float4(color_rgb * shadowValue, color_a);
 }
@@ -204,10 +206,11 @@ technique11 Default
 		SetGeometryShader( NULL );
 		SetPixelShader( CompileShader( ps_4_0, PS() ) );
 
-		//SetRasterizerState(BackCulling);
-		//SetBlendState(EnableBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
-		////SetDepthStencilState(NoDepth,0);
-		//SetVertexShader(CompileShader(vs_4_0, VS()));
-		//SetPixelShader(CompileShader(ps_4_0, PS()));
+		/*SetVertexShader(CompileShader(vs_4_0, VS()));
+		SetPixelShader(CompileShader(ps_4_0, PS()));
+
+		SetRasterizerState(BackCulling);
+		SetDepthStencilState(DisableDepthWriting, 0);
+		SetBlendState(AlphaBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);*/
     }
 }

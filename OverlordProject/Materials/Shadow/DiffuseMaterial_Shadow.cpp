@@ -8,7 +8,12 @@ DiffuseMaterial_Shadow::DiffuseMaterial_Shadow():
 void DiffuseMaterial_Shadow::SetDiffuseTexture(const std::wstring& assetFile)
 {
 	m_pDiffuseTexture = ContentManager::Load<TextureData>(assetFile);
-	SetVariable_Texture(L"gDiffuseMap", m_pDiffuseTexture);
+	SetVariable_Texture(L"gDiffuseMap", m_pDiffuseTexture);	
+}
+
+void DiffuseMaterial_Shadow::SetShadowBias(float bias)
+{
+	SetVariable_Scalar(L"ggShadowMapBias", bias);
 }
 
 void DiffuseMaterial_Shadow::InitializeEffectVariables()

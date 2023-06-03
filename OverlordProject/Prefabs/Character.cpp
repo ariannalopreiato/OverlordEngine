@@ -36,7 +36,7 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 
 	auto pModelMesh = AddChild(new GameObject);
 	auto pModel = pModelMesh->AddComponent(new ModelComponent(L"Meshes/Player/link.ovm"));
-	float pivotOffset = 1.2f;
+	float pivotOffset = 1.3f;
 	pModel->GetTransform()->Translate(0.f, -pivotOffset, 0.f);
 	pModel->GetTransform()->Scale(0.015f);
 
