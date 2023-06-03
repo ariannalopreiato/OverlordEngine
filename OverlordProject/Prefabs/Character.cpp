@@ -32,7 +32,7 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	const auto pEyeRMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
 	pEyeRMaterial->SetDiffuseTexture(L"Textures/Character/eyeRight.png");
 	const auto pEyeLMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-	pEyeLMaterial->SetDiffuseTexture(L"Textures/Character/eyeLeft.png");
+	pEyeLMaterial->SetDiffuseTexture(L"Textures/Character/eyeRight.png");
 
 	auto pModelMesh = AddChild(new GameObject);
 	auto pModel = pModelMesh->AddComponent(new ModelComponent(L"Meshes/Player/link.ovm"));
@@ -40,14 +40,15 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	pModel->GetTransform()->Translate(0.f, -pivotOffset, 0.f);
 	pModel->GetTransform()->Scale(0.015f);
 
-	pModel->SetMaterial(pSwordMaterial, 1);
-	pModel->SetMaterial(pMouthMaterial, 3);
-	pModel->SetMaterial(pEyeRMaterial, 4);
-	pModel->SetMaterial(pPupilMaterial, 5);
-	pModel->SetMaterial(pEyeLMaterial, 6);
-	pModel->SetMaterial(pPupilMaterial, 7);
 	pModel->SetMaterial(pEyebrowRMaterial, 0);
 	pModel->SetMaterial(pEyebrowLMaterial, 2);
+	pModel->SetMaterial(pSwordMaterial, 1);
+	pModel->SetMaterial(pMouthMaterial, 3);
+	pModel->SetMaterial(pEyeRMaterial, 5);
+	pModel->SetMaterial(pPupilMaterial, 4);
+	pModel->SetMaterial(pEyeLMaterial, 7);
+	pModel->SetMaterial(pPupilMaterial, 6);
+
 	pModel->SetMaterial(pBodyMaterial, 8);
 
 	m_pAnimator = pModel->GetAnimator();
@@ -203,15 +204,15 @@ void Character::Update(const SceneContext& sceneContext)
 	//Else If the jump action is triggered
 	else if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_Jump))
 	{
-		//Set m_TotalVelocity.y equal to CharacterDesc::JumpSpeed
-		m_TotalVelocity.y = m_CharacterDesc.JumpSpeed;
-
 		if (m_CurrentState != jump)
 		{
 			m_PreviousState = m_CurrentState;
 			m_CurrentState = jump;
 			SetAnimation(m_CurrentState);
 		}
+
+		//Set m_TotalVelocity.y equal to CharacterDesc::JumpSpeed
+		m_TotalVelocity.y = m_CharacterDesc.JumpSpeed;
 	}
 	//Else (=Character is grounded, no input pressed)
 	else

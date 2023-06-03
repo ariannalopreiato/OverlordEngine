@@ -106,7 +106,12 @@ float4 MainPS(GS_DATA input) : SV_TARGET{
 	float4 sampledTexture = gSpriteTexture.Sample(samPoint, input.TexCoord);
 	float channel = sampledTexture[input.Channel];
 
-	return input.Color * channel;
+	float4 output = input.Color * channel;
+
+	if (output.a < 1.f)
+		discard;
+
+	return output;
 }
 
 // Default Technique

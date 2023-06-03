@@ -4,7 +4,7 @@ float4x4 gWorldViewProj_Light;
 float3 gLightDirection = float3(-0.577f, -0.577f, 0.577f);
 float gShadowMapBias = 0.05f;
 float4x4 gBones[70];
-float4 ambientColor = float4(0.3f, 0.3f, 0.3f, 1.f);
+float4 ambientColor = float4(0.1f, 0.1f, 0.1f, 1.f);
 
 Texture2D gDiffuseMap;
 Texture2D gShadowMap;
@@ -157,6 +157,10 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 
 	//diffuseStrength = saturate(diffuseStrength);
 	color_rgb *= diffuseStrength + ambientColor;
+
+	if (color_a < 1.f)
+		discard;
+
 
 	return float4( color_rgb * shadowValue, color_a );
 }
