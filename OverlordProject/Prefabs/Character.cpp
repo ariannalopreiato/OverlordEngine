@@ -170,7 +170,7 @@ void Character::Update(const SceneContext& sceneContext)
 		if (m_MoveSpeed < 0.0f)
 			m_MoveSpeed = 0.f;
 
-		if (m_CurrentState != idle)
+		if (m_CurrentState != idle && m_CurrentState != jump)
 		{
 			m_CurrentState = idle;
 			SetAnimation(m_CurrentState);
@@ -218,7 +218,7 @@ void Character::Update(const SceneContext& sceneContext)
 	{
 		//m_TotalVelocity.y is zero
 		m_TotalVelocity.y = -0.01f;
-		if (m_CurrentState != run && m_CurrentState != idle)
+		if (m_CurrentState != run && m_CurrentState != idle && m_pAnimator->IsAnimationFinished())
 		{
 			m_CurrentState = m_PreviousState;
 			SetAnimation(m_CurrentState);

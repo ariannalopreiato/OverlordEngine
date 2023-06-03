@@ -119,6 +119,11 @@ void ModelAnimator::SetAnimation(const AnimationClip& clip)
 	Reset(false);
 }
 
+bool ModelAnimator::IsAnimationFinished() const
+{
+	return m_TickCount >= m_CurrentClip.duration/2; 
+}
+
 void ModelAnimator::Reset(bool pause)
 {
 	if (pause)

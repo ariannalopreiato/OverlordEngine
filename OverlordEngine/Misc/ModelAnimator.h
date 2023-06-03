@@ -18,6 +18,7 @@ public:
 	void Pause() { m_IsPlaying = false; }
 	void SetPlayReversed(bool reverse) { m_Reversed = reverse; }
 	void SetAnimationSpeed(float speedPercentage) { m_AnimationSpeed = speedPercentage; }
+	bool IsAnimationFinished() const;
 
 	bool IsPlaying() const { return m_IsPlaying; }
 	bool IsReversed() const { return m_Reversed; }
