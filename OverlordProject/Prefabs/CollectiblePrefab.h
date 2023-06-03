@@ -27,7 +27,7 @@ private:
 	std::wstring m_Model;
 	GameObject* m_pModelMesh;
 	float m_PivotOffset;
-	float m_Rotate;
+	float m_Rotate{ 0.f };
 	bool m_IsCollected{ false };
 	int m_Value{ 0 };
 };

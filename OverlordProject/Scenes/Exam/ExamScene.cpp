@@ -96,16 +96,15 @@ void ExamScene::Initialize()
 
 	//BACKGROUND MUSIC
 
+	//LOAD LEVEL
+	LoadLevel();
 
 	//POST PROCESSING - BLOOM
 	auto bloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
 	AddPostProcessingEffect(bloom);
 
 	//LIFE
-	m_pLifeManager = AddChild(new LifeManager(3, {0.13f, 0.13f, 0.13f}, {20.f, 80.f, 0.f}));
-
-	//LOAD LEVEL
-	LoadLevel();
+	m_pLifeManager = AddChild(new LifeManager(3, { 0.13f, 0.13f, 0.13f }, { 20.f, 80.f, 0.f }));
 }
 
 void ExamScene::OnGUI()
@@ -223,10 +222,10 @@ void ExamScene::InitializeCollectibles()
 
 	for (const auto& collectible : m_pCollectibles)
 	{
-		const auto pMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
+		const auto pMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
 		auto model = collectible->GetModel();
 
-		pMaterial->SetDiffuseTexture(L"Textures/rupee.png");
+		pMaterial->SetDiffuseTexture(L"Textures/blue.jpg");
 		model->SetMaterial(pMaterial);
 	}
 

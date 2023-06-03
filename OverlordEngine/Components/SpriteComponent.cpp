@@ -19,6 +19,11 @@ void SpriteComponent::SetTexture(const std::wstring& spriteAsset)
 	m_pTexture = ContentManager::Load<TextureData>(m_SpriteAsset);
 }
 
+void SpriteComponent::SetIsTransparent(bool /*isTransparent*/)
+{
+	
+}
+
 XMFLOAT2 SpriteComponent::GetDimensions()
 {
 	return m_pTexture->GetDimension(); 

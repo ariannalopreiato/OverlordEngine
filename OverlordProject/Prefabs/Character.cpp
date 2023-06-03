@@ -59,15 +59,15 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 
 	//PARTICLES
 	ParticleEmitterSettings settings{};
-	settings.velocity = { 0.f,6.f,0.f };
+	settings.velocity = { 0.f,0.f,0.f };
 	settings.minSize = 1.f;
 	settings.maxSize = 2.f;
 	settings.minEnergy = 1.f;
 	settings.maxEnergy = 2.f;
 	settings.minScale = 3.5f;
 	settings.maxScale = 5.5f;
-	settings.minEmitterRadius = .2f;
-	settings.maxEmitterRadius = .5f;
+	settings.minEmitterRadius = .0f;
+	settings.maxEmitterRadius = .0f;
 	settings.color = { 1.f,1.f,1.f, .6f };
 
 	const auto pObject = AddChild(new GameObject);
@@ -83,7 +83,8 @@ void Character::ScalePlayerMesh(float scale)
 
 void Character::Update(const SceneContext& sceneContext)
 {
-	m_pEmitter->GetTransform()->Translate(GetTransform()->GetPosition());
+	auto pos = GetTransform()->GetPosition();
+	m_pEmitter->GetTransform()->Translate(pos);
 
 	constexpr float epsilon{ 0.001f }; //Constant that can be used to compare if a float is near zero
 

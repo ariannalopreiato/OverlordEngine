@@ -1,6 +1,7 @@
 float4x4 gTransform : WorldViewProjection;
 Texture2D gSpriteTexture;
 float2 gTextureSize;
+bool gIsTransparent;
 
 SamplerState samPoint
 {
@@ -149,7 +150,12 @@ void MainGS(point VS_DATA vertex[1], inout TriangleStream<GS_DATA> triStream)
 //************
 float4 MainPS(GS_DATA input) : SV_TARGET
 {
-    return gSpriteTexture.Sample(samPoint, input.TexCoord) * input.Color;
+    float4 output = gSpriteTexture.Sample(samPoint, input.TexCoord) * input.Color;
+
+    if (output.a < 1.f && gIsTransparent)
+        discard;
+
+    return output;
 }
 
 // Default Technique

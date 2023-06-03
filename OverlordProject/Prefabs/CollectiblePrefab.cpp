@@ -22,13 +22,11 @@ void CollectiblePrefab::Initialize(const SceneContext& /*sceneContext*/)
 	m_Position.y -= m_PivotOffset;
 	pModel->GetTransform()->Translate(m_Position);
 	pModel->GetTransform()->Scale(m_Scale);
-	m_pModelMesh->GetTransform()->Rotate(m_Rotation);
 	
 
 	auto pRigidBody = m_pModelMesh->AddComponent(new RigidBodyComponent(true));
 	float size{ .5f };
 	pRigidBody->AddCollider(PxBoxGeometry{ size / 2, size / 2, size / 2 }, *pMaterialPhys, true);
-
 	
 	m_pModelMesh->SetOnTriggerCallBack([=](GameObject*, GameObject* /*otherObjectPtr*/, PxTriggerAction triggerAction)
 		{
@@ -39,10 +37,11 @@ void CollectiblePrefab::Initialize(const SceneContext& /*sceneContext*/)
 		});
 }
 
-void CollectiblePrefab::Update(const SceneContext& /*sceneContext*/)
+void CollectiblePrefab::Update(const SceneContext& sceneContext)
 {
-	//float rotationSpeed = 20.0f; // adjust this to change the speed of rotation
-	//float deltaTime = sceneContext.pGameTime->GetElapsed();
-	//m_Rotate += rotationSpeed * deltaTime;
-	//m_ModelMesh->GetTransform()->Rotate(0.0f, m_Rotate, 0.0f);
+	float rotationSpeed = 60.0f; // adjust this to change the speed of rotation
+	float deltaTime = sceneContext.pGameTime->GetElapsed();
+	m_Rotate += rotationSpeed * deltaTime;
+
+	m_pModelMesh->GetTransform()->Rotate(m_Rotation.x, m_Rotate, m_Rotation.z);
 }
