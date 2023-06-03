@@ -24,6 +24,10 @@ void CollectiblePrefab::Initialize(const SceneContext& /*sceneContext*/)
 	pModel->GetTransform()->Translate(m_Position);
 	pModel->GetTransform()->Scale(m_Scale);
 	
+	const auto pFmod = SoundManager::Get()->GetSystem();
+	FMOD::Sound* pSound{};
+	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/rupee.mp3", FMOD_LOOP_OFF, nullptr, &pSound);
+	result = pFmod->playSound(pSound, nullptr, true, &m_pCollectSound);
 
 	auto pRigidBody = m_pModelMesh->AddComponent(new RigidBodyComponent(true));
 	float size{ .5f };
@@ -33,7 +37,10 @@ void CollectiblePrefab::Initialize(const SceneContext& /*sceneContext*/)
 		{
 			if (triggerAction == PxTriggerAction::ENTER)
 			{
-					m_IsCollected = true;
+				m_IsCollected = true;
+				bool bPaused = false;
+				m_pCollectSound->getPaused(&bPaused);
+				m_pCollectSound->setPaused(!bPaused);
 			}
 		});
 }

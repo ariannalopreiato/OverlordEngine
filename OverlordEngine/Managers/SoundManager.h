@@ -9,6 +9,11 @@ public:
 
 	FMOD::System* GetSystem() const { return m_pFmodSystem; }
 
+	enum Sound
+	{
+
+	};
+
 protected:
 	void Initialize() override;
 

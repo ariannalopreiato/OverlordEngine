@@ -55,6 +55,7 @@ private:
 	Character* m_pPlayer{};
 	std::vector<CollectiblePrefab*> m_pCollectibles{};
 	std::vector<CollectiblePrefab*> m_pHearts{};
+
 	int m_CurrentPoints{ 0 };
 	int m_TotalPoints{};
 	float m_GameDuration;
@@ -67,4 +68,16 @@ private:
 	float m_ShadowMapScale{ 0.3f };
 
 	KillPlane* m_pKillPlane{};
+
+	enum InputId
+	{
+		Play2D,
+		Play3D,
+		IncreaseVolume,
+		DecreaseVolume
+	};
+
+	FMOD::Channel* m_pTheme{};
+	FMOD::Channel* m_pCollectRupee{};
+	FMOD_VECTOR m_PrevListenerPos{};
 };

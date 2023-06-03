@@ -13,14 +13,32 @@
 #include "Prefabs/LifeManager.h"
 #include "Prefabs/KillPlane.h"
 
+
 void ExamScene::Initialize()
 {
 	m_SceneContext.settings.enableOnGUI = true;
 	m_SceneContext.settings.drawGrid = false; 
 	m_SceneContext.settings.drawPhysXDebug = false;
 
+	//SOUND 2D
+	const auto pFmod = SoundManager::Get()->GetSystem();
+	FMOD::Sound* pSound{};
+	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/WindfallIsland.mp3", FMOD_DEFAULT | FMOD_LOOP_NORMAL, nullptr, &pSound);
+	result = pFmod->playSound(pSound, nullptr, true, &m_pTheme);
+	m_pTheme->setVolume(0.5f);
+
+	//result = pFmod->createStream("Resources/Sounds/rupee.mp3", FMOD_DEFAULT | FMOD_LOOP_NORMAL, nullptr, &pSound);
+	//result = pFmod->playSound(pSound, nullptr, true, &m_pCollectRupee);
+
+	bool bPaused = false;
+	m_pTheme->getPaused(&bPaused);
+	m_pTheme->setPaused(!bPaused);
+
+
+	//FONT
 	m_pFont = ContentManager::Load<SpriteFont>(L"SpriteFonts/Sheerwood_32.fnt");
 
+	//LIGHT
 	m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
 
 	//GROUND PLANE
@@ -330,7 +348,10 @@ void ExamScene::CheckForCollectibles()
 			m_CurrentPoints += obj->GetValue();
 			RemoveChild(obj);
 			m_pCollectibles.erase(std::remove(m_pCollectibles.begin(), m_pCollectibles.end(), obj));
-			//todo collected sound
+
+			//bool bPaused = false;
+			//m_pCollectRupee->getPaused(&bPaused);
+			//m_pCollectRupee->setPaused(!bPaused);
 		}
 	}
 

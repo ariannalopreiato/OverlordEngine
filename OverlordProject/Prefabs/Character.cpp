@@ -83,8 +83,8 @@ void Character::ScalePlayerMesh(float scale)
 
 void Character::Update(const SceneContext& sceneContext)
 {
-	auto pos = GetTransform()->GetPosition();
-	m_pEmitter->GetTransform()->Translate(pos);
+	/*auto pos = GetTransform()->GetPosition();
+	m_pEmitter->GetTransform()->Translate(pos);*/
 
 	constexpr float epsilon{ 0.001f }; //Constant that can be used to compare if a float is near zero
 
