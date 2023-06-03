@@ -3,6 +3,7 @@ float4x4 gWorldViewProj : WORLDVIEWPROJECTION;
 float4x4 gWorldViewProj_Light;
 float3 gLightDirection = float3(-0.577f, -0.577f, 0.577f);
 float gShadowMapBias = 0.001f;
+float4 ambientColor = float4(0.3f, 0.3f, 0.3f, 1.f);
 
 Texture2D gDiffuseMap;
 Texture2D gShadowMap;
@@ -152,19 +153,41 @@ float EvaluateShadowMap(float4 lpos)
 //--------------------------------------------------------------------------------------
 float4 PS(VS_OUTPUT input) : SV_TARGET
 {
+	//float shadowValue = EvaluateShadowMap(input.lPos);
+	//shadowValue = (shadowValue / 2) + 0.5f;
+	//float4 diffuseColor = gDiffuseMap.Sample(samLinear,input.texCoord);
+	//float3 color_rgb= diffuseColor.rgb;
+	//float color_a = diffuseColor.a;
+	//
+	////HalfLambert Diffuse :)
+	//float diffuseStrength = dot(input.normal, -gLightDirection);
+	//diffuseStrength = diffuseStrength * 0.5 + 0.5;
+	//diffuseStrength = saturate(diffuseStrength);
+	//color_rgb = color_rgb * diffuseStrength;
+
+	//return float4(color_rgb * shadowValue , color_a );
+
 	float shadowValue = EvaluateShadowMap(input.lPos);
 	shadowValue = (shadowValue / 2) + 0.5f;
 	float4 diffuseColor = gDiffuseMap.Sample(samLinear,input.texCoord);
-	float3 color_rgb= diffuseColor.rgb;
+	float3 color_rgb = diffuseColor.rgb;
 	float color_a = diffuseColor.a;
-	
+
 	//HalfLambert Diffuse :)
 	float diffuseStrength = dot(input.normal, -gLightDirection);
-	diffuseStrength = diffuseStrength * 0.5 + 0.5;
-	diffuseStrength = saturate(diffuseStrength);
-	color_rgb = color_rgb * diffuseStrength;
+	//diffuseStrength = diffuseStrength * 0.5 + 0.5;
 
-	return float4(color_rgb * shadowValue , color_a );
+	float threshold = 0.6f;
+
+	if (diffuseStrength > threshold)
+		diffuseStrength = 1.f;
+	else
+		diffuseStrength = 0.6f;
+
+	//diffuseStrength = saturate(diffuseStrength);
+	color_rgb *= diffuseStrength + ambientColor;
+
+	return float4(color_rgb * shadowValue, color_a);
 }
 
 //--------------------------------------------------------------------------------------
