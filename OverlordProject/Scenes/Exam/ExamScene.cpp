@@ -11,6 +11,7 @@
 #include "Materials/Post/PostBloom.h"
 #include "Prefabs/TimerPrefab.h"
 #include "Prefabs/LifeManager.h"
+#include "Prefabs/KillPlane.h"
 
 void ExamScene::Initialize()
 {
@@ -24,7 +25,7 @@ void ExamScene::Initialize()
 
 	//GROUND PLANE
 	const auto pDefaultMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
-	GameSceneExt::CreatePhysXGroundPlane(*this, pDefaultMaterial);
+	//GameSceneExt::CreatePhysXGroundPlane(*this, pDefaultMaterial);
 
 	//SKYBOX
 	auto pSkyBox = AddChild(new GameObject());
@@ -92,7 +93,7 @@ void ExamScene::Initialize()
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
 	//TIMER
-	m_pTimer = AddChild((new TimerPrefab(241, XMFLOAT2{ m_SceneContext.windowWidth/2 - 50.f, 10.f})));
+	m_pTimer = AddChild(new TimerPrefab(241, XMFLOAT2{ m_SceneContext.windowWidth/2 - 50.f, 10.f}));
 
 	//BACKGROUND MUSIC
 
@@ -102,6 +103,9 @@ void ExamScene::Initialize()
 	//POST PROCESSING - BLOOM
 	auto bloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
 	AddPostProcessingEffect(bloom);
+
+	//KILLPLANE
+	m_pKillPlane = AddChild(new KillPlane(m_pPlayer, { 0.f, -1.6f, 0.f }, {500.f, 1.f, 500.f}));
 
 	//LIFE
 	m_pLifeManager = AddChild(new LifeManager(3, { 0.13f, 0.13f, 0.13f }, { 20.f, 80.f, 0.f }));
@@ -166,6 +170,13 @@ void ExamScene::Update()
 		Reset();
 		SceneManager::Get()->SetActiveGameScene(L"Game Over");
 	}
+
+	if (m_pKillPlane->GetIsHit())
+	{
+		m_pLifeManager->RemoveLife();
+		m_pKillPlane->Reset();
+		PositionPlayer();
+	}
 }
 
 void ExamScene::LateUpdate()
@@ -204,6 +215,7 @@ void ExamScene::InitializeCollectibles()
 		m_pCollectibles.clear();
 	}
 
+	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {1.37f, 1.12f, -47.6f}, {90.f, 0.f, 0.f})));
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, { 1.37f, 1.12f, -47.6f }, { 90.f, 0.f, 0.f })));
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-72.f, 11.f, -29.f }, { 90.f, 0.f, 0.f })));
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-45.f, 18.f, 56.f }, { 90.f, 0.f, 0.f })));
@@ -215,7 +227,6 @@ void ExamScene::InitializeCollectibles()
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {12.f, 17.f, 48.f }, { 90.f, 0.f, 0.f })));
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {29.f, 13.f, 22.f }, { 90.f, 0.f, 0.f })));
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-18.f, 17.f, 13.f }, { 90.f, 0.f, 0.f })));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {10.f, 24.f, 3.f }, { 90.f, 0.f, 0.f })));
 
 	//POINTS
 	m_TotalPoints = int(m_pCollectibles.size());
@@ -274,6 +285,7 @@ void ExamScene::Reset()
 	m_CurrentPoints = 0;
 	m_pLifeManager->Reset();
 	m_pTimer->Reset();
+	m_pKillPlane->Reset();
 }
 
 void ExamScene::LoadLevel()

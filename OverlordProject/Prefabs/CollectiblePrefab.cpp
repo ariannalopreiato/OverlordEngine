@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CollectiblePrefab.h"
 #include "Materials/DiffuseMaterial.h"
+#include "Character.h"
 
 CollectiblePrefab::CollectiblePrefab(const std::wstring& model, int value, const XMFLOAT3& position, const XMFLOAT3& rotation, const XMFLOAT3& scale, float pivotOffset)
 	: m_Model{ model }
@@ -32,7 +33,7 @@ void CollectiblePrefab::Initialize(const SceneContext& /*sceneContext*/)
 		{
 			if (triggerAction == PxTriggerAction::ENTER)
 			{
-				m_IsCollected = true;
+					m_IsCollected = true;
 			}
 		});
 }

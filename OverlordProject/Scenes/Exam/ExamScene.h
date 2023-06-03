@@ -6,6 +6,7 @@ class Ladder;
 class SpriteFont;
 class TimerPrefab;
 class LifeManager;
+class KillPlane;
 class ExamScene : public GameScene
 {
 public:
@@ -64,4 +65,6 @@ private:
 
 	bool m_DrawShadowMap{ false };
 	float m_ShadowMapScale{ 0.3f };
+
+	KillPlane* m_pKillPlane{};
 };

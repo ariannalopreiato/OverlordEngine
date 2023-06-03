@@ -1,5 +1,4 @@
 #pragma once
-
 class CollectiblePrefab final : public GameObject
 {
 public:

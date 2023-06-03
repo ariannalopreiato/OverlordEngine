@@ -93,6 +93,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Prefabs\KillPlane.cpp" />
     <ClCompile Include="Scenes\Exam\GameOver.cpp" />
     <ClCompile Include="Scenes\Exam\PauseMenu.cpp" />
     <ClCompile Include="Prefabs\LifeManager.cpp" />
@@ -162,6 +163,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Prefabs\KillPlane.h" />
     <ClInclude Include="Scenes\Exam\GameOver.h" />
     <ClInclude Include="Scenes\Exam\PauseMenu.h" />
     <ClInclude Include="Prefabs\LifeManager.h" />
