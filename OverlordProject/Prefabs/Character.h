@@ -62,7 +62,7 @@ public:
 protected:
 	void Initialize(const SceneContext&) override;
 	void Update(const SceneContext&) override;
-
+	
 private:
 	void SetAnimation(AnimationState state);
 
@@ -71,14 +71,13 @@ private:
 	CameraMovement* m_pCameraMovement{};
 
 	bool m_CanClimb = false;
-	bool m_IsGrounded = true;
-
-	bool m_IsAnimated = false;
 
 	ModelAnimator* m_pAnimator{};
 
-	int m_AnimationClipId{ 0 };
-	float m_AnimationSpeed{ 1.f };
+	AnimationState m_CurrentState;
+	AnimationState m_PreviousState;
+
+	ParticleEmitterComponent* m_pEmitter{};
 
 	char** m_ClipNames{};
 	UINT m_ClipCount{};

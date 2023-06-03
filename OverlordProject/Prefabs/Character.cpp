@@ -17,12 +17,6 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	m_pControllerComponent = AddComponent(new ControllerComponent(m_CharacterDesc.controller));
 
 	//Model component + textures	
-	auto pModelMesh = AddChild(new GameObject);
-	auto pModel = pModelMesh->AddComponent(new ModelComponent(L"Meshes/Player/link.ovm"));
-	float pivotOffset = 1.5f;
-	pModel->GetTransform()->Translate(0.f, -pivotOffset, 0.f);
-	pModel->GetTransform()->Scale(0.015f);
-
 	const auto pSwordMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
 	pSwordMaterial->SetDiffuseTexture(L"Textures/Character/sheath.png");
 	const auto pMouthMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
@@ -33,28 +27,50 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	pEyebrowRMaterial->SetDiffuseTexture(L"Textures/Character/eyebrow1.png");
 	const auto pEyebrowLMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
 	pEyebrowLMaterial->SetDiffuseTexture(L"Textures/Character/eyebrow1.png");
-	const auto pPupilRMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-	pPupilRMaterial->SetDiffuseTexture(L"Textures/Character/pupil.png");
+	const auto pPupilMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pPupilMaterial->SetDiffuseTexture(L"Textures/Character/pupil.png");
 	const auto pEyeRMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
 	pEyeRMaterial->SetDiffuseTexture(L"Textures/Character/eyeRight.png");
-	const auto pPupilLMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-	pPupilLMaterial->SetDiffuseTexture(L"Textures/Character/pupil.png");
 	const auto pEyeLMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
 	pEyeLMaterial->SetDiffuseTexture(L"Textures/Character/eyeLeft.png");
+
+	auto pModelMesh = AddChild(new GameObject);
+	auto pModel = pModelMesh->AddComponent(new ModelComponent(L"Meshes/Player/link.ovm"));
+	float pivotOffset = 1.2f;
+	pModel->GetTransform()->Translate(0.f, -pivotOffset, 0.f);
+	pModel->GetTransform()->Scale(0.015f);
 
 	pModel->SetMaterial(pSwordMaterial, 1);
 	pModel->SetMaterial(pMouthMaterial, 3);
 	pModel->SetMaterial(pEyeRMaterial, 4);
-	pModel->SetMaterial(pPupilRMaterial, 5);
+	pModel->SetMaterial(pPupilMaterial, 5);
 	pModel->SetMaterial(pEyeLMaterial, 6);
-	pModel->SetMaterial(pPupilLMaterial, 7);
+	pModel->SetMaterial(pPupilMaterial, 7);
 	pModel->SetMaterial(pEyebrowRMaterial, 0);
 	pModel->SetMaterial(pEyebrowLMaterial, 2);
 	pModel->SetMaterial(pBodyMaterial, 8);
 
 	m_pAnimator = pModel->GetAnimator();
 	m_pAnimator->GetClipCount();
-	SetAnimation(idle);
+	m_CurrentState = idle;
+	m_PreviousState = idle;
+	SetAnimation(m_CurrentState);
+
+	//PARTICLES
+	ParticleEmitterSettings settings{};
+	settings.velocity = { 0.f,6.f,0.f };
+	settings.minSize = 1.f;
+	settings.maxSize = 2.f;
+	settings.minEnergy = 1.f;
+	settings.maxEnergy = 2.f;
+	settings.minScale = 3.5f;
+	settings.maxScale = 5.5f;
+	settings.minEmitterRadius = .2f;
+	settings.maxEmitterRadius = .5f;
+	settings.color = { 1.f,1.f,1.f, .6f };
+
+	const auto pObject = AddChild(new GameObject);
+	m_pEmitter = pObject->AddComponent(new ParticleEmitterComponent(L"Textures/Smoke.png", settings, 200));
 }
 
 void Character::ScalePlayerMesh(float scale)
@@ -66,6 +82,8 @@ void Character::ScalePlayerMesh(float scale)
 
 void Character::Update(const SceneContext& sceneContext)
 {
+	m_pEmitter->GetTransform()->Translate(GetTransform()->GetPosition());
+
 	constexpr float epsilon{ 0.001f }; //Constant that can be used to compare if a float is near zero
 
 	//***************
@@ -77,19 +95,14 @@ void Character::Update(const SceneContext& sceneContext)
 	//if it's inside the ladder trigger
 	if (m_CanClimb)
 	{
-		//if it's still on the ground
-		if (m_IsGrounded)
-		{
-			//move.y should contain a 1 (Forward) or -1 (Backward) based on the active input (check corresponding actionId in m_CharacterDesc)
-			//Optional: if move.y is near zero (abs(move.y) < epsilon), you could use the ThumbStickPosition.y for movement
-			if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveBackward))
-				move.z = -1;
+		//move.y should contain a 1 (Forward) or -1 (Backward) based on the active input (check corresponding actionId in m_CharacterDesc)
+		//Optional: if move.y is near zero (abs(move.y) < epsilon), you could use the ThumbStickPosition.y for movement
+		if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveBackward))
+			move.z = -1;
 
-			if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveForward))
-			{
-				move.z = 1;
-				m_IsGrounded = false;
-			}
+		if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveForward))
+		{
+			move.z = 1;
 		}
 		else
 		{
@@ -141,7 +154,11 @@ void Character::Update(const SceneContext& sceneContext)
 		if (m_MoveSpeed > m_CharacterDesc.maxMoveSpeed)
 			m_MoveSpeed = m_CharacterDesc.maxMoveSpeed;
 
-		SetAnimation(run);
+		if (m_CurrentState != run)
+		{
+			m_CurrentState = run;
+			SetAnimation(m_CurrentState);
+		}
 	}
 	//Else (character is not moving, or stopped moving)
 	else
@@ -152,6 +169,13 @@ void Character::Update(const SceneContext& sceneContext)
 		//Make sure the current MoveSpeed doesn't get smaller than zero
 		if (m_MoveSpeed < 0.0f)
 			m_MoveSpeed = 0.f;
+
+		if (m_CurrentState != idle)
+		{
+			m_CurrentState = idle;
+			SetAnimation(m_CurrentState);
+		}
+		
 	}
 
 	//Now we can calculate the Horizontal Velocity which should be stored in m_TotalVelocity.xz
@@ -181,13 +205,24 @@ void Character::Update(const SceneContext& sceneContext)
 	{
 		//Set m_TotalVelocity.y equal to CharacterDesc::JumpSpeed
 		m_TotalVelocity.y = m_CharacterDesc.JumpSpeed;
+
+		if (m_CurrentState != jump)
+		{
+			m_PreviousState = m_CurrentState;
+			m_CurrentState = jump;
+			SetAnimation(m_CurrentState);
+		}
 	}
 	//Else (=Character is grounded, no input pressed)
 	else
 	{
 		//m_TotalVelocity.y is zero
 		m_TotalVelocity.y = -0.01f;
-		m_IsGrounded = true;
+		if (m_CurrentState != run && m_CurrentState != idle)
+		{
+			m_CurrentState = m_PreviousState;
+			SetAnimation(m_CurrentState);
+		}
 	}
 
 	//************

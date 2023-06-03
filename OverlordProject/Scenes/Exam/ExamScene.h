@@ -26,6 +26,7 @@ protected:
 	void LateUpdate() override;
 	void Draw() override;
 	void OnGUI() override;
+	void PostDraw() override;
 
 private:
 	void PositionPlayer();

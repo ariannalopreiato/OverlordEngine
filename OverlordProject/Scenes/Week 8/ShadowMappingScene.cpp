@@ -3,6 +3,7 @@
 
 #include "Materials/Shadow/DiffuseMaterial_Shadow.h"
 #include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
+#include "Prefabs/Character.h"
 
 
 void ShadowMappingScene::Initialize()
@@ -12,37 +13,47 @@ void ShadowMappingScene::Initialize()
 
 	m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
 
-	//Materials
-	//*********
-	const auto pPeasantMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-	pPeasantMaterial->SetDiffuseTexture(L"Textures/body.png");
-
 	const auto pGroundMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
 	pGroundMaterial->SetDiffuseTexture(L"Textures/GroundBrick.jpg");
 
+
 	//Ground Mesh
 	//***********
-	const auto pGroundObj = new GameObject();
-	const auto pGroundModel = new ModelComponent(L"Meshes/UnitPlane.ovm");
-	pGroundModel->SetMaterial(pGroundMaterial);
+	const auto pDefaultMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
+	GameSceneExt::CreatePhysXGroundPlane(*this, pDefaultMaterial);
 
-	pGroundObj->AddComponent(pGroundModel);
-	pGroundObj->GetTransform()->Scale(10.0f, 10.0f, 10.0f);
+	const auto pPeasantMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pPeasantMaterial->SetDiffuseTexture(L"Textures/PeasantGirl_Diffuse.png");
 
-	AddChild(pGroundObj);
-
-	//Character Mesh 
-	//**************
 	const auto pObject = AddChild(new GameObject);
-	const auto pModel = pObject->AddComponent(new ModelComponent(L"Meshes/PeasantGirl.ovm"));
+	const auto pModel = pObject->AddComponent(new ModelComponent(L"Meshes/Player/link.ovm"));
 	pModel->SetMaterial(pPeasantMaterial);
 
-	pObject->GetTransform()->Scale(0.1f, 0.1f, 0.1f);
 
-	if (const auto pAnimator = pModel->GetAnimator())
+	const int texAmount = 32;
+
+	std::vector<std::wstring> textures;
+
+	textures.reserve(texAmount);
+
+	for (int i = 0; i < texAmount; ++i)
 	{
-		pAnimator->SetAnimation(0);
-		pAnimator->Play();
+		textures.emplace_back(L"Textures/Level/" + std::to_wstring(i) + L".png");
+	}
+
+	const auto pLevelObject = AddChild(new GameObject());
+	const auto pLevelMesh = pLevelObject->AddComponent(new ModelComponent(L"Meshes/Level/windfall.ovm", true));
+
+	const auto pLevelActor = pLevelObject->AddComponent(new RigidBodyComponent(true));
+	const auto pPxTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Level/windfall.ovpt");
+	pLevelActor->AddCollider(PxTriangleMeshGeometry(pPxTriangleMesh, PxMeshScale({ .015f, .015f, .015f })), *pDefaultMaterial);
+	pLevelObject->GetTransform()->Scale(.015f, .015f, .015f);
+
+	for (UINT8 i = 0; i < textures.size(); ++i)
+	{
+		auto mat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
+		mat->SetDiffuseTexture(textures[int(i)]);
+		pLevelMesh->SetMaterial(mat, i);
 	}
 
 	//Input

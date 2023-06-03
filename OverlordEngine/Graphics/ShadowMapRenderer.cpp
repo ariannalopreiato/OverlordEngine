@@ -137,7 +137,7 @@ void ShadowMapRenderer::DrawMesh(const SceneContext& sceneContext, MeshFilter* p
 	const UINT offset{ 0 };
 	for (const auto& mesh : pMeshFilter->GetMeshes())
 	{
-		const auto& vertexBufferData = pMeshFilter->GetVertexBufferData(techContext.inputLayoutID);
+		const auto& vertexBufferData = pMeshFilter->GetVertexBufferData(techContext.inputLayoutID, mesh.id);
 		sceneContext.d3dContext.pDeviceContext->IASetVertexBuffers(0, 1, &vertexBufferData.pVertexBuffer, &vertexBufferData.VertexStride, &offset);
 
 		sceneContext.d3dContext.pDeviceContext->IASetIndexBuffer(mesh.buffers.pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);

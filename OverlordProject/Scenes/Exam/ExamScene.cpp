@@ -20,6 +20,8 @@ void ExamScene::Initialize()
 
 	m_pFont = ContentManager::Load<SpriteFont>(L"SpriteFonts/Sheerwood_32.fnt");
 
+	m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
+
 	//GROUND PLANE
 	const auto pDefaultMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
 	GameSceneExt::CreatePhysXGroundPlane(*this, pDefaultMaterial);
@@ -31,16 +33,19 @@ void ExamScene::Initialize()
 	const auto pMaterial = MaterialManager::Get()->CreateMaterial<SkyboxMaterial>();
 	pMaterial->SetDiffuseTexture(L"Textures/skybox.png");
 	pModel->SetMaterial(pMaterial);
-	pSkyBox->GetTransform()->Scale(400, 350, 400);
+	pSkyBox->GetTransform()->Scale(400.f, 380.f, 400.f);
 	pSkyBox->GetTransform()->Rotate(0, 135, 0);
 
 	//CHARACTER
-	CharacterDesc characterDesc{ pDefaultMaterial };
+	CharacterDesc characterDesc{ pDefaultMaterial, 0.5f, 1.5f };
 	characterDesc.actionId_MoveForward = CharacterMoveForward;
 	characterDesc.actionId_MoveBackward = CharacterMoveBackward;
 	characterDesc.actionId_MoveLeft = CharacterMoveLeft;
 	characterDesc.actionId_MoveRight = CharacterMoveRight;
 	characterDesc.actionId_Jump = CharacterJump;
+	characterDesc.maxMoveSpeed = 10.f;
+	characterDesc.JumpSpeed = 15.f;
+	characterDesc.maxFallSpeed = 15.f;
 
 	m_pPlayer = AddChild(new Character(characterDesc));
 
@@ -48,7 +53,7 @@ void ExamScene::Initialize()
 
 	//CAMERA
 	const auto cameraObj = AddChild(new GameObject());
-	auto cameraMovement = cameraObj->AddComponent(new CameraMovement(m_pPlayer, {8.f, 4.f, 6.f}));
+	auto cameraMovement = cameraObj->AddComponent(new CameraMovement(m_pPlayer, { 8.f, 4.f, 6.f }));
 	auto cameraComponent = cameraObj->AddComponent(new CameraComponent());
 	SetActiveCamera(cameraComponent);
 
@@ -109,19 +114,16 @@ void ExamScene::OnGUI()
 	ImGui::SliderFloat("ShadowMap Scale", &m_ShadowMapScale, 0.f, 1.f);
 }
 
-void ExamScene::Update()
+void ExamScene::PostDraw()
 {
-	if (m_SceneContext.pInput->IsActionTriggered(0))
-	{
-		const auto pCameraTransform = m_SceneContext.pCamera->GetTransform();
-		m_SceneContext.pLights->SetDirectionalLight(pCameraTransform->GetPosition(), pCameraTransform->GetForward());
-	}
-
 	if (m_DrawShadowMap) {
 
-		ShadowMapRenderer::Get()->Debug_DrawDepthSRV({ m_SceneContext.windowWidth - 10.f, 10.f }, { m_ShadowMapScale, m_ShadowMapScale }, { 1.f,0.f });
+		ShadowMapRenderer::Get()->Debug_DrawDepthSRV({ m_SceneContext.windowWidth, 0.f }, { m_ShadowMapScale, m_ShadowMapScale }, { 1.f,0.f });
 	}
+}
 
+void ExamScene::Update()
+{
 	//std::cout << "POSITION" << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().x << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().y << std::endl;
@@ -295,8 +297,9 @@ void ExamScene::LoadLevel()
 
 	const auto pLevelActor = pLevelObject->AddComponent(new RigidBodyComponent(true));
 	const auto pPxTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Level/windfall.ovpt");
-	pLevelActor->AddCollider(PxTriangleMeshGeometry(pPxTriangleMesh, PxMeshScale({ .015f, .015f, .015f })), *pDefaultMaterial);
-	pLevelObject->GetTransform()->Scale(.015f, .015f, .015f);
+	float scale{ 0.015f };
+	pLevelActor->AddCollider(PxTriangleMeshGeometry(pPxTriangleMesh, PxMeshScale({ scale, scale, scale })), *pDefaultMaterial);
+	pLevelActor->GetTransform()->Scale(scale);
 
 
 	for (UINT8 i = 0; i < textures.size(); ++i)
