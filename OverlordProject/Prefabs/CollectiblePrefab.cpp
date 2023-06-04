@@ -15,25 +15,23 @@ CollectiblePrefab::CollectiblePrefab(const std::wstring& model, int value, const
 void CollectiblePrefab::Initialize(const SceneContext& /*sceneContext*/)
 {
 	auto& physx = PxGetPhysics();
-	auto pMaterialPhys = physx.createMaterial(0.f, 0.f, 1.f);
-	
+	auto pMaterialPhys = physx.createMaterial(0.f, 0.f, 1.f);	
 
-	m_pModelMesh = AddChild(new GameObject);
-	auto pModel = m_pModelMesh->AddComponent(new ModelComponent(m_Model));
+	AddComponent(new ModelComponent(m_Model));
 	m_Position.y -= m_PivotOffset;
-	pModel->GetTransform()->Translate(m_Position);
-	pModel->GetTransform()->Scale(m_Scale);
+	GetComponent<ModelComponent>()->GetTransform()->Translate(m_Position);
+	GetComponent<ModelComponent>()->GetTransform()->Scale(m_Scale);
 	
 	const auto pFmod = SoundManager::Get()->GetSystem();
 	FMOD::Sound* pSound{};
 	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/rupee.mp3", FMOD_LOOP_OFF, nullptr, &pSound);
 	result = pFmod->playSound(pSound, nullptr, true, &m_pCollectSound);
 
-	auto pRigidBody = m_pModelMesh->AddComponent(new RigidBodyComponent(true));
+	AddComponent(new RigidBodyComponent(true));
 	float size{ .5f };
-	pRigidBody->AddCollider(PxBoxGeometry{ size / 2, size / 2, size / 2 }, *pMaterialPhys, true);
+	GetComponent<RigidBodyComponent>()->AddCollider(PxBoxGeometry{ size / 2, size / 2, size / 2 }, *pMaterialPhys, true);
 	
-	m_pModelMesh->SetOnTriggerCallBack([=](GameObject*, GameObject* /*otherObjectPtr*/, PxTriggerAction triggerAction)
+	SetOnTriggerCallBack([=](GameObject*, GameObject* /*otherObjectPtr*/, PxTriggerAction triggerAction)
 		{
 			if (triggerAction == PxTriggerAction::ENTER)
 			{
@@ -51,5 +49,5 @@ void CollectiblePrefab::Update(const SceneContext& sceneContext)
 	float deltaTime = sceneContext.pGameTime->GetElapsed();
 	m_Rotate += rotationSpeed * deltaTime;
 
-	m_pModelMesh->GetTransform()->Rotate(m_Rotation.x, m_Rotate, m_Rotation.z);
+	GetTransform()->Rotate(m_Rotation.x, m_Rotate, m_Rotation.z);
 }

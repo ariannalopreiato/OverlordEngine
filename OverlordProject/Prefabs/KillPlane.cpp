@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "KillPlane.h"
 #include "Character.h"
+#include "Materials/DiffuseMaterial.h"
 
 KillPlane::KillPlane(Character* pPlayer, const XMFLOAT3& position, const XMFLOAT3& scale)
 	: m_pPlayer(pPlayer)
@@ -14,9 +15,12 @@ void KillPlane::Initialize(const SceneContext& /*sceneContext*/)
 	auto& physx = PxGetPhysics();
 	auto pMaterialPhys = physx.createMaterial(0.f, 0.f, 1.f);
 
-
 	auto pMesh = AddChild(new GameObject);
-	auto pModel = pMesh->AddComponent(new ModelComponent(L"Meshes/UnitPlane.ovm"));
+	auto pModel = pMesh->AddComponent(new ModelComponent(L"Meshes/Level/plane.ovm"));
+	const auto pWater = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
+	pWater->SetDiffuseTexture(L"Textures/Water.jpg");
+	pModel->SetMaterial(pWater);
+
 	pModel->GetTransform()->Translate(m_Position);
 	pModel->GetTransform()->Scale(m_Scale);
 

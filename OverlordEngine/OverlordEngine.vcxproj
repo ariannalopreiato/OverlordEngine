@@ -109,6 +109,7 @@
     <ClInclude Include="Deferred\QuadRenderer.h" />
     <ClInclude Include="Graphics\ShadowMapRenderer.h" />
     <ClInclude Include="Lab_Todos.h" />
+    <ClInclude Include="Managers\GameSoundManager.h" />
     <ClInclude Include="Managers\LightManager.h" />
     <ClInclude Include="Misc\ModelAnimator.h" />
     <ClInclude Include="Content\SpriteFontLoader.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Deferred\DeferredRenderer.cpp" />
     <ClCompile Include="Deferred\QuadRenderer.cpp" />
     <ClCompile Include="Graphics\ShadowMapRenderer.cpp" />
+    <ClCompile Include="Managers\GameSoundManager.cpp" />
     <ClCompile Include="Managers\LightManager.cpp" />
     <ClCompile Include="Misc\ModelAnimator.cpp" />
     <ClCompile Include="Content\SpriteFontLoader.cpp">

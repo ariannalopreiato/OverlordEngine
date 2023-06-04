@@ -12,6 +12,7 @@
 #include "Prefabs/TimerPrefab.h"
 #include "Prefabs/LifeManager.h"
 #include "Prefabs/KillPlane.h"
+#include "Managers/GameSoundManager.h"
 
 
 void ExamScene::Initialize()
@@ -20,12 +21,7 @@ void ExamScene::Initialize()
 	m_SceneContext.settings.drawGrid = false; 
 	m_SceneContext.settings.drawPhysXDebug = false;
 
-	//BACKGROUND MUSIC
-	const auto pFmod = SoundManager::Get()->GetSystem();
-	FMOD::Sound* pSound{};
-	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/WindfallIsland.mp3", FMOD_DEFAULT | FMOD_LOOP_NORMAL, nullptr, &pSound);
-	result = pFmod->playSound(pSound, nullptr, true, &m_pTheme);
-	m_pTheme->setVolume(0.5f);
+	//m_pOpen->setVolume(1.f);
 
 	//FONT
 	m_pFont = ContentManager::Load<SpriteFont>(L"SpriteFonts/Sheerwood_32.fnt");
@@ -104,15 +100,19 @@ void ExamScene::Initialize()
 	//LOAD LEVEL
 	LoadLevel();
 
-	//POST PROCESSING - BLOOM
-	auto bloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
-	AddPostProcessingEffect(bloom);
-
 	//KILLPLANE
-	m_pKillPlane = AddChild(new KillPlane(m_pPlayer, { 0.f, -0.8f, 0.f }, {500.f, 1.f, 500.f}));
+	m_pKillPlane = AddChild(new KillPlane(m_pPlayer, { 0.f, -1.6f, 0.f }, {600.f, 1.f, 600.f}));
 
 	//LIFE
 	m_pLifeManager = AddChild(new LifeManager(3, { 0.13f, 0.13f, 0.13f }, { 20.f, 80.f, 0.f }));
+
+	//MUSIC
+	auto soundManager = GameSoundManager::Get();
+	soundManager->AddSound(GameSoundManager::Sound::WindfallIsland, "Resources/Sounds/WindfallIsland.mp3");
+
+	//POST PROCESSING - BLOOM
+	auto bloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
+	AddPostProcessingEffect(bloom);
 }
 
 void ExamScene::OnGUI()
@@ -133,11 +133,19 @@ void ExamScene::Update()
 {
 	if (!m_IsPlaying)
 	{
-		bool bPaused = false;
-		m_pTheme->getPaused(&bPaused);
-		m_pTheme->setPaused(!bPaused);
-		m_IsPlaying = true;
+		GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::WindfallIsland, true);
+	//	bool bPaused = false;
+	//	m_pTheme->getPaused(&bPaused);
+	//	m_pTheme->setPaused(!bPaused);
+		m_IsPlaying = true;	
+
+	//	m_CanMenuPlay = false;
+	//	bPaused = false;
+	//	bPaused = false;
+	//	m_pMenuMusic->getPaused(&bPaused);
+	//	m_pMenuMusic->setPaused(!bPaused);
 	}
+	// 
 	//std::cout << "POSITION" << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().x << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().y << std::endl;
@@ -155,6 +163,11 @@ void ExamScene::Update()
 			m_pTheme->getPaused(&bPaused);
 			m_pTheme->setPaused(!bPaused);
 			m_IsPlaying = false;
+
+			bPaused = false;
+			m_pOpen->getPaused(&bPaused);
+			m_pOpen->setPaused(!bPaused);
+
 			SceneManager::Get()->SetActiveGameScene(L"Pause Menu");
 		}
 
@@ -218,7 +231,6 @@ void ExamScene::PositionPlayer()
 {
 	//reposition player
 	m_pPlayer->GetTransform()->Translate(15.f, 3.f, -49.f);
-	m_pPlayer->GetComponent<ParticleEmitterComponent>()->GetTransform()->Translate(15.f, 3.f, -49.f);
 }
 
 void ExamScene::InitializeCollectibles()
@@ -232,7 +244,6 @@ void ExamScene::InitializeCollectibles()
 	}
 
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {1.37f, 1.12f, -47.6f}, {90.f, 0.f, 0.f})));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, { 1.37f, 1.12f, -47.6f }, { 90.f, 0.f, 0.f })));
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-72.f, 11.f, -29.f }, { 90.f, 0.f, 0.f })));
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-45.f, 18.f, 56.f }, { 90.f, 0.f, 0.f })));
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {46.f, 8.f, 16.f }, { 90.f, 0.f, 0.f })));
@@ -266,6 +277,7 @@ void ExamScene::InitializeCollectibles()
 	}
 
 	m_pHearts.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/heart.ovm", 1, { 4.37f, 1.12f, -47.6f }, { 0.f, 0.f, 0.f }, {1.2f, 1.2f, 1.2f})));
+	
 
 	for (const auto& heart : m_pHearts)
 	{
@@ -325,7 +337,7 @@ void ExamScene::LoadLevel()
 
 void ExamScene::CheckForCollectibles()
 {
-	for (const auto& obj : m_pCollectibles)
+	for ( auto& obj : m_pCollectibles)
 	{
 		if (obj->GetIsCollected())
 		{

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MainGame.h"
+#include "Managers/GameSoundManager.h"
 
 /*LAB Content*/
 //#define W3
@@ -8,7 +9,7 @@
 //#define W6
 //#define W7
 //#define W8
-#define W9
+//#define W9
 //#define W10
 //#define W11
 
@@ -98,6 +99,8 @@
 //Game is preparing
 void MainGame::OnGamePreparing(GameContext& gameContext)
 {
+	GameSoundManager::Create(gameContext);
+
 	//Here you can change some game settings before engine initialize
 	//gameContext.windowWidth=... (default is 1280)
 	//gameContext.windowHeight=... (default is 720)
@@ -109,6 +112,7 @@ void MainGame::OnGamePreparing(GameContext& gameContext)
 
 void MainGame::Initialize()
 {
+	GameSoundManager::Get()->SetUp();
 
 #ifdef W3
 	SceneManager::Get()->AddGameScene(new MinionScene());

@@ -21,8 +21,8 @@ private:
 	GameObject* m_Restart{};
 	GameObject* m_EndButton{};
 
-	FMOD::Channel* m_pOpen{};
-	FMOD::Channel* m_Continue{};
-	FMOD::Channel* m_ToMainMenu{};
-	bool m_IsPlaying{ false };
+	//FMOD::Channel* m_pOpen{};
+	//FMOD::Channel* m_Continue{};
+	//FMOD::Channel* m_ToMainMenu{};
+	//bool m_IsPlaying{ false };
 };

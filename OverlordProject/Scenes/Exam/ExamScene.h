@@ -68,16 +68,15 @@ private:
 
 	KillPlane* m_pKillPlane{};
 
-	enum InputId
-	{
-		Play2D,
-		Play3D,
-		IncreaseVolume,
-		DecreaseVolume
-	};
-
 	FMOD::Channel* m_pTheme{};
 	FMOD::Channel* m_pCollectRupee{};
 	FMOD_VECTOR m_PrevListenerPos{};
 	bool m_IsPlaying{ false };
+
+	//Pause
+	FMOD::Channel* m_pOpen{};
+
+	//Menu
+	bool m_CanMenuPlay{ true };
+	FMOD::Channel* m_pMenuMusic{};
 };

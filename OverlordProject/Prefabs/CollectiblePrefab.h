@@ -12,7 +12,7 @@ public:
 
 	bool GetIsCollected() { return m_IsCollected; }
 	int GetValue() { return m_Value; }
-	ModelComponent* GetModel() { return m_pModelMesh->GetComponent<ModelComponent>(); }
+	ModelComponent* GetModel() { return GetComponent<ModelComponent>(); }
 
 protected:
 	void Initialize(const SceneContext& sceneContext) override;
@@ -24,7 +24,6 @@ private:
 	XMFLOAT3 m_Rotation;
 	std::wstring m_Texture;
 	std::wstring m_Model;
-	GameObject* m_pModelMesh;
 	float m_PivotOffset;
 	float m_Rotate{ 0.f };
 	bool m_IsCollected{ false };

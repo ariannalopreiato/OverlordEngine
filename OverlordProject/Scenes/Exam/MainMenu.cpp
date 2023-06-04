@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MainMenu.h"
 #include <cstdlib>
+#include "Managers/GameSoundManager.h"
 
 void MainMenu::Initialize()
 {
@@ -29,14 +30,9 @@ void MainMenu::Initialize()
 	m_EndButton->GetTransform()->Scale(0.7f, 0.7f, 0.7f);
 
 
-	const auto pFmod = SoundManager::Get()->GetSystem();
-	FMOD::Sound* pSound{};
-	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/TitleScreen.mp3", FMOD_DEFAULT | FMOD_LOOP_NORMAL, nullptr, &pSound);
-	result = pFmod->playSound(pSound, nullptr, true, &m_pMenuMusic);
-
-	bool bPaused = false;
-	m_pMenuMusic->getPaused(&bPaused);
-	m_pMenuMusic->setPaused(!bPaused);
+	auto soundManager = GameSoundManager::Get();
+	soundManager->AddSound(GameSoundManager::Sound::TitleMusic, "Resources/Sounds/TitleScreen.mp3");
+	soundManager->Play2DSound(GameSoundManager::Sound::TitleMusic, true);
 }
 
 void MainMenu::Update()
@@ -46,10 +42,6 @@ void MainMenu::Update()
 		if (m_StartButton->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{
 			//Load new scene
-			bool bPaused = false;
-			m_pMenuMusic->getPaused(&bPaused);
-			m_pMenuMusic->setPaused(!bPaused);
-
 			SceneManager::Get()->SetActiveGameScene(L"Control Screen");
 		}
 		if (m_EndButton->GetComponent<SpriteComponent>()->IsMouseOverSprite())
