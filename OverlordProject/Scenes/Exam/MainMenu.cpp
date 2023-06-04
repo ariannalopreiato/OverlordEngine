@@ -28,10 +28,15 @@ void MainMenu::Initialize()
 	m_EndButton->GetTransform()->Translate(m_SceneContext.windowWidth / 2.f + 425.f, m_SceneContext.windowHeight / 2.f + 200.f, 1.f);
 	m_EndButton->GetTransform()->Scale(0.7f, 0.7f, 0.7f);
 
-	const auto pMaterial = PxGetPhysics().createMaterial(.5f, .5f, .5f);
 
-	const auto pRigidBody = m_StartButton->AddComponent(new RigidBodyComponent(true));
-	pRigidBody->AddCollider(PxBoxGeometry{ 1.f, 0.5f, 0.5f }, *pMaterial);
+	const auto pFmod = SoundManager::Get()->GetSystem();
+	FMOD::Sound* pSound{};
+	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/TitleScreen.mp3", FMOD_DEFAULT | FMOD_LOOP_NORMAL, nullptr, &pSound);
+	result = pFmod->playSound(pSound, nullptr, true, &m_pMenuMusic);
+
+	bool bPaused = false;
+	m_pMenuMusic->getPaused(&bPaused);
+	m_pMenuMusic->setPaused(!bPaused);
 }
 
 void MainMenu::Update()
@@ -41,7 +46,11 @@ void MainMenu::Update()
 		if (m_StartButton->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{
 			//Load new scene
-			SceneManager::Get()->SetActiveGameScene(L"Exam Scene");
+			bool bPaused = false;
+			m_pMenuMusic->getPaused(&bPaused);
+			m_pMenuMusic->setPaused(!bPaused);
+
+			SceneManager::Get()->SetActiveGameScene(L"Control Screen");
 		}
 		if (m_EndButton->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{

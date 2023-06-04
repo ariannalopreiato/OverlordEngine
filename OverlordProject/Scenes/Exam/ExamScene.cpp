@@ -20,30 +20,18 @@ void ExamScene::Initialize()
 	m_SceneContext.settings.drawGrid = false; 
 	m_SceneContext.settings.drawPhysXDebug = false;
 
-	//SOUND 2D
+	//BACKGROUND MUSIC
 	const auto pFmod = SoundManager::Get()->GetSystem();
 	FMOD::Sound* pSound{};
 	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/WindfallIsland.mp3", FMOD_DEFAULT | FMOD_LOOP_NORMAL, nullptr, &pSound);
 	result = pFmod->playSound(pSound, nullptr, true, &m_pTheme);
 	m_pTheme->setVolume(0.5f);
 
-	//result = pFmod->createStream("Resources/Sounds/rupee.mp3", FMOD_DEFAULT | FMOD_LOOP_NORMAL, nullptr, &pSound);
-	//result = pFmod->playSound(pSound, nullptr, true, &m_pCollectRupee);
-
-	bool bPaused = false;
-	m_pTheme->getPaused(&bPaused);
-	m_pTheme->setPaused(!bPaused);
-
-
 	//FONT
 	m_pFont = ContentManager::Load<SpriteFont>(L"SpriteFonts/Sheerwood_32.fnt");
 
 	//LIGHT
 	m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
-
-	//GROUND PLANE
-	const auto pDefaultMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
-	//GameSceneExt::CreatePhysXGroundPlane(*this, pDefaultMaterial);
 
 	//SKYBOX
 	auto pSkyBox = AddChild(new GameObject());
@@ -54,6 +42,9 @@ void ExamScene::Initialize()
 	pModel->SetMaterial(pMaterial);
 	pSkyBox->GetTransform()->Scale(400.f, 380.f, 400.f);
 	pSkyBox->GetTransform()->Rotate(0, 135, 0);
+
+	//DEFAULT MATERIAL
+	const auto pDefaultMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
 
 	//CHARACTER
 	CharacterDesc characterDesc{ pDefaultMaterial, 0.5f, 1.5f };
@@ -81,9 +72,6 @@ void ExamScene::Initialize()
 	m_pPlayer->SetCameraMovement(cameraMovement);
 
 	cameraMovement->SetCameraMovement(MoveCameraLeft, MoveCameraRight);
-
-	//Ladders
-	//PositionLaddersTrigger();
 
 	//COLLECTIBLES
 	InitializeCollectibles();
@@ -113,8 +101,6 @@ void ExamScene::Initialize()
 	//TIMER
 	m_pTimer = AddChild(new TimerPrefab(241, XMFLOAT2{ m_SceneContext.windowWidth/2 - 50.f, 10.f}));
 
-	//BACKGROUND MUSIC
-
 	//LOAD LEVEL
 	LoadLevel();
 
@@ -123,7 +109,7 @@ void ExamScene::Initialize()
 	AddPostProcessingEffect(bloom);
 
 	//KILLPLANE
-	m_pKillPlane = AddChild(new KillPlane(m_pPlayer, { 0.f, -1.6f, 0.f }, {500.f, 1.f, 500.f}));
+	m_pKillPlane = AddChild(new KillPlane(m_pPlayer, { 0.f, -0.8f, 0.f }, {500.f, 1.f, 500.f}));
 
 	//LIFE
 	m_pLifeManager = AddChild(new LifeManager(3, { 0.13f, 0.13f, 0.13f }, { 20.f, 80.f, 0.f }));
@@ -145,6 +131,13 @@ void ExamScene::PostDraw()
 
 void ExamScene::Update()
 {
+	if (!m_IsPlaying)
+	{
+		bool bPaused = false;
+		m_pTheme->getPaused(&bPaused);
+		m_pTheme->setPaused(!bPaused);
+		m_IsPlaying = true;
+	}
 	//std::cout << "POSITION" << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().x << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().y << std::endl;
@@ -158,6 +151,10 @@ void ExamScene::Update()
 
 		if (InputManager::IsKeyboardKey(InputState::released, VK_DELETE))
 		{
+			bool bPaused = false;
+			m_pTheme->getPaused(&bPaused);
+			m_pTheme->setPaused(!bPaused);
+			m_IsPlaying = false;
 			SceneManager::Get()->SetActiveGameScene(L"Pause Menu");
 		}
 
@@ -282,20 +279,6 @@ void ExamScene::InitializeCollectibles()
 	}
 }
 
-//void ExamScene::PositionLaddersTrigger()
-//{
-//	XMFLOAT3 ladderDimensions{ 0.8f, 5.9f, 0.5f };
-//	m_Ladders.emplace_back(AddChild(new Ladder(ladderDimensions, { -2.f, 18.7f, 9.f }, {0.f, 30.f, 0.f})));
-//	m_Ladders.emplace_back(AddChild(new Ladder(ladderDimensions, { 17.4f, 18.7f, 10.6f }, { 0.f, -35.f, 0.f })));
-//	XMFLOAT3 bigLadderDimensions{ 0.8f, 20.f, 0.5f };
-//	m_Ladders.emplace_back(AddChild(new Ladder(bigLadderDimensions, { 10.7f, 40.7f, 47.1f }, { 0.f, -35.f, 0.f })));
-//
-//	for (const auto& ladder : m_Ladders)
-//	{
-//		ladder->SetPlayer(m_pPlayer);
-//	}
-//}
-
 void ExamScene::Reset()
 {
 	PositionPlayer();
@@ -348,10 +331,6 @@ void ExamScene::CheckForCollectibles()
 			m_CurrentPoints += obj->GetValue();
 			RemoveChild(obj);
 			m_pCollectibles.erase(std::remove(m_pCollectibles.begin(), m_pCollectibles.end(), obj));
-
-			//bool bPaused = false;
-			//m_pCollectRupee->getPaused(&bPaused);
-			//m_pCollectRupee->setPaused(!bPaused);
 		}
 	}
 
@@ -362,14 +341,12 @@ void ExamScene::CheckForCollectibles()
 			m_pLifeManager->AddLife();  
 			RemoveChild(obj);
 			m_pHearts.erase(std::remove(m_pHearts.begin(), m_pHearts.end(), obj));
-			//todo collected heart sound
 		}
 	}
 }
 
 void ExamScene::DisplayPoints()
 {	
-	//std::string point = "x" + std::to_string(m_CurrentPoints);
 	std::string point = std::to_string(m_CurrentPoints) + "/" + std::to_string(m_TotalPoints);
 	TextRenderer::Get()->DrawText(m_pFont, StringUtil::utf8_decode(point), XMFLOAT2(1180.f, 10.f), XMFLOAT4{Colors::LightGoldenrodYellow});
 }

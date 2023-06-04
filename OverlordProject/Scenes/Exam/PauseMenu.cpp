@@ -30,10 +30,22 @@ void PauseMenu::Initialize()
 	m_EndButton->GetTransform()->Translate(m_SceneContext.windowWidth / 2.f, m_SceneContext.windowHeight / 2.f + 220.f, 1.f);
 	m_EndButton->GetTransform()->Scale(0.8f, 0.7f, 0.7f);
 
-	const auto pMaterial = PxGetPhysics().createMaterial(.5f, .5f, .5f);
+	//SOUNDS
+	const auto pFmod = SoundManager::Get()->GetSystem();
+	FMOD::Sound* pSound{};
+	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/PauseMenuOpen.wav", FMOD_LOOP_OFF, nullptr, &pSound);
+	result = pFmod->playSound(pSound, nullptr, true, &m_pOpen);
+	//m_pOpen->setVolume(1.f);
 
-	const auto pRigidBody = m_MainMenu->AddComponent(new RigidBodyComponent(true));
-	pRigidBody->AddCollider(PxBoxGeometry{ 1.f, 0.5f, 0.5f }, *pMaterial);
+	result = pFmod->createStream("Resources/Sounds/PauseMenuContinue.wav", FMOD_LOOP_OFF, nullptr, &pSound);
+	result = pFmod->playSound(pSound, nullptr, true, &m_Continue);
+	//m_Continue->setVolume(1.f);
+
+	result = pFmod->createStream("Resources/Sounds/PauseMenuMainMenu.wav", FMOD_LOOP_OFF, nullptr, &pSound);
+	result = pFmod->playSound(pSound, nullptr, true, &m_ToMainMenu);
+	//m_ToMainMenu->setVolume(1.f);
+
+	m_pOpen->setPaused(false);
 }
 
 void PauseMenu::Update()
@@ -43,11 +55,13 @@ void PauseMenu::Update()
 		if (m_MainMenu->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{
 			//Load new scene
+			m_ToMainMenu->setPaused(false);
 			SceneManager::Get()->SetActiveGameScene(L"Main Menu");
 		}
 		if (m_Restart->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{
 			//restart
+			m_Continue->setPaused(false);
 			SceneManager::Get()->SetActiveGameScene(L"Exam Scene");
 		}
 		if (m_EndButton->GetComponent<SpriteComponent>()->IsMouseOverSprite())

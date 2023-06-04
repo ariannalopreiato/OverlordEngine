@@ -32,7 +32,6 @@ protected:
 private:
 	void PositionPlayer();
 	void InitializeCollectibles();
-	//void PositionLaddersTrigger();
 	void Reset();
 	void LoadLevel();
 	void CheckForCollectibles();
@@ -80,4 +79,5 @@ private:
 	FMOD::Channel* m_pTheme{};
 	FMOD::Channel* m_pCollectRupee{};
 	FMOD_VECTOR m_PrevListenerPos{};
+	bool m_IsPlaying{ false };
 };

@@ -52,6 +52,7 @@
     <ClCompile Include="Scenes\Exam\WinScreen.cpp" />
     <ClCompile Include="Materials\SkyboxMaterial.cpp" />
     <ClCompile Include="Prefabs\KillPlane.cpp" />
+    <ClCompile Include="Scenes\Exam\ControlScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -104,5 +105,6 @@
     <ClInclude Include="Scenes\Exam\WinScreen.h" />
     <ClInclude Include="Materials\SkyboxMaterial.h" />
     <ClInclude Include="Prefabs\KillPlane.h" />
+    <ClInclude Include="Scenes\Exam\ControlScreen.h" />
   </ItemGroup>
 </Project>

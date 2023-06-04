@@ -47,7 +47,7 @@ void CollectiblePrefab::Initialize(const SceneContext& /*sceneContext*/)
 
 void CollectiblePrefab::Update(const SceneContext& sceneContext)
 {
-	float rotationSpeed = 60.0f; // adjust this to change the speed of rotation
+	float rotationSpeed = 90.0f; // adjust this to change the speed of rotation
 	float deltaTime = sceneContext.pGameTime->GetElapsed();
 	m_Rotate += rotationSpeed * deltaTime;
 

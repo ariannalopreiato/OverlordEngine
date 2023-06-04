@@ -8,7 +8,7 @@
 //#define W6
 //#define W7
 //#define W8
-//#define W9
+#define W9
 //#define W10
 //#define W11
 
@@ -90,6 +90,7 @@
 #include "Scenes/Exam/PauseMenu.h"
 #include "Scenes/Exam/GameOver.h"
 #include "Scenes/Exam/WinScreen.h"
+#include "Scenes/Exam/ControlScreen.h"
 #endif
 
 #pragma endregion
@@ -176,6 +177,7 @@ void MainGame::Initialize()
 
 #ifdef EXAM
 	SceneManager::Get()->AddGameScene(new MainMenu());
+	SceneManager::Get()->AddGameScene(new ControlScreen());	
 	SceneManager::Get()->AddGameScene(new WinScreen());
 	SceneManager::Get()->AddGameScene(new GameOver());
 	SceneManager::Get()->AddGameScene(new PauseMenu());

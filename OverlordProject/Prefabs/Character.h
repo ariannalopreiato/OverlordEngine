@@ -65,6 +65,7 @@ protected:
 	
 private:
 	void SetAnimation(AnimationState state);
+	void PlayRandomJumpSound();
 
 	CameraComponent* m_pCameraComponent{};
 	ControllerComponent* m_pControllerComponent{};
@@ -90,5 +91,10 @@ private:
 
 	XMFLOAT3 m_TotalVelocity{};						//TotalVelocity with X/Z for Horizontal Movement AND Y for Vertical Movement (fall/jump)
 	XMFLOAT3 m_CurrentDirection{};					//Current/Last Direction based on Camera forward/right (Stored for deacceleration)
+
+	FMOD::Channel* m_Hop{};
+	FMOD::Channel* m_Hup{};
+	FMOD::Channel* m_Yup{};
+	FMOD::Channel* m_CurrentJumpSound{};
 };
 

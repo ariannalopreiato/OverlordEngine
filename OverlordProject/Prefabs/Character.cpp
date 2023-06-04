@@ -59,19 +59,31 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 
 	//PARTICLES
 	ParticleEmitterSettings settings{};
-	settings.velocity = { 0.f,0.f,0.f };
-	settings.minSize = 1.f;
-	settings.maxSize = 2.f;
-	settings.minEnergy = 1.f;
-	settings.maxEnergy = 2.f;
-	settings.minScale = 3.5f;
-	settings.maxScale = 5.5f;
-	settings.minEmitterRadius = .0f;
-	settings.maxEmitterRadius = .0f;
-	settings.color = { 1.f,1.f,1.f, .6f };
+	settings.velocity = { 0.f,6.f,0.f };
+	settings.minSize = .2f;
+	settings.maxSize = .2f;
+	settings.minEnergy = .5f;
+	settings.maxEnergy = .8f;
+	settings.minScale = 2.f;
+	settings.maxScale = 3.f;
+	settings.minEmitterRadius = .05f;
+	settings.maxEmitterRadius = .02f;
+	settings.color = { 0.81f, 0.8f, 0.7f, 0.78f };
 
 	const auto pObject = AddChild(new GameObject);
-	m_pEmitter = pObject->AddComponent(new ParticleEmitterComponent(L"Textures/Smoke.png", settings, 200));
+	m_pEmitter = pObject->AddComponent(new ParticleEmitterComponent(L"Textures/FireBall.png", settings, 15));
+
+	//SOUNDS
+	const auto pFmod = SoundManager::Get()->GetSystem();
+	FMOD::Sound* pSound{};
+	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/Hop.wav", FMOD_LOOP_OFF, nullptr, &pSound);
+	result = pFmod->playSound(pSound, nullptr, true, &m_Hop);
+
+	result = pFmod->createStream("Resources/Sounds/Hup.wav", FMOD_LOOP_OFF, nullptr, &pSound);
+	result = pFmod->playSound(pSound, nullptr, true, &m_Hup);
+
+	result = pFmod->createStream("Resources/Sounds/Yup.wav", FMOD_LOOP_OFF, nullptr, &pSound);
+	result = pFmod->playSound(pSound, nullptr, true, &m_Yup);
 }
 
 void Character::ScalePlayerMesh(float scale)
@@ -83,6 +95,8 @@ void Character::ScalePlayerMesh(float scale)
 
 void Character::Update(const SceneContext& sceneContext)
 {
+	m_pEmitter->GetTransform()->Translate(m_pControllerComponent->GetFootPosition());
+
 	/*auto pos = GetTransform()->GetPosition();
 	m_pEmitter->GetTransform()->Translate(pos);*/
 
@@ -214,6 +228,8 @@ void Character::Update(const SceneContext& sceneContext)
 
 		//Set m_TotalVelocity.y equal to CharacterDesc::JumpSpeed
 		m_TotalVelocity.y = m_CharacterDesc.JumpSpeed;
+
+		PlayRandomJumpSound();
 	}
 	//Else (=Character is grounded, no input pressed)
 	else
@@ -224,6 +240,11 @@ void Character::Update(const SceneContext& sceneContext)
 		{
 			m_CurrentState = m_PreviousState;
 			SetAnimation(m_CurrentState);
+
+			/*bool bPaused = false;
+			m_CurrentJumpSound->getPaused(&bPaused);*/
+			m_CurrentJumpSound->setPaused(true);
+			m_CurrentJumpSound->setPosition(0, FMOD_TIMEUNIT_PCM);
 		}
 	}
 
@@ -245,6 +266,28 @@ void Character::SetAnimation(AnimationState state)
 {
 	m_pAnimator->SetAnimation(state);
 	m_pAnimator->Play();
+}
+
+void Character::PlayRandomJumpSound()
+{
+	int rand = std::rand() % 3;
+
+	switch (rand)
+	{
+	case 0:
+		m_CurrentJumpSound = m_Hop;
+		break;
+	case 1:
+		m_CurrentJumpSound = m_Hup;
+		break;
+	case 2:
+		m_CurrentJumpSound = m_Yup;
+		break;
+	}
+
+	//bool bPaused = false;
+	//m_CurrentJumpSound->getPaused(&bPaused);
+	m_CurrentJumpSound->setPaused(false);
 }
 
 
