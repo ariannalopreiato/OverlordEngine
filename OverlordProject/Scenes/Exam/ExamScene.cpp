@@ -109,7 +109,7 @@ void ExamScene::Initialize()
 	AddPostProcessingEffect(bloom);
 
 	//KILLPLANE
-	m_pKillPlane = AddChild(new KillPlane(m_pPlayer, { 0.f, -1.2f, 0.f }, {200.f, 1.f, 200.f}));
+	m_pKillPlane = AddChild(new KillPlane(m_pPlayer, { 0.f, -0.8f, 0.f }, {500.f, 1.f, 500.f}));
 
 	//LIFE
 	m_pLifeManager = AddChild(new LifeManager(3, { 0.13f, 0.13f, 0.13f }, { 20.f, 80.f, 0.f }));
@@ -218,6 +218,7 @@ void ExamScene::PositionPlayer()
 {
 	//reposition player
 	m_pPlayer->GetTransform()->Translate(15.f, 3.f, -49.f);
+	m_pPlayer->GetComponent<ParticleEmitterComponent>()->GetTransform()->Translate(15.f, 3.f, -49.f);
 }
 
 void ExamScene::InitializeCollectibles()
@@ -349,24 +350,4 @@ void ExamScene::DisplayPoints()
 {	
 	std::string point = std::to_string(m_CurrentPoints) + "/" + std::to_string(m_TotalPoints);
 	TextRenderer::Get()->DrawText(m_pFont, StringUtil::utf8_decode(point), XMFLOAT2(1180.f, 10.f), XMFLOAT4{Colors::LightGoldenrodYellow});
-}
-
-ExamScene::~ExamScene()
-{
-	//for (auto& c : m_pCollectibles)
-	//{
-	//	SafeDelete(c);
-	//}
-
-	//for (auto& h : m_pHearts)
-	//{
-	//	SafeDelete(h);
-	//}
-
-	//SafeDelete(m_pFont);
-	//SafeDelete(m_pKillPlane);
-	//SafeDelete(m_pTheme);
-	//SafeDelete(m_pTimer);
-	//SafeDelete(m_pLifeManager);
-	//SafeDelete(m_pPlayer);
 }
