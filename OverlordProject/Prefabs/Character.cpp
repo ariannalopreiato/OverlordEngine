@@ -70,10 +70,6 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	settings.maxEmitterRadius = .02f;
 	settings.color = { 0.81f, 0.8f, 0.7f, 0.78f };
 
-	//const auto pObject = AddChild(new GameObject());
-	m_pEmitter = AddComponent(new ParticleEmitterComponent(L"Textures/FireBall.png", settings, 15));
-	//m_pEmitter->GetTransform()->Translate(m_pControllerComponent->GetFootPosition());
-
 	//SOUNDS
 	const auto pFmod = SoundManager::Get()->GetSystem();
 	FMOD::Sound* pSound{};

@@ -11,7 +11,7 @@ class ExamScene : public GameScene
 {
 public:
 	ExamScene() : GameScene(L"Exam Scene") {}
-	~ExamScene() override = default;
+	~ExamScene() override;
 
 	ExamScene(const ExamScene& other) = delete;
 	ExamScene(ExamScene&& other) noexcept = delete;
@@ -77,7 +77,5 @@ private:
 	};
 
 	FMOD::Channel* m_pTheme{};
-	FMOD::Channel* m_pCollectRupee{};
-	FMOD_VECTOR m_PrevListenerPos{};
 	bool m_IsPlaying{ false };
 };

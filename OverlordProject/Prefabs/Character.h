@@ -78,8 +78,6 @@ private:
 	AnimationState m_CurrentState;
 	AnimationState m_PreviousState;
 
-	ParticleEmitterComponent* m_pEmitter{};
-
 	char** m_ClipNames{};
 	UINT m_ClipCount{};
 
