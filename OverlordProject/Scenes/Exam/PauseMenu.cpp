@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PauseMenu.h"
+#include "Managers/GameSoundManager.h"
 
 void PauseMenu::Initialize()
 {
@@ -31,21 +32,9 @@ void PauseMenu::Initialize()
 	m_EndButton->GetTransform()->Scale(0.8f, 0.7f, 0.7f);
 
 	//SOUNDS
-	//const auto pFmod = SoundManager::Get()->GetSystem();
-	//FMOD::Sound* pSound{};
-	//FMOD_RESULT result = pFmod->createStream("Resources/Sounds/PauseMenuOpen.wav", FMOD_LOOP_OFF, nullptr, &pSound);
-	//result = pFmod->playSound(pSound, nullptr, true, &m_pOpen);
-	////m_pOpen->setVolume(1.f);
-
-	//result = pFmod->createStream("Resources/Sounds/PauseMenuContinue.wav", FMOD_LOOP_OFF, nullptr, &pSound);
-	//result = pFmod->playSound(pSound, nullptr, true, &m_Continue);
-	////m_Continue->setVolume(1.f);
-
-	//result = pFmod->createStream("Resources/Sounds/PauseMenuMainMenu.wav", FMOD_LOOP_OFF, nullptr, &pSound);
-	//result = pFmod->playSound(pSound, nullptr, true, &m_ToMainMenu);
-	////m_ToMainMenu->setVolume(1.f);
-
-	//m_pOpen->setPaused(false);
+	auto soundManager = GameSoundManager::Get();
+	soundManager->AddSound(GameSoundManager::Sound::PauseMenuContinue, "Resources/Sounds/PauseMenuContinue.wav");
+	soundManager->AddSound(GameSoundManager::Sound::PauseMenuToMainMenu, "Resources/Sounds/PauseMenuMainMenu.wav");
 }
 
 void PauseMenu::Update()
@@ -55,13 +44,14 @@ void PauseMenu::Update()
 		if (m_MainMenu->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{
 			//Load new scene
-			//m_ToMainMenu->setPaused(false);
+			GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::PauseMenuToMainMenu);
+			GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::TitleMusic, true);
 			SceneManager::Get()->SetActiveGameScene(L"Main Menu");
 		}
 		if (m_Restart->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{
 			//restart
-			//m_Continue->setPaused(false);
+			GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::PauseMenuContinue);
 			SceneManager::Get()->SetActiveGameScene(L"Exam Scene");
 		}
 		if (m_EndButton->GetComponent<SpriteComponent>()->IsMouseOverSprite())

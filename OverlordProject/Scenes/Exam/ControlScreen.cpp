@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ControlScreen.h"
+#include "Managers/GameSoundManager.h"
 
 void ControlScreen::Initialize()
 {
@@ -15,6 +16,9 @@ void ControlScreen::Initialize()
 	m_Continue->GetTransform()->Scale(0.55f, 0.5f, 0.5f);
 
 	AddChild(m_Continue);
+
+	auto soundManager = GameSoundManager::Get();
+	soundManager->AddSound(GameSoundManager::Sound::StartGame, "Resources/Sounds/StartGame.wav");
 }
 
 void ControlScreen::Update()
@@ -24,6 +28,8 @@ void ControlScreen::Update()
 		if (m_Continue->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{
 			//Load new scene
+			GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::StartGame);
+			GameSoundManager::Get()->Stop2DSound(GameSoundManager::Sound::TitleMusic, true);
 			SceneManager::Get()->SetActiveGameScene(L"Exam Scene");
 		}
 	}

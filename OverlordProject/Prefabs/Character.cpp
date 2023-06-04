@@ -4,6 +4,7 @@
 #include "Materials/DiffuseMaterial_Skinned.h"
 #include "Materials/DiffuseMaterial.h"
 #include "CameraMovement.h"
+#include "Managers/GameSoundManager.h"
 
 Character::Character(const CharacterDesc& characterDesc) :
 	m_CharacterDesc{ characterDesc },
@@ -74,16 +75,10 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	//m_pEmitter = pObject->AddComponent(new ParticleEmitterComponent(L"Textures/FireBall.png", settings, 15));
 
 	//SOUNDS
-	const auto pFmod = SoundManager::Get()->GetSystem();
-	FMOD::Sound* pSound{};
-	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/Hop.wav", FMOD_LOOP_OFF, nullptr, &pSound);
-	result = pFmod->playSound(pSound, nullptr, true, &m_Hop);
-
-	result = pFmod->createStream("Resources/Sounds/Hup.wav", FMOD_LOOP_OFF, nullptr, &pSound);
-	result = pFmod->playSound(pSound, nullptr, true, &m_Hup);
-
-	result = pFmod->createStream("Resources/Sounds/Yup.wav", FMOD_LOOP_OFF, nullptr, &pSound);
-	result = pFmod->playSound(pSound, nullptr, true, &m_Yup);
+	auto soundManager = GameSoundManager::Get();
+	soundManager->AddSound(GameSoundManager::Sound::Hop, "Resources/Sounds/Hop.wav");
+	soundManager->AddSound(GameSoundManager::Sound::Hup, "Resources/Sounds/Hup.wav");
+	soundManager->AddSound(GameSoundManager::Sound::Yup, "Resources/Sounds/Yup.wav");
 }
 
 void Character::ScalePlayerMesh(float scale)
@@ -237,11 +232,6 @@ void Character::Update(const SceneContext& sceneContext)
 		{
 			m_CurrentState = m_PreviousState;
 			SetAnimation(m_CurrentState);
-
-			/*bool bPaused = false;
-			m_CurrentJumpSound->getPaused(&bPaused);*/
-			m_CurrentJumpSound->setPaused(true);
-			m_CurrentJumpSound->setPosition(0, FMOD_TIMEUNIT_PCM);
 		}
 	}
 
@@ -272,19 +262,15 @@ void Character::PlayRandomJumpSound()
 	switch (rand)
 	{
 	case 0:
-		m_CurrentJumpSound = m_Hop;
+		GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::Hop);
 		break;
 	case 1:
-		m_CurrentJumpSound = m_Hup;
+		GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::Hup);
 		break;
 	case 2:
-		m_CurrentJumpSound = m_Yup;
+		GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::Yup);
 		break;
 	}
-
-	//bool bPaused = false;
-	//m_CurrentJumpSound->getPaused(&bPaused);
-	m_CurrentJumpSound->setPaused(false);
 }
 
 

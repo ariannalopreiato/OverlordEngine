@@ -109,6 +109,8 @@ void ExamScene::Initialize()
 	//MUSIC
 	auto soundManager = GameSoundManager::Get();
 	soundManager->AddSound(GameSoundManager::Sound::WindfallIsland, "Resources/Sounds/WindfallIsland.mp3");
+	soundManager->AddSound(GameSoundManager::Sound::PauseMenuOpen, "Resources/Sounds/PauseMenuOpen.wav");
+	soundManager->AddSound(GameSoundManager::Sound::GameOver, "Resources/Sounds/GameOver.mp3");
 
 	//POST PROCESSING - BLOOM
 	auto bloom = MaterialManager::Get()->CreateMaterial<PostBloom>();
@@ -133,19 +135,12 @@ void ExamScene::Update()
 {
 	if (!m_IsPlaying)
 	{
+		Reset();
 		GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::WindfallIsland, true);
-	//	bool bPaused = false;
-	//	m_pTheme->getPaused(&bPaused);
-	//	m_pTheme->setPaused(!bPaused);
 		m_IsPlaying = true;	
-
-	//	m_CanMenuPlay = false;
-	//	bPaused = false;
-	//	bPaused = false;
-	//	m_pMenuMusic->getPaused(&bPaused);
-	//	m_pMenuMusic->setPaused(!bPaused);
 	}
-	// 
+
+
 	//std::cout << "POSITION" << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().x << std::endl;
 	//std::cout << m_pPlayer->GetTransform()->GetPosition().y << std::endl;
@@ -159,23 +154,16 @@ void ExamScene::Update()
 
 		if (InputManager::IsKeyboardKey(InputState::released, VK_DELETE))
 		{
-			bool bPaused = false;
-			m_pTheme->getPaused(&bPaused);
-			m_pTheme->setPaused(!bPaused);
 			m_IsPlaying = false;
-
-			bPaused = false;
-			m_pOpen->getPaused(&bPaused);
-			m_pOpen->setPaused(!bPaused);
-
+			GameSoundManager::Get()->Stop2DSound(GameSoundManager::Sound::WindfallIsland, true);
+			GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::PauseMenuOpen);
 			SceneManager::Get()->SetActiveGameScene(L"Pause Menu");
 		}
 
 		//check if all the rupees have been collected
 		if (CheckGameWon())
 		{
-			Reset();
-			SceneManager::Get()->SetActiveGameScene(L"Win Screen");
+			GameWon();
 		}
 	}
 	else //if the time runs out
@@ -183,20 +171,17 @@ void ExamScene::Update()
 		//check if all the rupees have been collected
 		if (CheckGameWon())
 		{
-			Reset();
-			SceneManager::Get()->SetActiveGameScene(L"Win Screen");
+			GameWon();
 		}
 		else
 		{
-			Reset();
-			SceneManager::Get()->SetActiveGameScene(L"Game Over");
+			GameOver();
 		}
 	}	
 
 	if (m_pLifeManager->IsDead())
 	{
-		Reset();
-		SceneManager::Get()->SetActiveGameScene(L"Game Over");
+		GameOver();
 	}
 
 	if (m_pKillPlane->GetIsHit())
@@ -244,16 +229,16 @@ void ExamScene::InitializeCollectibles()
 	}
 
 	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {1.37f, 1.12f, -47.6f}, {90.f, 0.f, 0.f})));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-72.f, 11.f, -29.f }, { 90.f, 0.f, 0.f })));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-45.f, 18.f, 56.f }, { 90.f, 0.f, 0.f })));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {46.f, 8.f, 16.f }, { 90.f, 0.f, 0.f })));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {57.f, 2.f, 32.f }, { 90.f, 0.f, 0.f })));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {9.f, 11.f, 73.f }, { 90.f, 0.f, 0.f })));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-8.f, 11.f, 63.f }, { 90.f, 0.f, 0.f })));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {10.f, 17.f, 75.f }, { 90.f, 0.f, 0.f })));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {12.f, 17.f, 48.f }, { 90.f, 0.f, 0.f })));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {29.f, 13.f, 22.f }, { 90.f, 0.f, 0.f })));
-	m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-18.f, 17.f, 13.f }, { 90.f, 0.f, 0.f })));
+	//m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-72.f, 11.f, -29.f }, { 90.f, 0.f, 0.f })));
+	//m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-45.f, 18.f, 56.f }, { 90.f, 0.f, 0.f })));
+	//m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {46.f, 8.f, 16.f }, { 90.f, 0.f, 0.f })));
+	//m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {57.f, 2.f, 32.f }, { 90.f, 0.f, 0.f })));
+	//m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {9.f, 11.f, 73.f }, { 90.f, 0.f, 0.f })));
+	//m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-8.f, 11.f, 63.f }, { 90.f, 0.f, 0.f })));
+	//m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {10.f, 17.f, 75.f }, { 90.f, 0.f, 0.f })));
+	//m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {12.f, 17.f, 48.f }, { 90.f, 0.f, 0.f })));
+	//m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {29.f, 13.f, 22.f }, { 90.f, 0.f, 0.f })));
+	//m_pCollectibles.emplace_back(AddChild(new CollectiblePrefab(L"Meshes/Collectibles/rupee.ovm", 1, {-18.f, 17.f, 13.f }, { 90.f, 0.f, 0.f })));
 
 	//POINTS
 	m_TotalPoints = int(m_pCollectibles.size());
@@ -295,11 +280,11 @@ void ExamScene::InitializeCollectibles()
 void ExamScene::Reset()
 {
 	PositionPlayer();
-	InitializeCollectibles();
 	m_CurrentPoints = 0;
 	m_pLifeManager->Reset();
 	m_pTimer->Reset();
 	m_pKillPlane->Reset();
+	InitializeCollectibles();
 }
 
 void ExamScene::LoadLevel()
@@ -362,4 +347,20 @@ void ExamScene::DisplayPoints()
 {	
 	std::string point = std::to_string(m_CurrentPoints) + "/" + std::to_string(m_TotalPoints);
 	TextRenderer::Get()->DrawText(m_pFont, StringUtil::utf8_decode(point), XMFLOAT2(1180.f, 10.f), XMFLOAT4{Colors::LightGoldenrodYellow});
+}
+
+void ExamScene::GameOver()
+{
+	Reset();
+	GameSoundManager::Get()->Stop2DSound(GameSoundManager::Sound::WindfallIsland, true);
+	GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::GameOver);
+	m_IsPlaying = false;
+	SceneManager::Get()->SetActiveGameScene(L"Game Over");
+}
+
+void ExamScene::GameWon()
+{
+	Reset();
+	m_IsPlaying = false;
+	SceneManager::Get()->SetActiveGameScene(L"Win Screen");
 }

@@ -2,6 +2,7 @@
 #include "CollectiblePrefab.h"
 #include "Materials/DiffuseMaterial.h"
 #include "Character.h"
+#include "Managers/GameSoundManager.h"
 
 CollectiblePrefab::CollectiblePrefab(const std::wstring& model, int value, const XMFLOAT3& position, const XMFLOAT3& rotation, const XMFLOAT3& scale, float pivotOffset)
 	: m_Model{ model }
@@ -22,10 +23,9 @@ void CollectiblePrefab::Initialize(const SceneContext& /*sceneContext*/)
 	GetComponent<ModelComponent>()->GetTransform()->Translate(m_Position);
 	GetComponent<ModelComponent>()->GetTransform()->Scale(m_Scale);
 	
-	const auto pFmod = SoundManager::Get()->GetSystem();
-	FMOD::Sound* pSound{};
-	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/rupee.mp3", FMOD_LOOP_OFF, nullptr, &pSound);
-	result = pFmod->playSound(pSound, nullptr, true, &m_pCollectSound);
+	//SOUNDS
+	auto soundManager = GameSoundManager::Get();
+	soundManager->AddSound(GameSoundManager::Sound::Rupee, "Resources/Sounds/rupee.mp3");
 
 	AddComponent(new RigidBodyComponent(true));
 	float size{ .5f };
@@ -35,10 +35,8 @@ void CollectiblePrefab::Initialize(const SceneContext& /*sceneContext*/)
 		{
 			if (triggerAction == PxTriggerAction::ENTER)
 			{
+				GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::Rupee);
 				m_IsCollected = true;
-				bool bPaused = false;
-				m_pCollectSound->getPaused(&bPaused);
-				m_pCollectSound->setPaused(!bPaused);
 			}
 		});
 }

@@ -46,4 +46,5 @@ void TimerPrefab::Update(const SceneContext& sceneContext)
 void TimerPrefab::Reset()
 {
 	m_CurrentTime = float(m_TotalTime);
+	ShowTime();
 }

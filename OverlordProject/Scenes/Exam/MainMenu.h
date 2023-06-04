@@ -19,6 +19,5 @@ private:
 	GameObject* m_pSprite{};
 	GameObject* m_StartButton{};
 	GameObject* m_EndButton{};
-	//bool m_CanPlay{ false };
-	//FMOD::Channel* m_pMenuMusic{};
+	bool m_CanPlay{ true };
 };

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameOver.h"
+#include "Managers/GameSoundManager.h"
 
 void GameOver::Initialize()
 {
@@ -36,11 +37,14 @@ void GameOver::Update()
 		if (m_MainMenu->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{
 			//Load new scene
+			GameSoundManager::Get()->Stop2DSound(GameSoundManager::Sound::GameOver);
+			GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::TitleMusic, true);
 			SceneManager::Get()->SetActiveGameScene(L"Main Menu");
 		}
 		if (m_TryAgain->GetComponent<SpriteComponent>()->IsMouseOverSprite())
 		{
 			//restart
+			GameSoundManager::Get()->Stop2DSound(GameSoundManager::Sound::GameOver);
 			SceneManager::Get()->SetActiveGameScene(L"Exam Scene");
 		}
 	}

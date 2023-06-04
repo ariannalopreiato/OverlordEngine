@@ -32,11 +32,16 @@ void MainMenu::Initialize()
 
 	auto soundManager = GameSoundManager::Get();
 	soundManager->AddSound(GameSoundManager::Sound::TitleMusic, "Resources/Sounds/TitleScreen.mp3");
-	soundManager->Play2DSound(GameSoundManager::Sound::TitleMusic, true);
 }
 
 void MainMenu::Update()
 {
+	if (m_CanPlay)
+	{
+		GameSoundManager::Get()->Play2DSound(GameSoundManager::Sound::TitleMusic, true);
+		m_CanPlay = false;
+	}
+
 	if (InputManager::IsMouseButton(InputState::pressed, VK_LBUTTON))
 	{
 		if (m_StartButton->GetComponent<SpriteComponent>()->IsMouseOverSprite())

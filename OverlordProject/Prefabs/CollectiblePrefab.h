@@ -28,6 +28,4 @@ private:
 	float m_Rotate{ 0.f };
 	bool m_IsCollected{ false };
 	int m_Value{ 0 };
-	bool m_CanPlay{ false };
-	FMOD::Channel* m_pCollectSound{};
 };

@@ -36,6 +36,8 @@ private:
 	void LoadLevel();
 	void CheckForCollectibles();
 	void DisplayPoints();
+	void GameOver();
+	void GameWon();
 
 	enum InputIds
 	{
@@ -72,11 +74,4 @@ private:
 	FMOD::Channel* m_pCollectRupee{};
 	FMOD_VECTOR m_PrevListenerPos{};
 	bool m_IsPlaying{ false };
-
-	//Pause
-	FMOD::Channel* m_pOpen{};
-
-	//Menu
-	bool m_CanMenuPlay{ true };
-	FMOD::Channel* m_pMenuMusic{};
 };
