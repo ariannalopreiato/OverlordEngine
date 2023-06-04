@@ -60,18 +60,19 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	//PARTICLES
 	ParticleEmitterSettings settings{};
 	settings.velocity = { 0.f,6.f,0.f };
-	settings.minSize = .2f;
-	settings.maxSize = .2f;
+	settings.minSize = .02f;
+	settings.maxSize = .02f;
 	settings.minEnergy = .5f;
 	settings.maxEnergy = .8f;
-	settings.minScale = 2.f;
-	settings.maxScale = 3.f;
+	settings.minScale = .2f;
+	settings.maxScale = .3f;
 	settings.minEmitterRadius = .05f;
 	settings.maxEmitterRadius = .02f;
 	settings.color = { 0.81f, 0.8f, 0.7f, 0.78f };
 
-	const auto pObject = AddChild(new GameObject);
-	m_pEmitter = pObject->AddComponent(new ParticleEmitterComponent(L"Textures/FireBall.png", settings, 15));
+	//const auto pObject = AddChild(new GameObject());
+	m_pEmitter = AddComponent(new ParticleEmitterComponent(L"Textures/FireBall.png", settings, 15));
+	//m_pEmitter->GetTransform()->Translate(m_pControllerComponent->GetFootPosition());
 
 	//SOUNDS
 	const auto pFmod = SoundManager::Get()->GetSystem();
@@ -95,7 +96,7 @@ void Character::ScalePlayerMesh(float scale)
 
 void Character::Update(const SceneContext& sceneContext)
 {
-	m_pEmitter->GetTransform()->Translate(m_pControllerComponent->GetFootPosition());
+	//m_pEmitter->GetTransform()->Translate(m_pControllerComponent->GetFootPosition());
 
 	/*auto pos = GetTransform()->GetPosition();
 	m_pEmitter->GetTransform()->Translate(pos);*/

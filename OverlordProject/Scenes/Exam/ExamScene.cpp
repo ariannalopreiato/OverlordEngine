@@ -218,6 +218,7 @@ void ExamScene::PositionPlayer()
 {
 	//reposition player
 	m_pPlayer->GetTransform()->Translate(15.f, 3.f, -49.f);
+	m_pPlayer->GetComponent<ParticleEmitterComponent>()->GetTransform()->Translate(15.f, 3.f, -49.f);
 }
 
 void ExamScene::InitializeCollectibles()
